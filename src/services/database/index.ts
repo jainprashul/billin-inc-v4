@@ -1,23 +1,26 @@
 import Dexie from 'dexie';
-import { ICompany, IRole, IUser } from './model';
+import { ICategory, ICompany, IRole, IUser } from './model';
+import { User } from './model/User';
 class AppDB extends Dexie {
 
     companyDB : CompanyDB[];
-    users! : Dexie.Table<IUser, number>;
+    users! : Dexie.Table<User, number>;
     roles! : Dexie.Table<IRole, number>;
     companies! : Dexie.Table<ICompany, number>;
+    categories! : Dexie.Table<ICategory, number>;
 
 
     constructor() {
         super('AppDB');
         // Declare tables
         this.version(1).stores({
-            users: '++id, name, username, email, role',
-            companies: '++id, name, email',
             roles: '++id, name, permissionIDs',
+            companies: '++id, name, email',
+            users: '++id, name, username, email, roleID, companyID',
             categories: '++id, companyID, name',
         });
         this.companyDB = [];
+        this.users.mapToClass(User);
     }
 
     getCompanyDB(companyID : number) : CompanyDB {
@@ -47,7 +50,4 @@ class CompanyDB extends Dexie {
     }
 }
 
-const db = new AppDB();
-export default db;
-
-
+export default AppDB

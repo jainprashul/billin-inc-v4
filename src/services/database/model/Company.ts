@@ -10,6 +10,9 @@ export interface ICompany {
     lastBackupName?: string;
     lastGSTInvoiceNo : number;
     lastInvoiceNo : number;
+    userIDs : number[];
+    createdAt?: Date;
+    createdBy?: string;
 }
 
 // Ref : Company.configID - Config.id

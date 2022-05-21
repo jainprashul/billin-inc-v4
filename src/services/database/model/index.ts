@@ -4,7 +4,7 @@ import { IStocks } from "./Stocks"
 import { IStockLogs } from "./StockLogs"
 import { ILedger } from "./Ledger"
 import { IInvoice } from "./Invoices"
-import { IUser, IRole } from "./User"
+import { IUser, IRole, User } from "./User"
 import { IPurchase } from "./Purchase"
 import { INotificationLog } from "./NotificationLog"
 import { IExpense } from "./Expenses"
@@ -27,5 +27,5 @@ export type {
     INotificationLog,
     IExpense,
     IConfig,
-    IProduct
+    IProduct,
 }
