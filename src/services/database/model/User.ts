@@ -1,13 +1,14 @@
+import { nanoid } from "@reduxjs/toolkit";
 import db from "../db";
 
 export interface IUser {
-    id?: number;
+    id?: number | string;
     name: string;
     username: string;
     email: string;
     roleID?: number;
     password: string;
-    companyIDs? : number[];
+    companyIDs?: number[];
 }
 
 interface IPermission {
@@ -23,16 +24,16 @@ export interface IRole {
 }
 
 export class User implements IUser {
-    id?: number;
+    id?: number | string;
     name: string;
     username: string;
     email: string;
     roleID: number;
-    role : IRole | undefined;
+    role: IRole | undefined;
     password: string;
-    companyIDs : number[];
+    companyIDs: number[];
     constructor(user: IUser) {
-        if(user.id) this.id = user.id;
+        if (user.id) this.id = user.id || nanoid(8);
         this.name = user.name;
         this.username = user.username;
         this.email = user.email;
@@ -50,7 +51,7 @@ export class User implements IUser {
     };
 
     addUserToCompany() {
-        db.companies.where('id').anyOf([...this.companyIDs]).modify( (company) => {
+        db.companies.where('id').anyOf([...this.companyIDs]).modify((company) => {
             company.userIDs.push(this.id as number);
         });
     }
@@ -66,21 +67,41 @@ export class User implements IUser {
             companyIDs: this.companyIDs
         });
 
-        db.transaction('rw', db.users, db.roles, db.companies, async () => {
+        db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
             delete user.role;
-            const _id = await db.users.put(user);
-            this.id = _id;
-            this.addUserToCompany();
-            console.log(`User ${this.name} saved successfully`);
+            db.users.orderBy('username').keys(async (usernames) => {
+                let usernameExists = usernames.includes(user.username);
+                console.log(usernames, user.username);
+                console.log(usernameExists);
+
+                if (usernameExists) {
+                    // throw new Error("Username already exists");
+                    tx.abort();
+                }
+                const _id = await db.users.put(user);
+                this.id = _id;
+                this.addUserToCompany();
+                console.log(`User ${this.name} saved successfully`);
+            });
+
         }).then(() => {
-            db.users.put(user);
+            // console.log("Transaction committed");
+        }).catch((err) => {
+            console.log(err);
+        }
+        );
+    }
+
+    delete(){
+        db.transaction('rw', db.users, db.companies, async (tx) => {
+            db.users.delete(this.id as number);
         });
     }
 }
 
 
 // example of a Admin Role
-export const AdminRole : IRole = {
+export const AdminRole: IRole = {
     id: 1,
     name: 'AdminRole',
     permissionIDs: [
@@ -104,7 +125,7 @@ export const AdminRole : IRole = {
 }
 
 // example of a User Role
-export const UserRole : IRole = {
+export const UserRole: IRole = {
     id: 2,
     name: 'UserRole',
     permissionIDs: [
