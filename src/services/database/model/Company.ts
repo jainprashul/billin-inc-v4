@@ -2,7 +2,7 @@ export interface ICompany {
     id?: number;
     name: string;
     address: IAddress;
-    contact: IContact[];
+    contacts: IContact[];
     gst: string;
     email?: string;
     configID : number;

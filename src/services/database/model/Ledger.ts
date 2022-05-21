@@ -8,6 +8,7 @@ export interface ILedger {
     payable : number;
     receivable : number;
     payableType : PayableType;
+    receivableType : PayableType;
     companyID : number;
     clientID : number;
     date : Date;
@@ -16,7 +17,7 @@ export interface ILedger {
 
 type ClientType = "CUSTOMER" | "VENDOR" | "EMPLOYEE" | "SUPPLIER";
 type LedgerVoucherType =  "SALES" | "PURCHASE" | "PAYMENT" | "RECEIPT" | "JOURNAL" | "TRANSFER";
-type PayableType =  "CASH" | "CREDIT" | "DEBIT" | "BOTH";
+type PayableType =  "CASH" | "UPI" | "NEFT" | "CARD" | "CHEQUE" | "CREDIT" | "DEBIT" | "OTHER";
 
 // Ref : Ledger.voucherID - Purchase.id
 // Ref : Ledger.voucherID - Invoices.id

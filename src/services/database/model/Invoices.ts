@@ -4,7 +4,7 @@ export interface IInvoice {
     voucherNo: string;
     voucherType: InvoiceVoucherType;
     clientID: number;
-    productID: number[];
+    productIDs: number[];
     billingDate: Date;
     categoryID: number;
     gstEnabled: boolean;

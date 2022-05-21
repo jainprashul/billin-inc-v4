@@ -4,7 +4,7 @@ export interface IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: number;
-    productID: number[];
+    productIDs: number[];
     billingDate: Date;
     categoryID: number;
     gstEnabled: boolean;

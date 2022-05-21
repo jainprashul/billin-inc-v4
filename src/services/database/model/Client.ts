@@ -6,5 +6,5 @@ export interface IClient {
     details : string;
     gst : string[15];
     address : IAddress;
-    contact : IContact[];
+    contacts : IContact[];
 }

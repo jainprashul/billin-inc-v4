@@ -3,9 +3,9 @@ export interface IUser {
     name: string;
     username: string;
     email: string;
-    role: IRole;
+    roleIDs: number[];
     password: string;
-    companyID: number[];
+    companyIDs: number[];
 }
 
 interface IPermission {
