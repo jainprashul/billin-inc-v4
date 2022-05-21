@@ -5,4 +5,6 @@
 - Created Folder Structure
 - Created index.ts
 - Created services folders 
-- Created services database - class dexie 
+- Created services - database - class dexie 
+- Added routes constants
+
