@@ -1,5 +1,5 @@
 import { IClient } from "./Client"
-import { ICompany, IAddress, ICategory, IContact } from "./Company"
+import { ICompany, IAddress, ICategory, IContact, Company } from "./Company"
 import { IStocks } from "./Stocks"
 import { IStockLogs } from "./StockLogs"
 import { ILedger } from "./Ledger"
@@ -28,4 +28,8 @@ export type {
     IExpense,
     IConfig,
     IProduct,
+}
+
+export {
+   Company, User 
 }

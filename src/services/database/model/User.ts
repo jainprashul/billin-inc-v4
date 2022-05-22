@@ -67,9 +67,9 @@ export class User implements IUser {
             companyIDs: this.companyIDs
         });
 
-        db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
+        return db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
             delete user.role;
-            db.users.orderBy('username').keys(async (usernames) => {
+            return db.users.orderBy('username').keys(async (usernames) => {
                 let usernameExists = usernames.includes(user.username);
                 console.log(usernames, user.username);
                 console.log(usernameExists);
@@ -82,14 +82,12 @@ export class User implements IUser {
                 this.id = _id;
                 this.addUserToCompany();
                 console.log(`User ${this.name} saved successfully`);
+                return this.id;
             });
 
-        }).then(() => {
-            // console.log("Transaction committed");
         }).catch((err) => {
             console.log(err);
-        }
-        );
+        });
     }
 
     delete(){
@@ -143,6 +141,16 @@ export const UserRole: IRole = {
         }
     ]
 }
+
+export const defaultUser = new User({
+    id: 1,
+    name: 'Admin',
+    username: 'admin',
+    email: 'admin@default',
+    roleID: 1,
+    password: 'admin',
+    companyIDs: [1],
+})
 
 
 
