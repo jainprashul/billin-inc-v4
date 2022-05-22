@@ -101,7 +101,7 @@ export class User implements IUser {
 // example of a Admin Role
 export const AdminRole: IRole = {
     id: 1,
-    name: 'AdminRole',
+    name: 'Administrator ',
     permissionIDs: [
         {
             id: 1,
@@ -125,7 +125,7 @@ export const AdminRole: IRole = {
 // example of a User Role
 export const UserRole: IRole = {
     id: 2,
-    name: 'UserRole',
+    name: 'UserDefault',
     permissionIDs: [
         {
             id: 1,

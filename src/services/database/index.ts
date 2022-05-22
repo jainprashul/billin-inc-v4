@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
 import CompanyDB from './companydb';
-import { Company, ICategory, IClient, IConfig, IExpense, IInvoice, ILedger, IProduct, IPurchase, IRole, IStockLogs, IStocks, User } from './model';
+import { Company, ICategory, IRole, User } from './model';
 class AppDB extends Dexie {
 
     companyDB : {[key : string] : CompanyDB}
@@ -15,7 +15,7 @@ class AppDB extends Dexie {
         this.version(1).stores({
             roles: '++id, name, permissionIDs',
             companies: '++id, name, email',
-            users: '++id, name, username, email, roleID, companyID',
+            users: '++id, name, &username, &email, roleID, companyID',
             categories: '++id, companyID, name',
         });
         this.companyDB = {};
