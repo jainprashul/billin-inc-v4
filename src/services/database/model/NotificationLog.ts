@@ -1,6 +1,6 @@
 export interface INotificationLog {
     id?: number;
-    notificationID : number;
+    notificationID: string;
     clientID : number;
     companyID? : number;
     date : Date;

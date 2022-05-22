@@ -1,5 +1,7 @@
+import { nanoid } from "@reduxjs/toolkit";
 import AppDB from ".";
 import CompanyDB from "./companydb";
+import { INotificationLog } from "./model";
 import { defaultCompany } from "./model/Company";
 import { AdminRole, defaultUser, UserRole } from "./model/User";
 
@@ -37,7 +39,40 @@ db.users.hook('deleting', (id, user, trans) => {
     })
 })
 
-
+Object.values(db.companyDB).forEach((companyDB) => {
+    companyDB.invoices.hook('creating', (id, invoice, tx) => {
+        // console.log('creating invoice', id, invoice, tx)
+        // console.log('creating invoice', tx.active)
+        const notify : INotificationLog = {
+            companyID: invoice.companyID,
+            clientID: invoice.clientID,
+            date: new Date(),
+            message: `Invoice ${invoice.voucherNo} created`,
+            notificationID : `ntf-${nanoid(8)}`,
+            status: "NEW",
+            link: `/invoice/${invoice.id}`
+        }
+        companyDB.notificationlogs.put(notify);
+    })
+    companyDB.invoices.hook('deleting', (id, invoice, tx) => {
+        // console.log('deleting invoice', id, invoice, tx)
+        // console.log('deleting invoice', tx.active)
+        const notify : INotificationLog = {
+            companyID: invoice.companyID,
+            clientID: invoice.clientID,
+            date: new Date(),
+            message: `Invoice ${invoice.voucherNo} deleted`,
+            notificationID : `ntf-${nanoid(8)}`,
+            status: "NEW",
+        }
+        companyDB.notificationlogs.put(notify);
+            
+    })
+    companyDB.ledger.hook('creating', (id, ledger, tx) => {
+        // console.log('creating ledger', id, ledger, tx)
+        // console.log('creating ledger', tx.active)
+    })
+})
 
 
 export default db;
