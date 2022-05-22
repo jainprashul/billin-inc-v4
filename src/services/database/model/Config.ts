@@ -16,6 +16,7 @@ export interface IConfig {
     lisenseeName? : string
     whatsappEnabled : boolean
     scheduleBackup : ISchedule
+    companyID : number
 }
 
 interface ISchedule {

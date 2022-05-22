@@ -1,13 +1,13 @@
-import { IClient } from "./Client"
+import { IClient, Client } from "./Client"
 import { ICompany, IAddress, ICategory, IContact, Company } from "./Company"
 import { IStocks } from "./Stocks"
 import { IStockLogs } from "./StockLogs"
-import { ILedger } from "./Ledger"
+import { ILedger, Ledger } from "./Ledger"
 import { IInvoice, Invoices } from "./Invoices"
 import { IUser, IRole, User } from "./User"
 import { IPurchase, Purchase } from "./Purchase"
 import { INotificationLog } from "./NotificationLog"
-import { IExpense } from "./Expenses"
+import { IExpense, Expense } from "./Expenses"
 import { IConfig } from "./Config"
 import { IProduct } from "./Product"
 
@@ -31,5 +31,5 @@ export type {
 }
 
 export {
-   Company, User, Purchase, Invoices,
+   Company, User, Purchase, Invoices, Client, Expense, Ledger,
 }

@@ -57,7 +57,7 @@ export class Invoices implements IInvoice {
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
         // console.log(companyDB);
-        const _save = companyDB.invoices.put({...this}).then(_id => {
+        const _save = companyDB.invoices.put({ ...this }).then(_id => {
             this.id = _id;
             console.log(this.id);
             return this.id;

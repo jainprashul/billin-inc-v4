@@ -80,7 +80,7 @@ export interface IAddress {
 
 export interface IContact {
     id?: number;
-    name: string;
+    name?: string;
     email?: string;
     phone?: string;
     mobile?: string;
