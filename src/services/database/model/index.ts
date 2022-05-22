@@ -3,9 +3,9 @@ import { ICompany, IAddress, ICategory, IContact, Company } from "./Company"
 import { IStocks } from "./Stocks"
 import { IStockLogs } from "./StockLogs"
 import { ILedger } from "./Ledger"
-import { IInvoice } from "./Invoices"
+import { IInvoice, Invoices } from "./Invoices"
 import { IUser, IRole, User } from "./User"
-import { IPurchase } from "./Purchase"
+import { IPurchase, Purchase } from "./Purchase"
 import { INotificationLog } from "./NotificationLog"
 import { IExpense } from "./Expenses"
 import { IConfig } from "./Config"
@@ -31,5 +31,5 @@ export type {
 }
 
 export {
-   Company, User 
+   Company, User, Purchase, Invoices,
 }

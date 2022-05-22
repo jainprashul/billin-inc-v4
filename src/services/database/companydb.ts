@@ -1,6 +1,5 @@
 import Dexie from "dexie";
-import { IClient, IConfig, IExpense, IInvoice, ILedger, IProduct, IPurchase, IStockLogs, IStocks } from './model';
-import { Invoices } from "./model/Invoices";
+import { IClient, IConfig, IExpense, IInvoice, ILedger, Invoices, IProduct, IPurchase, IStockLogs, IStocks, Purchase } from './model';
 
 
 export class CompanyDB extends Dexie {
@@ -9,7 +8,7 @@ export class CompanyDB extends Dexie {
     stocks! : Dexie.Table<IStocks, number>;
     stocklogs! : Dexie.Table<IStockLogs, number>;
     ledger! : Dexie.Table<ILedger, number>;
-    purchases! : Dexie.Table<IPurchase, number>;
+    purchases! : Dexie.Table<Purchase, number>;
     invoices! : Dexie.Table<Invoices, number>;
     products! : Dexie.Table<IProduct, number>;
     settings! : Dexie.Table<IConfig, number>;
@@ -28,6 +27,7 @@ export class CompanyDB extends Dexie {
             notificationlogs: '++id, companyID, clientID, date',
         });
         this.invoices.mapToClass(Invoices);
+        this.purchases.mapToClass(Purchase);
     }
 
     getClient(clientID : number) : Promise<IClient> {

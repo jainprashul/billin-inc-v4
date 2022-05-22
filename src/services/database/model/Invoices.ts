@@ -56,9 +56,8 @@ export class Invoices implements IInvoice {
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-        console.log(companyDB);
-        
-        const _save = companyDB.invoices.put(this).then(_id => {
+        // console.log(companyDB);
+        const _save = companyDB.invoices.put({...this}).then(_id => {
             this.id = _id;
             console.log(this.id);
             return this.id;
@@ -70,12 +69,9 @@ export class Invoices implements IInvoice {
         const companyDB = db.getCompanyDB(this.companyID)
         return companyDB.invoices.delete(this.id as number);
     }
-
 }
-
 // Ref : Invoices.companyID - Company.id
 // Ref : Invoices.clientID - Client.id
 // Ref : Invoices.productID > Product.id
-
 
 type InvoiceVoucherType = "NON_GST" | "INTRA_STATE" | "INTER_STATE" | "EXPORT" | "PURCHASE";
