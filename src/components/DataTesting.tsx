@@ -1,10 +1,11 @@
 import React from 'react'
 import { useTests } from './useTests';
+import moment from 'moment';
 
 type Props = {}
 
 const DataTesting = (props: Props) => {
-    const { createCompany, createUser, data } = useTests();
+    const { createCompany, createUser, data, createInvoice } = useTests();
     console.log(data);
     
     return (
@@ -39,6 +40,17 @@ const DataTesting = (props: Props) => {
                     </li>
                 ))}
             </ul>
+            <button onClick={createInvoice}>Create Invoice</button>
+            <ul>
+                {data?.invoices.map(invoice => (
+                    <li key={invoice.id}>
+                        {moment(invoice.billingDate).format('ln')} - {invoice.voucherNo} - {invoice.discountValue } - {invoice.grossTotal} - {invoice.totalAmount}
+                        <button onClick={() => invoice.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
+
+            
 
         </div>
     )

@@ -13,10 +13,10 @@ export interface IInvoice {
     gstEnabled: boolean;
     gstTotal: number;
     subTotal: number;
-    grossTotal: number;
+    // grossTotal: number;
     discount: boolean
     discountValue?: number;
-    totalAmount: number;
+    // totalAmount: number;
 }
 
 export class Invoices implements IInvoice {
@@ -48,32 +48,27 @@ export class Invoices implements IInvoice {
         this.gstEnabled = invoice.gstEnabled;
         this.gstTotal = invoice.gstTotal;
         this.subTotal = invoice.subTotal;
-        this.grossTotal = invoice.grossTotal;
+        this.grossTotal = invoice.gstTotal + invoice.subTotal;
         this.discount = invoice.discount;
-        this.discountValue = invoice.discountValue;
-        this.totalAmount = invoice.totalAmount;
+        this.discountValue = invoice.discountValue || 0;
+        this.totalAmount = this.grossTotal - this.discountValue;
     }
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-
-        return companyDB.transaction('rw', companyDB.invoices, companyDB.clients, companyDB.products, async () => {
-            const _save = companyDB.invoices.put(this).then(_id => {
-                this.id = _id;
-                console.log(this.id);
-                return this.id;
-            });
-            return _save;
+        console.log(companyDB);
+        
+        const _save = companyDB.invoices.put(this).then(_id => {
+            this.id = _id;
+            console.log(this.id);
+            return this.id;
         });
-
+        return _save;
     }
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
-        return companyDB.transaction('rw', companyDB.invoices, companyDB.clients, companyDB.products, async () => {
-            const _delete = companyDB.invoices.delete(this.id as number);
-            return _delete;
-        });
+        return companyDB.invoices.delete(this.id as number);
     }
 
 }

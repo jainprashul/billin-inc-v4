@@ -2,6 +2,7 @@ import faker from "@faker-js/faker";
 import { useLiveQuery } from "dexie-react-hooks";
 import db from "../services/database/db";
 import { Company, User } from "../services/database/model";
+import { Invoices } from "../services/database/model/Invoices";
 
 export const useTests = () => {
     const data = useLiveQuery(async () => {
@@ -51,12 +52,28 @@ export const useTests = () => {
     }
 
     const createInvoice = () => {
-        
+        const inv = new Invoices({
+            companyID: 1,
+            voucherNo: `inv_${faker.random.number()}`,
+            voucherType: 'NON_GST',
+            clientID: 1,
+            productIDs: [1, 2, 3],
+            billingDate: new Date(),
+            categoryID: 1,
+            gstEnabled: false,
+            gstTotal: 0,
+            subTotal: faker.random.number({ min: 1000, max: 10000 }),
+            discount: true,
+            discountValue: faker.random.number({ min: 0, max: 500 }),
+        })
+
+        return inv.save();
     }
 
     return {
         createUser,
         createCompany,
+        createInvoice,
         data
     }
 }
