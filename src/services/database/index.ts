@@ -19,6 +19,8 @@ class AppDB extends Dexie {
             categories: '++id, companyID, name',
         });
         this.companyDB = {};
+        this.loadCompanyDBs();
+
         this.users.mapToClass(User);
         this.companies.mapToClass(Company);
     }
@@ -26,6 +28,13 @@ class AppDB extends Dexie {
     getCompanyDB(companyID : number) : CompanyDB {
         let dbname = `Company_${companyID}`
         return this.companyDB[dbname];
+    }
+
+    async loadCompanyDBs()  {
+        const companies = await this.companies.toArray();
+        companies.forEach((company) => {
+            this.companyDB[`Company_${company.id}`] = new CompanyDB(`Company_${company.id}`);
+        });
     }
 
     createCompanyDB(companyID : number) : CompanyDB {

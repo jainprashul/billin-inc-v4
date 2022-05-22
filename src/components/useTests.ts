@@ -8,7 +8,8 @@ export const useTests = () => {
         return {
             users: await db.users.toArray(),
             companies: await db.companies.toArray(),
-            companyDB : await db.companyDB
+            companyDB: db.companyDB,
+            invoices: await db.companyDB["Company_1"].invoices.toArray(),
         }
     });
 
@@ -47,6 +48,10 @@ export const useTests = () => {
             userIDs: []
         })
         return company.save();
+    }
+
+    const createInvoice = () => {
+        
     }
 
     return {

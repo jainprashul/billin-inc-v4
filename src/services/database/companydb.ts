@@ -1,5 +1,6 @@
 import Dexie from "dexie";
 import { IClient, IConfig, IExpense, IInvoice, ILedger, IProduct, IPurchase, IStockLogs, IStocks } from './model';
+import { Invoices } from "./model/Invoices";
 
 
 export class CompanyDB extends Dexie {
@@ -9,12 +10,12 @@ export class CompanyDB extends Dexie {
     stocklogs! : Dexie.Table<IStockLogs, number>;
     ledger! : Dexie.Table<ILedger, number>;
     purchases! : Dexie.Table<IPurchase, number>;
-    invoices! : Dexie.Table<IInvoice, number>;
+    invoices! : Dexie.Table<Invoices, number>;
     products! : Dexie.Table<IProduct, number>;
     settings! : Dexie.Table<IConfig, number>;
 
     constructor(dbID: string) {
-        super(`company${dbID}`);
+        super(`${dbID}`);
         // Declare tables
         this.version(1).stores({
             expenses: '++id, companyID, name, amount, date, categoryID',
@@ -26,6 +27,7 @@ export class CompanyDB extends Dexie {
             settings: '++id, companyID, name, value',
             notificationlogs: '++id, companyID, clientID, date',
         });
+        this.invoices.mapToClass(Invoices);
     }
 
     getClient(clientID : number) : Promise<IClient> {

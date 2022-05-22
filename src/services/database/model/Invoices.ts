@@ -1,4 +1,5 @@
-import { companyDB } from "../db";
+import db from "../db";
+
 
 export interface IInvoice {
     id?: number;
@@ -54,6 +55,8 @@ export class Invoices implements IInvoice {
     }
 
     save() {
+        const companyDB = db.getCompanyDB(this.companyID)
+
         return companyDB.transaction('rw', companyDB.invoices, companyDB.clients, companyDB.products, async () => {
             const _save = companyDB.invoices.put(this).then(_id => {
                 this.id = _id;
@@ -62,9 +65,11 @@ export class Invoices implements IInvoice {
             });
             return _save;
         });
+
     }
 
     delete() {
+        const companyDB = db.getCompanyDB(this.companyID)
         return companyDB.transaction('rw', companyDB.invoices, companyDB.clients, companyDB.products, async () => {
             const _delete = companyDB.invoices.delete(this.id as number);
             return _delete;

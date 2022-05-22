@@ -4,7 +4,6 @@ import { defaultCompany } from "./model/Company";
 import { AdminRole, defaultUser, UserRole } from "./model/User";
 
 const db = new AppDB();
-export const companyDB = new CompanyDB('Company_1');
 
 // listeners for the database
 db.on("populate", () => {
