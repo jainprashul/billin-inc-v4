@@ -5,7 +5,7 @@ import moment from 'moment';
 type Props = {}
 
 const DataTesting = (props: Props) => {
-    const { createCompany, createUser, data, createInvoice } = useTests();
+    const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger } = useTests();
     console.log(data);
     
     return (
@@ -42,16 +42,32 @@ const DataTesting = (props: Props) => {
             </ul>
             <button onClick={createInvoice}>Create Invoice</button>
             <ul>
-                {data?.invoices.map(invoice => (
+                {data?.invoices?.map(invoice => (
                     <li key={invoice.id}>
                         {moment(invoice.billingDate).format('ln')} - {invoice.voucherNo} - {invoice.discountValue } - {invoice.grossTotal} - {invoice.totalAmount}
                         <button onClick={() => invoice.delete()}>Delete</button>
                     </li>
                 ))}
             </ul>
+            <button onClick={createPurchase}>Create Purchase</button>
+            <ul>
+                {data?.purchases?.map(purchase => (
+                    <li key={purchase.id}>
+                        {moment(purchase.billingDate).format('ln')} - {purchase.voucherNo} - {purchase.discountValue } - {purchase.grossTotal} - {purchase.totalAmount}
+                        <button onClick={() => purchase.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
 
-            
-
+            <button onClick={createClient}>Create Client</button>
+            <ul>
+                {data?.clients?.map(client => (
+                    <li key={client.id}>
+                        {client.name} - {client.details} - {client.gst}
+                        <button onClick={() => client.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
         </div>
     )
 }

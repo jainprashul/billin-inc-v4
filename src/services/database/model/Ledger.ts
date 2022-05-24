@@ -4,38 +4,38 @@ export interface ILedger {
     id?: number;
     voucherNo?: string;
     voucherType?: LedgerVoucherType;
-    cash : number;
-    credit : number;
-    debit : number;
-    payable : number;
-    receivable : number;
-    payableType : PayableType;
-    receivableType : PayableType;
-    companyID : number;
-    clientID : number;
-    date : Date;
-    clientType : ClientType;
+    cash: number;
+    credit: number;
+    debit: number;
+    payable: number;
+    receivable: number;
+    payableType: PayableType;
+    receivableType: PayableType;
+    companyID: number;
+    clientID: number;
+    date: Date;
+    clientType: ClientType;
 }
 
 type ClientType = "CUSTOMER" | "VENDOR" | "EMPLOYEE" | "SUPPLIER";
-type LedgerVoucherType =  "SALES" | "PURCHASE" | "PAYMENT" | "RECEIPT" | "JOURNAL" | "TRANSFER";
-type PayableType =  "CASH" | "UPI" | "NEFT" | "CARD" | "CHEQUE" | "CREDIT" | "DEBIT" | "OTHER";
+type LedgerVoucherType = "SALES" | "PURCHASE" | "PAYMENT" | "RECEIPT" | "JOURNAL" | "TRANSFER";
+type PayableType = "CASH" | "UPI" | "NEFT" | "CARD" | "CHEQUE" | "CREDIT" | "DEBIT" | "OTHER";
 
 export class Ledger implements ILedger {
     id?: number;
     voucherNo?: string;
     voucherType?: LedgerVoucherType;
-    cash : number;
-    credit : number;
-    debit : number;
-    payable : number;
-    receivable : number;
-    payableType : PayableType;
-    receivableType : PayableType;
-    companyID : number;
-    clientID : number;
-    date : Date;
-    clientType : ClientType;
+    cash: number;
+    credit: number;
+    debit: number;
+    payable: number;
+    receivable: number;
+    payableType: PayableType;
+    receivableType: PayableType;
+    companyID: number;
+    clientID: number;
+    date: Date;
+    clientType: ClientType;
 
     constructor(ledger: ILedger) {
         if (ledger.id) this.id = ledger.id;
@@ -56,12 +56,16 @@ export class Ledger implements ILedger {
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-        // console.log(companyDB);
-        const _save = companyDB.ledger.put({...this}).then(_id => {
-            this.id = _id;
-            return this.id;
-        });
-        return _save;
+        try {
+            // console.log(companyDB);
+            const _save = companyDB.ledger.put({ ...this }).then(_id => {
+                this.id = _id;
+                return this.id;
+            });
+            return _save;
+        } catch (error) {
+            console.log('CompanyDB does not exists. \n', error);
+        }
     }
 
     delete() {
