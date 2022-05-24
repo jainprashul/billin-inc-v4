@@ -1,5 +1,5 @@
 import Dexie from "dexie";
-import { Client, Expense, IClient, IConfig, IExpense, IInvoice, ILedger, INotificationLog, Invoices, IProduct, IPurchase, IStockLogs, IStocks, Ledger, Purchase } from './model';
+import { Client, Expense, IClient, IConfig, IExpense, IInvoice, ILedger, INotificationLog, Invoices, IProduct, IPurchase, IStockLogs, IStocks, Ledger, NotificationLog, Purchase } from './model';
 
 
 export class CompanyDB extends Dexie {
@@ -8,11 +8,11 @@ export class CompanyDB extends Dexie {
     stocks! : Dexie.Table<IStocks, number>;
     stocklogs! : Dexie.Table<IStockLogs, number>;
     ledger! : Dexie.Table<Ledger, number>;
-    purchases! : Dexie.Table<Purchase, number>;
-    invoices! : Dexie.Table<Invoices, number>;
+    purchases! : Dexie.Table<Purchase, string>;
+    invoices! : Dexie.Table<Invoices, string>;
     products! : Dexie.Table<IProduct, number>;
     settings! : Dexie.Table<IConfig, number>;
-    notificationlogs! : Dexie.Table<INotificationLog, number>;
+    notificationlogs! : Dexie.Table<NotificationLog, number>;
 
     constructor(dbID: string) {
         super(`${dbID}`);
@@ -21,8 +21,8 @@ export class CompanyDB extends Dexie {
             expenses: '++id, companyID, amount, date, categoryID',
             stocks: '++id, companyID, name, quantity, price, date',
             ledger: '++id, companyID, assetID, clientID, amount, date, categoryID',
-            purchases: '++id, companyID, voucherNo, clientID, date, categoryID',
-            invoices: '++id, companyID, voucherNo, clientID, date, categoryID',
+            purchases: 'id, companyID, voucherNo, clientID, date, categoryID',
+            invoices: 'id, companyID, voucherNo, clientID, date, categoryID',
             clients: '++id, companyID, name, gst , address.city, address.state',
             settings: '++id, companyID, name, value',
             notificationlogs: '++id, companyID, clientID, date',
@@ -32,6 +32,7 @@ export class CompanyDB extends Dexie {
         this.clients.mapToClass(Client);
         this.expenses.mapToClass(Expense);
         this.ledger.mapToClass(Ledger);
+        this.notificationlogs.mapToClass(NotificationLog);
     
     }
 

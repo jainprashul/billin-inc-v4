@@ -1,8 +1,11 @@
+import { nanoid } from "@reduxjs/toolkit";
+import { Transaction } from "dexie";
 import db from "../db";
+import { INotificationLog, NotificationLog } from "./NotificationLog";
 
 
 export interface IInvoice {
-    id?: number;
+    id?: string;
     companyID: number;
     voucherNo: string;
     voucherType: InvoiceVoucherType;
@@ -19,8 +22,8 @@ export interface IInvoice {
     // totalAmount: number;
 }
 
-export class Invoices implements IInvoice {
-    id?: number;
+export class Invoice implements IInvoice {
+    id: string;
     companyID: number;
     voucherNo: string;
     voucherType: InvoiceVoucherType;
@@ -37,7 +40,7 @@ export class Invoices implements IInvoice {
     totalAmount: number;
 
     constructor(invoice: IInvoice) {
-        if (invoice.id) this.id = invoice.id;
+        this.id = invoice.id || `inv_${nanoid(8)}`;
         this.companyID = invoice.companyID;
         this.voucherNo = invoice.voucherNo;
         this.voucherType = invoice.voucherType;
@@ -54,24 +57,62 @@ export class Invoices implements IInvoice {
         this.totalAmount = this.grossTotal - this.discountValue;
     }
 
+    private onCreate(id: string, invoice: Invoice, tx: Transaction) {
+        // console.log('Invoice created', id, invoice);
+        const notify = new NotificationLog({
+            companyID: invoice.companyID,
+            clientID: invoice.clientID,
+            date: new Date(),
+            message: `Invoice ${invoice.voucherNo} created`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            link: `/invoice/${invoice.id}`
+        })
+        notify.save();
+        // companyDB.invoices.hook.creating.unsubscribe(this.onCreate);
+    }
+
+    private onDelete(id: string, invoice: Invoice, tx: Transaction) {
+        // console.log('Invoice deleted', id, invoice);
+        const notify = new NotificationLog({
+            companyID: invoice.companyID,
+            clientID: invoice.clientID,
+            date: new Date(),
+            message: `Invoice ${invoice.voucherNo} deleted`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            link: `/invoice/${invoice.id}`
+        })
+        notify.save();
+        // companyDB.invoices.hook.creating.unsubscribe(this.onCreate);
+    }
+
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-        // console.log(companyDB);
-        try{
-            const _save = companyDB.invoices.put({ ...this }).then(_id => {
-                this.id = _id;
-                console.log(this.id);
-                return this.id;
-            });
-            return _save;
-        } catch (error) {
-            console.log('CompanyDB does not exists. \n', error);
-        }
+
+        companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
+            try {
+                const _save = companyDB.invoices.put({ ...this }).then(_id => {
+                    this.id = _id;
+                    console.log('Invoice saved', _id);
+                    return this.id;
+                });
+                return _save;
+            } catch (error) {
+                console.log('CompanyDB does not exists. \n', error);
+            }
+        })
+        companyDB.invoices.hook('creating', this.onCreate);
     }
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
-        return companyDB.invoices.delete(this.id as number);
+        companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
+            companyDB.invoices.delete(this.id as string).then(() => {
+                console.log('Invoice deleted', this.id);
+            })
+        })
+        companyDB.invoices.hook('deleting', this.onDelete);
     }
 }
 // Ref : Invoices.companyID - Company.id

@@ -1,8 +1,8 @@
 import faker from "@faker-js/faker";
 import { useLiveQuery } from "dexie-react-hooks";
 import db from "../services/database/db";
-import { Client, Company, Ledger, Purchase, User } from "../services/database/model";
-import { Invoices } from "../services/database/model/Invoices";
+import { Client, Company, Ledger, NotificationLog, Purchase, User } from "../services/database/model";
+import { Invoice } from "../services/database/model/Invoices";
 
 export const useTests = () => {
     const data = useLiveQuery(async () => {
@@ -13,6 +13,7 @@ export const useTests = () => {
             invoices: await db.companyDB["Company_1"]?.invoices.toArray(),
             purchases : await db.companyDB["Company_1"]?.purchases.toArray(),
             clients: await db.companyDB["Company_1"]?.clients.toArray(),
+            notifications : await db.companyDB["Company_1"]?.notificationlogs.toArray(),
         }
     });
 
@@ -54,7 +55,7 @@ export const useTests = () => {
     }
 
     const createInvoice = () => {
-        const inv = new Invoices({
+        const inv = new Invoice({
             companyID: 1,
             voucherNo: `inv_${faker.random.number()}`,
             voucherType: 'NON_GST',
@@ -75,7 +76,7 @@ export const useTests = () => {
     const createPurchase = () => {
         const purchase = new Purchase({
             companyID: 1,
-            voucherNo: `inv_${faker.random.number()}`,
+            voucherNo: `pur_${faker.random.number()}`,
             voucherType: 'NON_GST',
             clientID: 1,
             productIDs: [1, 2, 3],
@@ -130,6 +131,20 @@ export const useTests = () => {
         });
         return ledger.save();
     }
+
+    const createNotification = () => {
+        const notification = new NotificationLog({
+            companyID: 1,
+            clientID: 1,
+            message: faker.lorem.paragraph(),
+            date: new Date(),
+            notificationID: 'ntf_'+ faker.random.number(),
+            status: 'NEW',
+            link: '/test',
+        });
+
+        return notification.save();
+    }
             
 
 
@@ -140,6 +155,7 @@ export const useTests = () => {
         createPurchase,
         createClient,
         createLedger,
+        createNotification,
         data
     }
 }

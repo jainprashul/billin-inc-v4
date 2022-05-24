@@ -1,12 +1,12 @@
 import { nanoid } from "@reduxjs/toolkit";
+import Dexie from "dexie";
 import AppDB from ".";
 import CompanyDB from "./companydb";
-import { INotificationLog } from "./model";
-import { defaultCompany } from "./model/Company";
+import { INotificationLog, NotificationLog } from "./model";
+
 import { AdminRole, defaultUser, UserRole } from "./model/User";
 
 const db = new AppDB();
-
 // listeners for the database
 db.on("populate", () => {
     db.roles.bulkPut([AdminRole, UserRole]);
@@ -16,13 +16,19 @@ db.on("populate", () => {
 });
 
 db.on("ready", (dexie) => {
-    console.log("Database ready", dexie);
+    db.loadCompanyDBs().then(() => {
+        console.log("Database ready", db);
+        subscribeCompany();
+    });
 });
 
 
 // listeners for the database tables USERS
 db.users.hook("creating", (id, user, trans) => {
 
+});
+db.companies.hook("creating", (id, company, trans) => {
+    //  console.log(company)
 });
 
 db.users.hook('deleting', (id, user, trans) => {
@@ -39,40 +45,40 @@ db.users.hook('deleting', (id, user, trans) => {
     })
 })
 
-Object.values(db.companyDB).forEach((companyDB) => {
-    companyDB.invoices.hook('creating', (id, invoice, tx) => {
-        // console.log('creating invoice', id, invoice, tx)
-        // console.log('creating invoice', tx.active)
-        const notify : INotificationLog = {
-            companyID: invoice.companyID,
-            clientID: invoice.clientID,
-            date: new Date(),
-            message: `Invoice ${invoice.voucherNo} created`,
-            notificationID : `ntf-${nanoid(8)}`,
-            status: "NEW",
-            link: `/invoice/${invoice.id}`
-        }
-        companyDB.notificationlogs.put(notify);
+function subscribeCompany() {
+    // console.log('subscribeCompany', db.companyDB);
+    Object.values(db.companyDB).forEach((companyDB) => {
+        companyDB.open().catch((err) => {
+            console.log('error opening db', err);
+        });
+
+        companyDB.on('ready', () => {
+            console.log('companyDB ready', companyDB.name);
+        });
+
+        // companyDB.ledger.hook('creating', (id, ledger, tx) => {
+        //     // console.log('creating ledger', tx.active)
+        // })
+
+        // companyDB.invoices.hook('creating', (id, invoice, tx) => {
+        //     console.log('creating invoice', id, invoice, tx)
+        //     console.log('creating invoice', tx.active)
+        //     const notify = new NotificationLog({
+        //         companyID: invoice.companyID,
+        //         clientID: invoice.clientID,
+        //         date: new Date(),
+        //         message: `Invoice ${invoice.voucherNo} created`,
+        //         notificationID: `ntf-${nanoid(8)}`,
+        //         status: "NEW",
+        //         link: `/invoice/${invoice.id}`
+        //     })
+        //     notify.save();
+        //     console.log('notify', notify)
+        // })
+
+
     })
-    companyDB.invoices.hook('deleting', (id, invoice, tx) => {
-        // console.log('deleting invoice', id, invoice, tx)
-        // console.log('deleting invoice', tx.active)
-        const notify : INotificationLog = {
-            companyID: invoice.companyID,
-            clientID: invoice.clientID,
-            date: new Date(),
-            message: `Invoice ${invoice.voucherNo} deleted`,
-            notificationID : `ntf-${nanoid(8)}`,
-            status: "NEW",
-        }
-        companyDB.notificationlogs.put(notify);
-            
-    })
-    companyDB.ledger.hook('creating', (id, ledger, tx) => {
-        // console.log('creating ledger', id, ledger, tx)
-        // console.log('creating ledger', tx.active)
-    })
-})
+}
 
 
 export default db;

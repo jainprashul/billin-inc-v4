@@ -5,7 +5,7 @@ import moment from 'moment';
 type Props = {}
 
 const DataTesting = (props: Props) => {
-    const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger } = useTests();
+    const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger, createNotification } = useTests();
     console.log(data);
     
     return (
@@ -65,6 +65,15 @@ const DataTesting = (props: Props) => {
                     <li key={client.id}>
                         {client.name} - {client.details} - {client.gst}
                         <button onClick={() => client.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
+
+            <button onClick={createNotification}>Create Notif</button>
+            <ul>
+                {data?.notifications?.map(notification => (
+                    <li key={notification.id}>
+                        {moment(notification.date).format('l')} - {notification.message} - {notification.link}
                     </li>
                 ))}
             </ul>

@@ -33,7 +33,9 @@ class AppDB extends Dexie {
     async loadCompanyDBs()  {
         const companies = await this.companies.toArray();
         companies.forEach((company) => {
-            this.companyDB[`Company_${company.id}`] = new CompanyDB(`Company_${company.id}`);
+            let dbname = `Company_${company.id}`
+            let cDB = new CompanyDB(dbname);
+            this.companyDB[dbname] = cDB;
         });
     }
 
