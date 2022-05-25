@@ -6,7 +6,7 @@ type Props = {}
 
 const DataTesting = (props: Props) => {
     const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger, createNotification } = useTests();
-    console.log(data);
+    // console.log(data);
     
     return (
         <div>

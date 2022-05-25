@@ -85,8 +85,9 @@ export class Purchase implements IPurchase {
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-        // console.log(companyDB);
-        companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs , () => {
+        companyDB.purchases.hook.creating.subscribe(this.onCreate);
+
+        return companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs, () => {
             try {
                 const _save = companyDB.purchases.put({ ...this }).then(_id => {
                     this.id = _id;
@@ -100,18 +101,19 @@ export class Purchase implements IPurchase {
         })
 
         // companyDB.purchases.hook("creating", this.onCreate);
-        companyDB.purchases.hook.creating.subscribe(this.onCreate);
+
     }
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
-        companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs , () => {
-        companyDB.purchases.delete(this.id as string).then(_id => {
-            console.log("Purchase deleted", _id);
-            return _id;
-        });
-        })
         companyDB.purchases.hook("deleting", this.onDelete);
+
+        return companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs, () => {
+            return companyDB.purchases.delete(this.id as string).then(() => {
+                console.log("Purchase deleted", this.id);
+                return this.id;
+            });
+        })
     }
 }
 // Ref : Purchase.companyID - Company.id

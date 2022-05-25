@@ -4,7 +4,7 @@ import { Client, Expense, IClient, IConfig, Invoices, IProduct, IStockLogs, ISto
 
 export class CompanyDB extends Dexie {
     clients! : Dexie.Table<Client, string>;
-    expenses! : Dexie.Table<Expense, number>;
+    expenses! : Dexie.Table<Expense, string>;
     stocks! : Dexie.Table<IStocks, number>;
     stocklogs! : Dexie.Table<IStockLogs, number>;
     ledger! : Dexie.Table<Ledger, number>;
@@ -18,7 +18,7 @@ export class CompanyDB extends Dexie {
         super(`${dbID}`);
         // Declare tables
         this.version(1).stores({
-            expenses: '++id, companyID, amount, date, categoryID',
+            expenses: 'id, companyID, amount, date, categoryID',
             stocks: '++id, companyID, name, quantity, price, date',
             ledger: '++id, companyID, assetID, clientID, amount, date, categoryID',
             purchases: 'id, companyID, voucherNo, clientID, date, categoryID',

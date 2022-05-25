@@ -83,9 +83,9 @@ export class Client implements IClient {
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async () => {
-            return companyDB.clients.delete(this.id as string).then(_id => {
-                console.log("Client deleted", _id);
-                return _id;
+            return companyDB.clients.delete(this.id as string).then(() => {
+                console.log("Client deleted", this.id);
+                return this.id;
             });
         })
         companyDB.clients.hook("deleting", this.onDelete);
