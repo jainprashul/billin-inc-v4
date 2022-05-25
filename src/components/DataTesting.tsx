@@ -37,6 +37,7 @@ const DataTesting = (props: Props) => {
                 {data?.users.map(user => (
                     <li key={user.id}>
                         {user.name} - {user.username} - {user.email}
+                        <button onClick={() => user.delete()}>Delete</button>
                     </li>
                 ))}
             </ul>

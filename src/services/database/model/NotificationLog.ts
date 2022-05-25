@@ -3,7 +3,7 @@ import db from "../db";
 export interface INotificationLog {
     id?: number;
     notificationID: string;
-    clientID : number;
+    clientID : string;
     companyID : number;
     date : Date;
     message : string;
@@ -16,7 +16,7 @@ type NotificationStatus = "NEW" | "READ";
 export class NotificationLog implements INotificationLog {
     id?: number;
     notificationID: string;
-    clientID : number;
+    clientID : string;
     companyID : number;
     date : Date;
     message : string;

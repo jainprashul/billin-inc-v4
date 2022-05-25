@@ -8,7 +8,7 @@ export interface IPurchase {
     companyID: number;
     voucherNo: string;
     voucherType: PurchaseVoucherType;
-    clientID: number;
+    clientID: string;
     productIDs: number[];
     billingDate: Date;
     categoryID: number;
@@ -26,7 +26,7 @@ export class Purchase implements IPurchase {
     companyID: number;
     voucherNo: string;
     voucherType: PurchaseVoucherType;
-    clientID: number;
+    clientID: string;
     productIDs: number[];
     billingDate: Date;
     categoryID: number;
@@ -99,7 +99,8 @@ export class Purchase implements IPurchase {
             }
         })
 
-        companyDB.purchases.hook("creating", this.onCreate);
+        // companyDB.purchases.hook("creating", this.onCreate);
+        companyDB.purchases.hook.creating.subscribe(this.onCreate);
     }
 
     delete() {

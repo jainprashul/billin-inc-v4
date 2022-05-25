@@ -1,9 +1,9 @@
 import Dexie from "dexie";
-import { Client, Expense, IClient, IConfig, IExpense, IInvoice, ILedger, INotificationLog, Invoices, IProduct, IPurchase, IStockLogs, IStocks, Ledger, NotificationLog, Purchase } from './model';
+import { Client, Expense, IClient, IConfig, Invoices, IProduct, IStockLogs, IStocks, Ledger, NotificationLog, Purchase } from './model';
 
 
 export class CompanyDB extends Dexie {
-    clients! : Dexie.Table<Client, number>;
+    clients! : Dexie.Table<Client, string>;
     expenses! : Dexie.Table<Expense, number>;
     stocks! : Dexie.Table<IStocks, number>;
     stocklogs! : Dexie.Table<IStockLogs, number>;
@@ -23,7 +23,7 @@ export class CompanyDB extends Dexie {
             ledger: '++id, companyID, assetID, clientID, amount, date, categoryID',
             purchases: 'id, companyID, voucherNo, clientID, date, categoryID',
             invoices: 'id, companyID, voucherNo, clientID, date, categoryID',
-            clients: '++id, companyID, name, gst , address.city, address.state',
+            clients: 'id, companyID, name, gst , address.city, address.state',
             settings: '++id, companyID, name, value',
             notificationlogs: '++id, companyID, clientID, date',
         });
@@ -36,7 +36,7 @@ export class CompanyDB extends Dexie {
     
     }
 
-    getClient(clientID : number) : Promise<IClient> {
+    getClient(clientID : string) : Promise<IClient> {
         return this.clients.get(clientID) as Promise<IClient>;
     }
 }

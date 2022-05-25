@@ -1,7 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
-import { INotificationLog, NotificationLog } from "./NotificationLog";
+import { NotificationLog } from "./NotificationLog";
 
 
 export interface IInvoice {
@@ -9,7 +9,7 @@ export interface IInvoice {
     companyID: number;
     voucherNo: string;
     voucherType: InvoiceVoucherType;
-    clientID: number;
+    clientID: string;
     productIDs: number[];
     billingDate: Date;
     categoryID?: number;
@@ -27,7 +27,7 @@ export class Invoice implements IInvoice {
     companyID: number;
     voucherNo: string;
     voucherType: InvoiceVoucherType;
-    clientID: number;
+    clientID: string;
     productIDs: number[];
     billingDate: Date;
     categoryID?: number;

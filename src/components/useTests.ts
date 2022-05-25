@@ -59,7 +59,7 @@ export const useTests = () => {
             companyID: 1,
             voucherNo: `inv_${faker.random.number()}`,
             voucherType: 'NON_GST',
-            clientID: 1,
+            clientID: 'c_1',
             productIDs: [1, 2, 3],
             billingDate: new Date(),
             categoryID: 1,
@@ -78,7 +78,7 @@ export const useTests = () => {
             companyID: 1,
             voucherNo: `pur_${faker.random.number()}`,
             voucherType: 'NON_GST',
-            clientID: 1,
+            clientID: 'c_1',
             productIDs: [1, 2, 3],
             billingDate: new Date(),
             categoryID: 1,
@@ -135,7 +135,7 @@ export const useTests = () => {
     const createNotification = () => {
         const notification = new NotificationLog({
             companyID: 1,
-            clientID: 1,
+            clientID: 'c_1',
             message: faker.lorem.paragraph(),
             date: new Date(),
             notificationID: 'ntf_'+ faker.random.number(),

@@ -1,5 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
+import { Transaction } from "dexie";
 import db from "../db";
+import { NotificationLog } from "./NotificationLog";
 
 export interface IUser {
     id?: number | string;
@@ -56,6 +58,35 @@ export class User implements IUser {
         });
     }
 
+    private onCreate(id: string, user: User, tx: Transaction) {
+        console.log('USER DB',id , user.companyIDs);
+        user.companyIDs.forEach((companyID) => {
+            const notify = new NotificationLog({
+                companyID,
+                clientID: `usr_${user.username}`,
+                date: new Date(),
+                message: `User ${user.username} created`,
+                notificationID: `ntf-${nanoid(8)}`,
+                status: "NEW",
+            });
+            notify.save();
+        });
+    }
+
+    private onDelete(id: string, user: User, tx: Transaction) {
+        user.companyIDs.forEach((companyID) => {
+            const notify = new NotificationLog({
+                companyID,
+                clientID: `usr_${user.username}`,
+                date: new Date(),
+                message: `User ${user.username} deleted`,
+                notificationID: `ntf-${nanoid(8)}`,
+                status: "NEW",
+            });
+            notify.save();
+        });
+    }
+
     async save() {
         let user = new User({
             id: this.id,
@@ -66,6 +97,8 @@ export class User implements IUser {
             password: this.password,
             companyIDs: this.companyIDs
         });
+
+        db.users.hook.creating.subscribe(this.onCreate);
 
         return db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
             delete user.role;
@@ -91,6 +124,7 @@ export class User implements IUser {
     }
 
     delete(){
+        db.users.hook.deleting.subscribe(this.onDelete);
         db.transaction('rw', db.users, db.companies, async (tx) => {
             db.users.delete(this.id as number);
         });

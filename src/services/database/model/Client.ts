@@ -1,27 +1,30 @@
+import { nanoid } from "@reduxjs/toolkit";
+import { Transaction } from "dexie";
 import db from "../db";
 import { IAddress, IContact } from "./Company";
+import { NotificationLog } from "./NotificationLog";
 
 export interface IClient {
-    id?: number;
-    name : string;
-    details : string;
-    gst : string;
-    address : IAddress;
-    contacts : IContact[];
-    companyID : number;
+    id?: string;
+    name: string;
+    details: string;
+    gst: string;
+    address: IAddress;
+    contacts: IContact[];
+    companyID: number;
 }
 
 export class Client implements IClient {
-    id?: number;
-    name : string;
-    details : string;
-    gst : string;
-    address : IAddress;
-    contacts : IContact[];
+    id: string;
+    name: string;
+    details: string;
+    gst: string;
+    address: IAddress;
+    contacts: IContact[];
     companyID: number;
 
     constructor(client: IClient) {
-        if (client.id) this.id = client.id;
+        this.id = client.id || `c_${nanoid(8)}`;
         this.name = client.name;
         this.details = client.details;
         this.gst = client.gst;
@@ -30,19 +33,61 @@ export class Client implements IClient {
         this.companyID = client.companyID;
     }
 
+    private onCreate(id: string, client: Client, tx: Transaction) {
+        // console.log(id);
+        const notify = new NotificationLog({
+            companyID: client.companyID,
+            clientID: client.id,
+            date: new Date(),
+            message: `Client ${client.name} created`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            link: `/ledger/${client.id}`
+        });
+        notify.save();
+    }
+
+    private onDelete(id: string, client: Client, tx: Transaction) {
+        // console.log(id);
+        const notify = new NotificationLog({
+            companyID: client.companyID,
+            clientID: client.id,
+            date: new Date(),
+            message: `Client ${client.name} deleted`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            link: `/ledger/${client.id}`
+        });
+        notify.save();
+    }
+
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
+        // companyDB.clients.hook("creating", this.onCreate);
+        companyDB.clients.hook.creating.subscribe(this.onCreate);
         // console.log(companyDB);
-        const _save = companyDB.clients.put({...this}).then(_id => {
-            this.id = _id;
-            console.log(this.id);
-            return this.id;
+        companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async () => {
+            try {
+                const _save = companyDB.clients.put({ ...this }).then(_id => {
+                    this.id = _id;
+                    console.log("Client saved", _id);
+                    return this.id;
+                });
+                return _save;
+            } catch (error) {
+                console.log('CompanyDB does not exists. \n', error);
+            }
         });
-        return _save;
     }
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
-        return companyDB.clients.delete(this.id as number);
+        companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async () => {
+            return companyDB.clients.delete(this.id as string).then(_id => {
+                console.log("Client deleted", _id);
+                return _id;
+            });
+        })
+        companyDB.clients.hook("deleting", this.onDelete);
     }
 }
