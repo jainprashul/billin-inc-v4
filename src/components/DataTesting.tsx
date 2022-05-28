@@ -5,10 +5,9 @@ import moment from 'moment';
 type Props = {}
 
 const DataTesting = (props: Props) => {
-    const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger, createNotification, createExpense
-        // createProduct, createStock, createStockLog 
+    const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger, createNotification, createExpense, createProduct, createStockLog, createStock
     } = useTests();
-    console.log(data);
+    // console.log(data);
 
     return (
         <div>
@@ -92,7 +91,7 @@ const DataTesting = (props: Props) => {
                 ))}
             </ul>
 
-            {/* <button onClick={createProduct}>Create Product</button>
+            <button onClick={createProduct}>Create Product</button>
             <ul>
                 {data?.products?.map(product => (
                     <li key={product.id}>
@@ -100,7 +99,27 @@ const DataTesting = (props: Props) => {
                         <button onClick={() => product.delete()}>Delete</button>
                     </li>
                 ))}
-            </ul> */}
+            </ul>
+
+            <button onClick={createStockLog}>Create Stock Log</button>
+            <ul>
+                {data?.stockLogs?.map(stockLog => (
+                    <li key={stockLog.id}>
+                        {moment(stockLog.date).format('l')} - {stockLog.amount} - {stockLog.quantity} - {stockLog.voucherNo} - {stockLog.rate}
+                        <button onClick={() => stockLog.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
+
+            <button onClick={createStock}>Create Stock</button>
+            <ul>
+                {data?.stocks?.map(stock => (
+                    <li key={stock.id}>
+                        {stock.gstRate} - {stock.quantity} - {stock.name}
+                        <button onClick={() => stock.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
 
             <button onClick={createNotification}>Create Notif</button>
             <ul>

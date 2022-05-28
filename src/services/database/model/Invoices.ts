@@ -100,6 +100,7 @@ export class Invoice implements IInvoice {
                 return _save;
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
             }
         })
         companyDB.invoices.hook('creating', this.onCreate);

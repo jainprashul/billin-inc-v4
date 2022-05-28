@@ -87,7 +87,7 @@ export class Purchase implements IPurchase {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.purchases.hook.creating.subscribe(this.onCreate);
 
-        return companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs, () => {
+        return companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs, (tx) => {
             try {
                 const _save = companyDB.purchases.put({ ...this }).then(_id => {
                     this.id = _id;
@@ -97,6 +97,7 @@ export class Purchase implements IPurchase {
                 return _save;
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
             }
         })
 

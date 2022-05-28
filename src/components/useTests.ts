@@ -1,9 +1,8 @@
 import faker from "@faker-js/faker";
 import { useLiveQuery } from "dexie-react-hooks";
 import db from "../services/database/db";
-import { Client, Company, Expense, Ledger, NotificationLog, Purchase, User } from "../services/database/model";
+import { Client, Company, Expense, Ledger, NotificationLog, Product, Purchase, Stock, StockLog, User } from "../services/database/model";
 import { Invoice } from "../services/database/model/Invoices";
-import { ProductUnit } from "../services/database/model/Product";
 // import { StockLog } from "../services/database/model/StockLogs";
 // import { Stock } from "../services/database/model/Stocks";
 
@@ -17,9 +16,9 @@ export const useTests = () => {
             purchases : await db.companyDB[Object.keys(db.companyDB)[0]]?.purchases.toArray(),
             clients: await db.companyDB[Object.keys(db.companyDB)[0]]?.clients.toArray(),
             notifications : await db.companyDB[Object.keys(db.companyDB)[0]]?.notificationlogs.toArray(),
-            // stocks: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocks.toArray(),
-            // stockLogs: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocklogs.toArray(),
-            // products: await db.companyDB[Object.keys(db.companyDB)[0]]?.products.toArray(),
+            stocks: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocks.toArray(),
+            stockLogs: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocklogs.toArray(),
+            products: await db.companyDB[Object.keys(db.companyDB)[0]]?.products.toArray(),
             ledgers: await db.companyDB[Object.keys(db.companyDB)[0]]?.ledger.toArray(),
             expenses: await db.companyDB[Object.keys(db.companyDB)[0]]?.expenses.toArray(),
         }
@@ -165,48 +164,48 @@ export const useTests = () => {
         return expense.save();
     }
 
-    // const createProduct = () => {
-    //     const product = new Product({
-    //         companyID: 1,
-    //         name: faker.commerce.productName(),
-    //         gstRate: 12,
-    //         categoryID: 1,
-    //         hsn: `hsn_${faker.random.number()}`,
-    //         price: faker.random.number({ min: 1000, max: 10000 }),
-    //         quantity: faker.random.number({ min: 1, max: 100 }),
-    //         unit: ProductUnit.KG,
-    //     })
-    //     return product.save();
-    // }
+    const createProduct = () => {
+        const product = new Product({
+            companyID: 1,
+            name: faker.commerce.productName(),
+            gstRate: 12,
+            categoryID: 1,
+            hsn: `hsn_${faker.random.number()}`,
+            price: faker.random.number({ min: 1000, max: 10000 }),
+            quantity: faker.random.number({ min: 1, max: 100 }),
+            unit: 'KG',
+        })
+        return product.save();
+    }
 
-    // const createStock = () => {
-    //     const stock = new Stock({
-    //         companyID: 1,
-    //         gstRate: 12,
-    //         logIDs: [],
-    //         name: faker.commerce.productName(),
-    //         quantity: faker.random.number({ min: 1, max: 100 }),
-    //         purchasePrice: faker.random.number({ min: 1000, max: 10000 }),
-    //         salesPrice: faker.random.number({ min: 1000, max: 10000 }),
-    //         stockValue: faker.random.number({ min: 1000, max: 10000 }),
-    //     })
-    //     return stock.save();
-    // }
+    const createStock = () => {
+        const stock = new Stock({
+            companyID: 1,
+            gstRate: 12,
+            logIDs: [],
+            name: faker.commerce.productName(),
+            quantity: faker.random.number({ min: 1, max: 100 }),
+            purchasePrice: faker.random.number({ min: 1000, max: 10000 }),
+            salesPrice: faker.random.number({ min: 1000, max: 10000 }),
+            stockValue: faker.random.number({ min: 1000, max: 10000 }),
+        })
+        return stock.save();
+    }
 
-    // const createStockLog = () => {
-    //     const stockLog = new StockLog({
-    //         companyID: 1,
-    //         amount: faker.random.number({ min: 1000, max: 10000 }),
-    //         clientID: 'c_1',
-    //         date: new Date(),
-    //         logType: 'PURCHASE',
-    //         quantity: faker.random.number({ min: 1, max: 100 }),
-    //         rate: faker.random.number({ min: 1000, max: 10000 }), 
-    //         stockID: 1,
-    //         voucherNo: `pur_${faker.random.number()}`,
-    //     })
-    //     return stockLog.save();
-    // }
+    const createStockLog = () => {
+        const stockLog = new StockLog({
+            companyID: 1,
+            amount: faker.random.number({ min: 1000, max: 10000 }),
+            clientID: 'c_1',
+            date: new Date(),
+            logType: 'PURCHASE',
+            quantity: faker.random.number({ min: 1, max: 100 }),
+            rate: faker.random.number({ min: 1000, max: 10000 }), 
+            stockID: 1,
+            voucherNo: `pur_${faker.random.number()}`,
+        })
+        return stockLog.save();
+    }
             
 
 
@@ -219,9 +218,9 @@ export const useTests = () => {
         createLedger,
         createNotification,
         createExpense,
-        // createProduct,
-        // createStock,
-        // createStockLog,
+        createProduct,
+        createStock,
+        createStockLog,
         data
     }
 }
