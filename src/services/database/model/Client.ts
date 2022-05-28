@@ -66,7 +66,7 @@ export class Client implements IClient {
         // companyDB.clients.hook("creating", this.onCreate);
         companyDB.clients.hook.creating.subscribe(this.onCreate);
         // console.log(companyDB);
-        companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async () => {
+        companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async (tx) => {
             try {
                 const _save = companyDB.clients.put({ ...this }).then(_id => {
                     this.id = _id;
@@ -76,6 +76,7 @@ export class Client implements IClient {
                 return _save;
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
             }
         });
     }

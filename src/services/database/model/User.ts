@@ -61,29 +61,37 @@ export class User implements IUser {
     private onCreate(id: string, user: User, tx: Transaction) {
         console.log('USER DB',id , user.companyIDs);
         user.companyIDs.forEach((companyID) => {
-            const notify = new NotificationLog({
-                companyID,
-                clientID: `usr_${user.username}`,
-                date: new Date(),
-                message: `User ${user.username} created`,
-                notificationID: `ntf-${nanoid(8)}`,
-                status: "NEW",
-            });
-            notify.save();
+            try {
+                const notify = new NotificationLog({
+                    companyID,
+                    clientID: `usr_${user.username}`,
+                    date: new Date(),
+                    message: `User ${user.username} created`,
+                    notificationID: `ntf-${nanoid(8)}`,
+                    status: "NEW",
+                });
+                notify.save();
+            } catch (error) {
+                console.log('DB Does not exist \n', error);
+            }
         });
     }
 
     private onDelete(id: string, user: User, tx: Transaction) {
         user.companyIDs.forEach((companyID) => {
-            const notify = new NotificationLog({
-                companyID,
-                clientID: `usr_${user.username}`,
-                date: new Date(),
-                message: `User ${user.username} deleted`,
-                notificationID: `ntf-${nanoid(8)}`,
-                status: "NEW",
-            });
-            notify.save();
+            try {
+                const notify = new NotificationLog({
+                    companyID,
+                    clientID: `usr_${user.username}`,
+                    date: new Date(),
+                    message: `User ${user.username} deleted`,
+                    notificationID: `ntf-${nanoid(8)}`,
+                    status: "NEW",
+                });
+                notify.save();
+            } catch (error) {
+                console.log('DB Does not exist \n', error);
+            }
         });
     }
 
@@ -98,7 +106,7 @@ export class User implements IUser {
             companyIDs: this.companyIDs
         });
 
-        db.users.hook.creating.subscribe(this.onCreate);
+        // db.users.hook.creating.subscribe(this.onCreate);
 
         return db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
             delete user.role;
@@ -120,11 +128,12 @@ export class User implements IUser {
 
         }).catch((err) => {
             console.log(err);
+            throw new Error(err);
         });
     }
 
     delete(){
-        db.users.hook.deleting.subscribe(this.onDelete);
+        // db.users.hook.deleting.subscribe(this.onDelete);
         db.transaction('rw', db.users, db.companies, async (tx) => {
             db.users.delete(this.id as number);
         });

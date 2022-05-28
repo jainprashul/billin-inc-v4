@@ -5,9 +5,11 @@ import moment from 'moment';
 type Props = {}
 
 const DataTesting = (props: Props) => {
-    const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger, createNotification } = useTests();
-    // console.log(data);
-    
+    const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger, createNotification, createExpense
+        // createProduct, createStock, createStockLog 
+    } = useTests();
+    console.log(data);
+
     return (
         <div>
             <h1>DB Tests</h1>
@@ -45,7 +47,7 @@ const DataTesting = (props: Props) => {
             <ul>
                 {data?.invoices?.map(invoice => (
                     <li key={invoice.id}>
-                        {moment(invoice.billingDate).format('ln')} - {invoice.voucherNo} - {invoice.discountValue } - {invoice.grossTotal} - {invoice.totalAmount}
+                        {moment(invoice.billingDate).format('l')} - {invoice.voucherNo} - {invoice.discountValue} - {invoice.grossTotal} - {invoice.totalAmount}
                         <button onClick={() => invoice.delete()}>Delete</button>
                     </li>
                 ))}
@@ -54,7 +56,7 @@ const DataTesting = (props: Props) => {
             <ul>
                 {data?.purchases?.map(purchase => (
                     <li key={purchase.id}>
-                        {moment(purchase.billingDate).format('ln')} - {purchase.voucherNo} - {purchase.discountValue } - {purchase.grossTotal} - {purchase.totalAmount}
+                        {moment(purchase.billingDate).format('l')} - {purchase.voucherNo} - {purchase.discountValue} - {purchase.grossTotal} - {purchase.totalAmount}
                         <button onClick={() => purchase.delete()}>Delete</button>
                     </li>
                 ))}
@@ -69,6 +71,36 @@ const DataTesting = (props: Props) => {
                     </li>
                 ))}
             </ul>
+
+            <button onClick={createLedger}>Create Ledger</button>
+            <ul>
+                {data?.ledgers?.map(ledger => (
+                    <li key={ledger.id}>
+                        {moment(ledger.date).format('l')} - {ledger.voucherNo} - {ledger.clientID} - {ledger.credit} - {ledger.debit}
+                        <button onClick={() => ledger.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
+
+            <button onClick={createExpense}>Create Expense</button>
+            <ul>
+                {data?.expenses?.map(expense => (
+                    <li key={expense.id}>
+                        {moment(expense.date).format('l')} - {expense.amount} - {expense.description}
+                        <button onClick={() => expense.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul>
+
+            {/* <button onClick={createProduct}>Create Product</button>
+            <ul>
+                {data?.products?.map(product => (
+                    <li key={product.id}>
+                        {product.name} - {product.gstRate} - {product.unit}
+                        <button onClick={() => product.delete()}>Delete</button>
+                    </li>
+                ))}
+            </ul> */}
 
             <button onClick={createNotification}>Create Notif</button>
             <ul>

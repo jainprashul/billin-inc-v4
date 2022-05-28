@@ -63,7 +63,7 @@ export class Expense implements IExpense {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.expenses.hook.creating.subscribe(this.onCreate);
 
-        return companyDB.transaction("rw", companyDB.expenses, companyDB.notificationlogs, () => {
+        return companyDB.transaction("rw", companyDB.expenses, companyDB.notificationlogs, (tx) => {
             try {
                 const _save = companyDB.expenses.put({...this}).then(_id => {
                     this.id = _id;
@@ -73,6 +73,7 @@ export class Expense implements IExpense {
                 return _save;
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
             }
         })
     }

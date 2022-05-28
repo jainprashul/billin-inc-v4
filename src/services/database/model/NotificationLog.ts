@@ -47,6 +47,23 @@ export class NotificationLog implements INotificationLog {
                 return _save;
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
+            }
+        })
+    }
+
+    deleteAll() {
+        const companyDB = db.getCompanyDB(this.companyID)
+
+        companyDB.transaction('rw', companyDB.notificationlogs, (tx) => {
+            try{
+                const _delete = companyDB.notificationlogs.clear().then(_id => {
+                    console.log('All Notification Deleted');
+                });
+                return _delete;
+            } catch (error) {
+                console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
             }
         })
     }

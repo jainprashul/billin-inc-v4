@@ -1,4 +1,7 @@
+import { nanoid } from "@reduxjs/toolkit";
+import { Transaction } from "dexie";
 import db from "../db";
+import { NotificationLog } from "./NotificationLog";
 
 export interface ILedger {
     id?: number;
@@ -12,7 +15,7 @@ export interface ILedger {
     payableType: PayableType;
     receivableType: PayableType;
     companyID: number;
-    clientID: number;
+    clientID: string;
     date: Date;
     clientType: ClientType;
 }
@@ -33,7 +36,7 @@ export class Ledger implements ILedger {
     payableType: PayableType;
     receivableType: PayableType;
     companyID: number;
-    clientID: number;
+    clientID: string;
     date: Date;
     clientType: ClientType;
 
@@ -54,26 +57,61 @@ export class Ledger implements ILedger {
         this.clientType = ledger.clientType;
     }
 
+    private onCreate(id: string, ledgerItem: Ledger, tx: Transaction) {
+        // console.log(id);
+        const notify = new NotificationLog({
+            companyID: ledgerItem.companyID,
+            clientID: ledgerItem.clientID,
+            date: new Date(),
+            message: `Ledger Entry for ${ledgerItem.voucherNo} created`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+        });
+        notify.save();
+    }
+
+    private onDelete(id: string, ledgerItem: Ledger, tx: Transaction) {
+        // console.log(id);
+        const notify = new NotificationLog({
+            companyID: ledgerItem.companyID,
+            clientID: ledgerItem.clientID,
+            date: new Date(),
+            message: `Ledger Entry for ${ledgerItem.voucherNo} deleted`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            link: `/expense/${ledgerItem.id}`
+        });
+        notify.save();
+    }
+
+
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-        try {
-            // console.log(companyDB);
-            const _save = companyDB.ledger.put({ ...this }).then(_id => {
-                this.id = _id;
-                return this.id;
-            });
-            return _save;
-        } catch (error) {
-            console.log('CompanyDB does not exists. \n', error);
-        }
+        return companyDB.transaction("rw", companyDB.ledger, companyDB.notificationlogs, async (tx) => {
+            try {
+                // console.log(companyDB);
+                const _save = companyDB.ledger.put({ ...this }).then(_id => {
+                    this.id = _id;
+                    return this.id;
+                });
+                return _save;
+            } catch (error) {
+                console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
+            }
+        });
     }
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
-        return companyDB.ledger.delete(this.id as number);
+        return companyDB.transaction("rw", companyDB.ledger, companyDB.notificationlogs, async (tx) => {
+            return companyDB.ledger.delete(this.id as number).then(_id => {
+                console.log("Ledger deleted", this);
+                return this.id;
+            });
+        });
     }
 }
-
 // Ref : Ledger.voucherID - Purchase.id
 // Ref : Ledger.voucherID - Invoices.id
 // Ref : Ledger.clientID - Client.id
