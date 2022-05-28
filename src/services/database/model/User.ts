@@ -106,8 +106,7 @@ export class User implements IUser {
             companyIDs: this.companyIDs
         });
 
-        // db.users.hook.creating.subscribe(this.onCreate);
-
+        db.users.hook.creating.subscribe(this.onCreate);
         return db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
             delete user.role;
             return db.users.orderBy('username').keys(async (usernames) => {
@@ -133,7 +132,7 @@ export class User implements IUser {
     }
 
     delete(){
-        // db.users.hook.deleting.subscribe(this.onDelete);
+        db.users.hook.deleting.subscribe(this.onDelete);
         db.transaction('rw', db.users, db.companies, async (tx) => {
             db.users.delete(this.id as number);
         });

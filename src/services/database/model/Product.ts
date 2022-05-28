@@ -1,18 +1,19 @@
 import { nanoid } from "@reduxjs/toolkit";
+import { isVisible } from "@testing-library/user-event/dist/types/utils";
 import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
 
 export interface IProduct {
     id?: string;
-    name : string;
-    categoryID? : number;
-    gstRate : GstRate;
-    hsn : string;
-    price : number;
-    quantity : number;
-    unit : ProductUnit;
-    companyID : number;
+    name: string;
+    categoryID?: number;
+    gstRate: GstRate;
+    hsn: string;
+    price: number;
+    quantity: number;
+    unit: ProductUnit;
+    companyID: number;
 }
 
 type ProductUnit = "KG" | "L" | "PCS" | "BOX" | "BAG" | "BOTTLE" | "CARTON";
@@ -21,16 +22,16 @@ type GstRate = 0 | 5 | 12 | 18 | 28;
 
 export class Product implements IProduct {
     id: string;
-    name : string;
-    categoryID? : number;
-    gstRate : GstRate;
-    hsn : string;
-    price : number;
-    quantity : number;
-    unit : ProductUnit;
-    companyID : number;
-    gstAmount : number;
-    totalAmont : number; 
+    name: string;
+    categoryID?: number;
+    gstRate: GstRate;
+    hsn: string;
+    price: number;
+    quantity: number;
+    unit: ProductUnit;
+    companyID: number;
+    gstAmount: number;
+    totalAmont: number;
     grossAmount: number;
 
     constructor(product: IProduct) {
@@ -57,7 +58,8 @@ export class Product implements IProduct {
             message: `Product ${product.id} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/stock/${product.id}`
+            link: `/stock/${product.id}`,
+            isVisible: true
         });
         notify.save();
     }
@@ -71,7 +73,7 @@ export class Product implements IProduct {
             message: `Product ${product.id} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-
+            isVisible: true
         });
         notify.save();
     }
@@ -82,7 +84,7 @@ export class Product implements IProduct {
 
         return companyDB.transaction("rw", companyDB.products, companyDB.notificationlogs, (tx) => {
             try {
-                const _save = companyDB.products.put({...this}).then(_id => {
+                const _save = companyDB.products.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Product saved", _id);
                     return this.id;
@@ -92,7 +94,7 @@ export class Product implements IProduct {
                 console.log('CompanyDB does not exists. \n', error);
                 tx.abort()
             }
-        }); 
+        });
     }
 
     delete() {
@@ -110,6 +112,6 @@ export class Product implements IProduct {
                 console.log('CompanyDB does not exists. \n', error);
                 tx.abort();
             }
-        }); 
+        });
     }
 }

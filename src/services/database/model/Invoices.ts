@@ -1,4 +1,5 @@
 import { nanoid } from "@reduxjs/toolkit";
+import { isVisible } from "@testing-library/user-event/dist/types/utils";
 import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
@@ -66,7 +67,8 @@ export class Invoice implements IInvoice {
             message: `Invoice ${invoice.voucherNo} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/invoice/${invoice.id}`
+            link: `/invoice/${invoice.id}`,
+            isVisible: true
         })
         notify.save();
         // companyDB.invoices.hook.creating.unsubscribe(this.onCreate);
@@ -81,7 +83,8 @@ export class Invoice implements IInvoice {
             message: `Invoice ${invoice.voucherNo} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/invoice/${invoice.id}`
+            link: `/invoice/${invoice.id}`,
+            isVisible: true
         })
         notify.save();
         // companyDB.invoices.hook.creating.unsubscribe(this.onCreate);
@@ -89,8 +92,9 @@ export class Invoice implements IInvoice {
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
+        companyDB.invoices.hook('creating', this.onCreate);
 
-        companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
+        return companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
             try {
                 const _save = companyDB.invoices.put({ ...this }).then(_id => {
                     this.id = _id;
@@ -103,17 +107,18 @@ export class Invoice implements IInvoice {
                 tx.abort();
             }
         })
-        companyDB.invoices.hook('creating', this.onCreate);
     }
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
-        companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
-            companyDB.invoices.delete(this.id as string).then(() => {
+        companyDB.invoices.hook('deleting', this.onDelete);
+
+        return companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
+            return companyDB.invoices.delete(this.id as string).then(() => {
                 console.log('Invoice deleted', this.id);
+                return this.id;
             })
         })
-        companyDB.invoices.hook('deleting', this.onDelete);
     }
 }
 // Ref : Invoices.companyID - Company.id

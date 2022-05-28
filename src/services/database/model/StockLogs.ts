@@ -72,7 +72,8 @@ export class StockLog implements IStockLogs {
     }
 
     save() {
-        const companyDB = db.getCompanyDB(this.companyID)
+        const companyDB = db.getCompanyDB(this.companyID);
+        companyDB.stocklogs.hook.creating.subscribe(this.onCreate);
 
         return companyDB.transaction("rw", companyDB.stocklogs, companyDB.stocks, companyDB.notificationlogs, async (tx) => {
             try {
@@ -92,6 +93,7 @@ export class StockLog implements IStockLogs {
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
+        companyDB.stocklogs.hook.deleting.subscribe(this.onDelete);
 
         return companyDB.transaction("rw", companyDB.stocklogs, companyDB.stocks, companyDB.notificationlogs, async (tx) => {
             try {

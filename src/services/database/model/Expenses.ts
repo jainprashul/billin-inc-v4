@@ -1,4 +1,5 @@
 import { nanoid } from "@reduxjs/toolkit";
+import { isVisible } from "@testing-library/user-event/dist/types/utils";
 import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
@@ -40,7 +41,8 @@ export class Expense implements IExpense {
             message: `Expense ${expense.description} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/expense/${expense.id}`
+            link: `/expense/${expense.id}`,
+            isVisible: true
         });
         notify.save();
     }
@@ -54,7 +56,8 @@ export class Expense implements IExpense {
             message: `Expense ${expense.description} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/expense/${expense.id}`
+            link: `/expense/${expense.id}`,
+            isVisible: true
         });
         notify.save();
     }

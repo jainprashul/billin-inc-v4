@@ -1,4 +1,5 @@
 import { nanoid } from "@reduxjs/toolkit";
+import { isVisible } from "@testing-library/user-event/dist/types/utils";
 import { Transaction } from "dexie";
 import db from "../db";
 import { IAddress, IContact } from "./Company";
@@ -42,7 +43,8 @@ export class Client implements IClient {
             message: `Client ${client.name} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/ledger/${client.id}`
+            link: `/ledger/${client.id}`,
+            isVisible: true
         });
         notify.save();
     }
@@ -56,17 +58,17 @@ export class Client implements IClient {
             message: `Client ${client.name} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/ledger/${client.id}`
+            link: `/ledger/${client.id}`,
+            isVisible: true
         });
         notify.save();
     }
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-        // companyDB.clients.hook("creating", this.onCreate);
         companyDB.clients.hook.creating.subscribe(this.onCreate);
         // console.log(companyDB);
-        companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async (tx) => {
+        return companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async (tx) => {
             try {
                 const _save = companyDB.clients.put({ ...this }).then(_id => {
                     this.id = _id;
@@ -83,12 +85,13 @@ export class Client implements IClient {
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
-        companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async () => {
+        companyDB.clients.hook("deleting", this.onDelete);
+
+        return companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async () => {
             return companyDB.clients.delete(this.id as string).then(() => {
                 console.log("Client deleted", this.id);
                 return this.id;
             });
         })
-        companyDB.clients.hook("deleting", this.onDelete);
     }
 }

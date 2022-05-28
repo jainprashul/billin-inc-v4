@@ -87,6 +87,8 @@ export class Ledger implements ILedger {
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
+        companyDB.ledger.hook.creating.subscribe(this.onCreate);
+
         return companyDB.transaction("rw", companyDB.ledger, companyDB.notificationlogs, async (tx) => {
             try {
                 // console.log(companyDB);
@@ -104,9 +106,10 @@ export class Ledger implements ILedger {
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
+        companyDB.ledger.hook.deleting.subscribe(this.onDelete);
         return companyDB.transaction("rw", companyDB.ledger, companyDB.notificationlogs, async (tx) => {
             return companyDB.ledger.delete(this.id as number).then(_id => {
-                console.log("Ledger deleted", this);
+                console.log("Ledger deleted", this.id);
                 return this.id;
             });
         });

@@ -51,7 +51,8 @@ export class Stock implements IStocks {
             message: `${stock.name} has been added`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/stock/${stock.id}`
+            link: `/stock/${stock.id}`,
+            isVisible: true
         });
         notify.save();
     }
@@ -65,7 +66,8 @@ export class Stock implements IStocks {
             message: `${stock.name} has been removed`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/stock/${stock.id}`
+            link: `/stock/${stock.id}`,
+            isVisible: true
         });
         notify.save();
     }

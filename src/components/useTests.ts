@@ -15,7 +15,7 @@ export const useTests = () => {
             invoices: await db.companyDB[Object.keys(db.companyDB)[0]]?.invoices.toArray(),
             purchases : await db.companyDB[Object.keys(db.companyDB)[0]]?.purchases.toArray(),
             clients: await db.companyDB[Object.keys(db.companyDB)[0]]?.clients.toArray(),
-            notifications : await db.companyDB[Object.keys(db.companyDB)[0]]?.notificationlogs.toArray(),
+            notifications : await db.companyDB[Object.keys(db.companyDB)[0]]?.notificationlogs.orderBy("date").filter((x)=> x.isVisible ).reverse().toArray(),
             stocks: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocks.toArray(),
             stockLogs: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocklogs.toArray(),
             products: await db.companyDB[Object.keys(db.companyDB)[0]]?.products.toArray(),

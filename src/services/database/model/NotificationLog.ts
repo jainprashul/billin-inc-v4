@@ -9,6 +9,7 @@ export interface INotificationLog {
     message : string;
     link? : string;
     status : NotificationStatus;
+    isVisible? : boolean;
 }
 
 type NotificationStatus = "NEW" | "READ";
@@ -22,6 +23,7 @@ export class NotificationLog implements INotificationLog {
     message : string;
     link? : string;
     status : NotificationStatus;
+    isVisible: boolean;
 
     constructor(notificationLog: INotificationLog) {
         if (notificationLog.id) this.id = notificationLog.id;
@@ -32,6 +34,7 @@ export class NotificationLog implements INotificationLog {
         this.message = notificationLog.message;
         this.link = notificationLog.link;
         this.status = notificationLog.status;
+        this.isVisible = notificationLog.isVisible || false;
     }
 
     save() {
