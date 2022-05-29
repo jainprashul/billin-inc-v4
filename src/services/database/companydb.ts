@@ -3,16 +3,16 @@ import { Client, Expense, IConfig, Invoices, Ledger, NotificationLog, Product, P
 
 
 export class CompanyDB extends Dexie {
-    clients! : Dexie.Table<Client, string>;
-    expenses! : Dexie.Table<Expense, string>;
-    stocks! : Dexie.Table<Stock, string>;
-    stocklogs! : Dexie.Table<StockLog, string>;
-    ledger! : Dexie.Table<Ledger, number>;
-    purchases! : Dexie.Table<Purchase, string>;
-    invoices! : Dexie.Table<Invoices, string>;
-    products! : Dexie.Table<Product, string>;
-    settings! : Dexie.Table<IConfig, number>;
-    notificationlogs! : Dexie.Table<NotificationLog, number>;
+    clients!: Dexie.Table<Client, string>;
+    expenses!: Dexie.Table<Expense, string>;
+    stocks!: Dexie.Table<Stock, string>;
+    stocklogs!: Dexie.Table<StockLog, string>;
+    ledger!: Dexie.Table<Ledger, number>;
+    purchases!: Dexie.Table<Purchase, string>;
+    invoices!: Dexie.Table<Invoices, string>;
+    products!: Dexie.Table<Product, string>;
+    settings!: Dexie.Table<IConfig, number>;
+    notificationlogs!: Dexie.Table<NotificationLog, number>;
 
     constructor(dbID: string) {
         super(`${dbID}`);
@@ -38,10 +38,10 @@ export class CompanyDB extends Dexie {
         this.products.mapToClass(Product);
         this.stocklogs.mapToClass(StockLog);
         this.stocks.mapToClass(Stock);
-    
+
     }
 
-    getClient(clientID : string) : Promise<Client> {
+    getClient(clientID: string): Promise<Client> {
         return this.clients.get(clientID) as Promise<Client>;
     }
 }

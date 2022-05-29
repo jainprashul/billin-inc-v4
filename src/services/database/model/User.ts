@@ -63,7 +63,7 @@ export class User implements IUser {
     }
 
     private onCreate(id: string, user: User, tx: Transaction) {
-        console.log('USER DB',id , user.companyIDs);
+        console.log('USER DB', id, user.companyIDs);
         user.companyIDs.forEach((companyID) => {
             try {
                 const notify = new NotificationLog({
@@ -136,7 +136,7 @@ export class User implements IUser {
         });
     }
 
-    delete(){
+    delete() {
         db.users.hook.deleting.subscribe(this.onDelete);
         db.transaction('rw', db.users, db.companies, async (tx) => {
             db.users.delete(this.id as number);

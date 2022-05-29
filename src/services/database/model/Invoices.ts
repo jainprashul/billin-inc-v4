@@ -68,8 +68,7 @@ export class Invoice implements IInvoice {
         const companyDB = db.getCompanyDB(this.companyID)
         return companyDB.transaction('rw', companyDB.products, async (tx) => {
             const products = await companyDB.products.where('voucherID').equals(this.id).toArray();
-            console.log('Invoice products', products);
-            
+            // console.log('Invoice products', products);
             this.products = products;
         })
     }

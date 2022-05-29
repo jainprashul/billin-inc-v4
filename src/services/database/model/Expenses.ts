@@ -32,7 +32,6 @@ export class Expense implements IExpense {
     }
 
     private onCreate(id: string, expense: Expense, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: expense.companyID,
             clientID: `${expense.expenseType}_${expense.id}`,
@@ -47,7 +46,6 @@ export class Expense implements IExpense {
     }
 
     private onDelete(id: string, expense: Expense, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: expense.companyID,
             clientID: `${expense.expenseType}_${expense.id}`,
@@ -67,7 +65,7 @@ export class Expense implements IExpense {
 
         return companyDB.transaction("rw", companyDB.expenses, companyDB.notificationlogs, (tx) => {
             try {
-                const _save = companyDB.expenses.put({...this}).then(_id => {
+                const _save = companyDB.expenses.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Expense saved", _id);
                     return this.id;

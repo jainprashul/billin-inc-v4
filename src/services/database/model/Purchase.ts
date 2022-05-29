@@ -57,18 +57,18 @@ export class Purchase implements IPurchase {
         this.discount = purchase.discount;
         this.discountValue = purchase.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
-                // this.loadProducts();
-                Object.defineProperty(this, 'products', {
-                    enumerable: false,
-                })
+        // this.loadProducts();
+        Object.defineProperty(this, 'products', {
+            enumerable: false,
+        })
     }
 
     loadProducts() {
         const companyDB = db.getCompanyDB(this.companyID)
         return companyDB.transaction('rw', companyDB.products, async (tx) => {
             const products = await companyDB.products.where('voucherID').equals(this.id).toArray();
-            console.log('Purchase products', products);
-            
+            // console.log('Purchase products', products);
+
             this.products = products;
         })
     }

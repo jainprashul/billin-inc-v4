@@ -33,7 +33,7 @@ export const useTests = () => {
             expenses: await db.companyDB[Object.keys(db.companyDB)[0]]?.expenses.toArray(),
         }
     });
-    console.log(data?.purchases);
+    // console.log(data?.purchases);
 
 
     const createUser = () => {
@@ -45,8 +45,6 @@ export const useTests = () => {
             password: faker.internet.password(8),
             companyIDs: [1]
         });
-        console.log(user);
-
         user.save();
     }
 

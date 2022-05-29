@@ -7,12 +7,12 @@ export interface ICompany {
     contacts: IContact[];
     gst: string;
     email?: string;
-    configID? : number;
+    configID?: number;
     lastBackupID?: string;
     lastBackupName?: string;
-    lastGSTInvoiceNo : number;
-    lastInvoiceNo : number;
-    userIDs : Set<number>;
+    lastGSTInvoiceNo: number;
+    lastInvoiceNo: number;
+    userIDs: Set<number>;
     createdBy?: string;
 }
 
@@ -23,12 +23,12 @@ export class Company implements ICompany {
     contacts: IContact[];
     gst: string;
     email?: string;
-    configID? : number;
+    configID?: number;
     lastBackupID?: string;
     lastBackupName?: string;
-    lastGSTInvoiceNo : number;
-    lastInvoiceNo : number;
-    userIDs : Set<number>;
+    lastGSTInvoiceNo: number;
+    lastInvoiceNo: number;
+    userIDs: Set<number>;
     createdAt: Date;
     createdBy?: string;
     constructor(company: ICompany) {
@@ -49,11 +49,11 @@ export class Company implements ICompany {
     }
 
     async save() {
-        let company = new Company({...this})
-        return db.transaction('rw', db.companies, db.users, db.roles,  async () => {
-            const _save =  db.companies.put(company).then(_id => {
+        let company = new Company({ ...this })
+        return db.transaction('rw', db.companies, db.users, db.roles, async () => {
+            const _save = db.companies.put(company).then(_id => {
                 this.id = _id;
-                console.log(this.id);
+                console.log('Company Saved', this.id);
                 // create a company database
                 return db.createCompanyDB(_id);
             });

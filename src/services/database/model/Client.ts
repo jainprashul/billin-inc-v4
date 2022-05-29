@@ -1,5 +1,4 @@
 import { nanoid } from "@reduxjs/toolkit";
-import { isVisible } from "@testing-library/user-event/dist/types/utils";
 import { Transaction } from "dexie";
 import db from "../db";
 import { IAddress, IContact } from "./Company";
@@ -35,7 +34,6 @@ export class Client implements IClient {
     }
 
     private onCreate(id: string, client: Client, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: client.companyID,
             clientID: client.id,
@@ -50,7 +48,6 @@ export class Client implements IClient {
     }
 
     private onDelete(id: string, client: Client, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: client.companyID,
             clientID: client.id,
@@ -67,7 +64,6 @@ export class Client implements IClient {
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.clients.hook.creating.subscribe(this.onCreate);
-        // console.log(companyDB);
         return companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async (tx) => {
             try {
                 const _save = companyDB.clients.put({ ...this }).then(_id => {

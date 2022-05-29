@@ -3,11 +3,11 @@ import CompanyDB from './companydb';
 import { Company, ICategory, IRole, User } from './model';
 class AppDB extends Dexie {
 
-    companyDB : {[key : string] : CompanyDB}
-    users! : Dexie.Table<User, number>;
-    roles! : Dexie.Table<IRole, number>;
-    companies! : Dexie.Table<Company, number>;
-    categories! : Dexie.Table<ICategory, number>;
+    companyDB: { [key: string]: CompanyDB }
+    users!: Dexie.Table<User, number>;
+    roles!: Dexie.Table<IRole, number>;
+    companies!: Dexie.Table<Company, number>;
+    categories!: Dexie.Table<ICategory, number>;
 
     constructor() {
         super('BILLIN_DB');
@@ -25,12 +25,12 @@ class AppDB extends Dexie {
         this.companies.mapToClass(Company);
     }
 
-    getCompanyDB(companyID : number) : CompanyDB {
+    getCompanyDB(companyID: number): CompanyDB {
         let dbname = `Company_${companyID}`
         return this.companyDB[dbname];
     }
 
-    async loadCompanyDBs()  {
+    async loadCompanyDBs() {
         const companies = await this.companies.toArray();
         companies.forEach((company) => {
             let dbname = `Company_${company.id}`
@@ -39,16 +39,16 @@ class AppDB extends Dexie {
         });
     }
 
-    createCompanyDB(companyID : number) : CompanyDB {
-        console.log('createCompanyDB', companyID);
+    createCompanyDB(companyID: number): CompanyDB {
+        // console.log('createCompanyDB', companyID);
         let dbname = `Company_${companyID}`
         let newDB = new CompanyDB(dbname);
         newDB.on('populate', () => {
             console.log('populate', dbname);
         });
         this.companyDB[dbname] = newDB;
-        console.log(this.companyDB);
-        
+        // console.log(this.companyDB);
+
         return newDB;
     }
 }

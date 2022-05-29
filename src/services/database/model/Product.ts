@@ -74,13 +74,9 @@ export class Product implements IProduct {
     removeFromVoucher() {
         const companyDB = db.getCompanyDB(this.companyID)
         if (this.voucherID.startsWith("inv_")) {
-            console.log("invoice");
             companyDB.invoices.get(this.voucherID).then(invoice => {
-                console.log(invoice?.id);
                 if (invoice) {
                     invoice.productIDs.delete(this.id);
-                    console.log(invoice.productIDs);
-                    
                     companyDB.invoices.update(invoice.id, invoice);
                 }
             });
@@ -95,7 +91,6 @@ export class Product implements IProduct {
     }
 
     private onCreate(id: number, product: Product, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: product.companyID,
             clientID: `${product.name}_${product.id}`,
@@ -110,7 +105,6 @@ export class Product implements IProduct {
     }
 
     private onDelete(id: number, product: Product, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: product.companyID,
             clientID: `${product.name}_${product.id}`,

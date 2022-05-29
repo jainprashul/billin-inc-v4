@@ -3,13 +3,13 @@ import db from "../db";
 export interface INotificationLog {
     id?: number;
     notificationID: string;
-    clientID : string;
-    companyID : number;
-    date : Date;
-    message : string;
-    link? : string;
-    status : NotificationStatus;
-    isVisible? : boolean;
+    clientID: string;
+    companyID: number;
+    date: Date;
+    message: string;
+    link?: string;
+    status: NotificationStatus;
+    isVisible?: boolean;
 }
 
 type NotificationStatus = "NEW" | "READ";
@@ -17,12 +17,12 @@ type NotificationStatus = "NEW" | "READ";
 export class NotificationLog implements INotificationLog {
     id?: number;
     notificationID: string;
-    clientID : string;
-    companyID : number;
-    date : Date;
-    message : string;
-    link? : string;
-    status : NotificationStatus;
+    clientID: string;
+    companyID: number;
+    date: Date;
+    message: string;
+    link?: string;
+    status: NotificationStatus;
     isVisible: boolean;
 
     constructor(notificationLog: INotificationLog) {
@@ -41,10 +41,10 @@ export class NotificationLog implements INotificationLog {
         const companyDB = db.getCompanyDB(this.companyID)
 
         companyDB.transaction('rw', companyDB.notificationlogs, (tx) => {
-            try{
+            try {
                 const _save = companyDB.notificationlogs.put({ ...this }).then(_id => {
                     this.id = _id;
-                    console.log('Notification Created',this.id);
+                    console.log('Notification Created', this.id);
                     return this.id;
                 });
                 return _save;
@@ -59,7 +59,7 @@ export class NotificationLog implements INotificationLog {
         const companyDB = db.getCompanyDB(this.companyID)
 
         companyDB.transaction('rw', companyDB.notificationlogs, (tx) => {
-            try{
+            try {
                 const _delete = companyDB.notificationlogs.clear().then(_id => {
                     console.log('All Notification Deleted');
                 });

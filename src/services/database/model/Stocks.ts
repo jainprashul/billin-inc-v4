@@ -6,14 +6,14 @@ import { StockLog } from "./StockLogs";
 
 export interface IStocks {
     id?: string;
-    name : string;
-    quantity : number;
-    salesPrice : number;
-    purchasePrice : number;
-    stockValue : number;
-    gstRate : number;
-    logIDs : Set<string>;
-    companyID : number;
+    name: string;
+    quantity: number;
+    salesPrice: number;
+    purchasePrice: number;
+    stockValue: number;
+    gstRate: number;
+    logIDs: Set<string>;
+    companyID: number;
 }
 
 // Ref : Stocks.logID > StockLogs.id
@@ -22,14 +22,14 @@ export interface IStocks {
 
 export class Stock implements IStocks {
     id: string;
-    name : string;
-    quantity : number;
-    salesPrice : number;
-    purchasePrice : number;
-    stockValue : number;
-    gstRate : number;
-    logIDs : Set<string>;
-    companyID : number;
+    name: string;
+    quantity: number;
+    salesPrice: number;
+    purchasePrice: number;
+    stockValue: number;
+    gstRate: number;
+    logIDs: Set<string>;
+    companyID: number;
     stockLogs: StockLog[] | undefined;
 
     constructor(stock: IStocks) {
@@ -50,13 +50,12 @@ export class Stock implements IStocks {
     }
 
     async loadStockLogs() {
-        const companyDB =  db.getCompanyDB(this.companyID)
-        const logs = await companyDB.stocklogs.where('stockID').equals(this.id).toArray();        
+        const companyDB = db.getCompanyDB(this.companyID)
+        const logs = await companyDB.stocklogs.where('stockID').equals(this.id).toArray();
         this.stockLogs = logs
     }
 
     private onCreate(id: number, stock: Stock, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: stock.companyID,
             clientID: `${stock.name}_${stock.id}`,
@@ -71,7 +70,6 @@ export class Stock implements IStocks {
     }
 
     private onDelete(id: number, stock: Stock, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: stock.companyID,
             clientID: `${stock.name}_${stock.id}`,
@@ -98,7 +96,7 @@ export class Stock implements IStocks {
                     });
                 });
                 return _save;
-                
+
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
                 tx.abort();

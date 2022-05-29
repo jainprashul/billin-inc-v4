@@ -31,5 +31,5 @@ export type {
 }
 
 export {
-   Company, User, Purchase, Invoice as Invoices, Client, Expense, Ledger, NotificationLog, Product, StockLog, Stock
+    Company, User, Purchase, Invoice as Invoices, Client, Expense, Ledger, NotificationLog, Product, StockLog, Stock
 }

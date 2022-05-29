@@ -45,7 +45,6 @@ export class StockLog implements IStockLogs {
     }
 
     private onCreate(id: string, stockLogs: StockLog, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: stockLogs.companyID,
             clientID: stockLogs.clientID,
@@ -59,7 +58,6 @@ export class StockLog implements IStockLogs {
     }
 
     private onDelete(id: string, stockLogs: StockLog, tx: Transaction) {
-        // console.log(id);
         const notify = new NotificationLog({
             companyID: stockLogs.companyID,
             clientID: stockLogs.clientID,
@@ -72,7 +70,7 @@ export class StockLog implements IStockLogs {
         notify.save();
     }
 
-    private addtoStock(companyDB : CompanyDB) {
+    private addtoStock(companyDB: CompanyDB) {
         // update stock logids
         companyDB.stocks.get(this.stockID).then(stock => {
             if (stock) {
@@ -82,7 +80,7 @@ export class StockLog implements IStockLogs {
         });
     }
 
-    private deletefromStock(companyDB : CompanyDB) {
+    private deletefromStock(companyDB: CompanyDB) {
         // update stock logids
         companyDB.stocks.get(this.stockID).then(stock => {
             if (stock) {

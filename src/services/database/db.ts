@@ -1,8 +1,4 @@
-import { nanoid } from "@reduxjs/toolkit";
-import Dexie from "dexie";
 import AppDB from ".";
-import CompanyDB from "./companydb";
-import { INotificationLog, NotificationLog } from "./model";
 
 import { AdminRole, defaultUser, UserRole } from "./model/User";
 
@@ -21,7 +17,6 @@ db.on("ready", (dexie) => {
         subscribeCompany();
     });
 });
-
 
 // listeners for the database tables USERS
 db.users.hook("creating", (id, user, trans) => {
