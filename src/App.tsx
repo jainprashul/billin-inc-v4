@@ -4,14 +4,16 @@ import { SnackbarProvider } from 'notistack';
 
 import './styles/App.css';
 import { ThemeProvider } from '@mui/material';
+import { theme } from './styles/theme';
 
 function App() {
   return (
     <div className="App">
-
+      <ThemeProvider theme={theme}>
       <SnackbarProvider maxSnack={3}>
         <AppRoutes />
       </SnackbarProvider>
+      </ThemeProvider>
 
     </div>
   );
