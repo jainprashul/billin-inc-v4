@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React from 'react';
+import AppRoutes from './routes/AppRoutes';
+import { SnackbarProvider } from 'notistack';
+
 import './styles/App.css';
-import { DataTesting } from './components';
+import { ThemeProvider } from '@mui/material';
 
 function App() {
   return (
     <div className="App">
-      <DataTesting />
+
+      <SnackbarProvider maxSnack={3}>
+        <AppRoutes />
+      </SnackbarProvider>
+
     </div>
   );
 }
