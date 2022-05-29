@@ -26,7 +26,7 @@ export class CompanyDB extends Dexie {
             clients: 'id, companyID, name, gst , address.city, address.state',
             settings: '++id, companyID, name, value',
             notificationlogs: '++id, companyID, clientID, date, isVisible',
-            products: 'id, companyID, name, hsn, unit',
+            products: 'id, companyID, name, hsn, unit, voucherID, categoryID',
             stocklogs: '++id, stockID, voucherNo, logType, companyID, clientID, date'
         });
         this.invoices.mapToClass(Invoices);

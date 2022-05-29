@@ -2,6 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
+import { Product } from "./Product";
 
 
 export interface IInvoice {
@@ -10,7 +11,7 @@ export interface IInvoice {
     voucherNo: string;
     voucherType: InvoiceVoucherType;
     clientID: string;
-    productIDs: number[];
+    productIDs: Set<string>;
     billingDate: Date;
     categoryID?: number;
     gstEnabled: boolean;
@@ -28,7 +29,8 @@ export class Invoice implements IInvoice {
     voucherNo: string;
     voucherType: InvoiceVoucherType;
     clientID: string;
-    productIDs: number[];
+    productIDs: Set<string>;
+    products: Product[];
     billingDate: Date;
     categoryID?: number;
     gstEnabled: boolean;
@@ -46,6 +48,7 @@ export class Invoice implements IInvoice {
         this.voucherType = invoice.voucherType;
         this.clientID = invoice.clientID;
         this.productIDs = invoice.productIDs;
+        this.products = [];
         this.billingDate = invoice.billingDate;
         this.categoryID = invoice.categoryID;
         this.gstEnabled = invoice.gstEnabled;
@@ -55,6 +58,20 @@ export class Invoice implements IInvoice {
         this.discount = invoice.discount;
         this.discountValue = invoice.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
+        // this.loadProducts();
+        Object.defineProperty(this, 'products', {
+            enumerable: false,
+        })
+    }
+
+    loadProducts() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        return companyDB.transaction('rw', companyDB.products, async (tx) => {
+            const products = await companyDB.products.where('voucherID').equals(this.id).toArray();
+            console.log('Invoice products', products);
+            
+            this.products = products;
+        })
     }
 
     private onCreate(id: string, invoice: Invoice, tx: Transaction) {
@@ -70,11 +87,9 @@ export class Invoice implements IInvoice {
             isVisible: true
         })
         notify.save();
-        // companyDB.invoices.hook.creating.unsubscribe(this.onCreate);
     }
 
     private onDelete(id: string, invoice: Invoice, tx: Transaction) {
-        // console.log('Invoice deleted', id, invoice);
         const notify = new NotificationLog({
             companyID: invoice.companyID,
             clientID: invoice.clientID,
@@ -84,14 +99,13 @@ export class Invoice implements IInvoice {
             status: "NEW",
             link: `/invoice/${invoice.id}`,
             isVisible: true
-        })
+        });
         notify.save();
-        // companyDB.invoices.hook.creating.unsubscribe(this.onCreate);
     }
 
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
-        companyDB.invoices.hook('creating', this.onCreate);
+        companyDB.invoices.hook.creating.subscribe(this.onCreate);
 
         return companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
             try {
@@ -116,7 +130,7 @@ export class Invoice implements IInvoice {
             return companyDB.invoices.delete(this.id as string).then(() => {
                 console.log('Invoice deleted', this.id);
                 return this.id;
-            })
+            });
         })
     }
 }

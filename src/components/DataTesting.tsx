@@ -48,7 +48,7 @@ const DataTesting = (props: Props) => {
             <ul>
                 {data?.invoices?.map(invoice => (
                     <li key={invoice.id}>
-                        {moment(invoice.billingDate).format('l')} - {invoice.voucherNo} - {invoice.discountValue} - {invoice.grossTotal} - {invoice.totalAmount}
+                        {moment(invoice.billingDate).format('l')} - {invoice.voucherNo} - {invoice.discountValue} - {invoice.grossTotal} - {invoice.totalAmount} - {invoice.products.length}
                         <button onClick={() => invoice.delete()}>Delete</button>
                     </li>
                 ))}
@@ -57,7 +57,7 @@ const DataTesting = (props: Props) => {
             <ul>
                 {data?.purchases?.map(purchase => (
                     <li key={purchase.id}>
-                        {moment(purchase.billingDate).format('l')} - {purchase.voucherNo} - {purchase.discountValue} - {purchase.grossTotal} - {purchase.totalAmount}
+                        {moment(purchase.billingDate).format('l')} - {purchase.voucherNo} - {purchase.discountValue} - {purchase.grossTotal} - {purchase.totalAmount} - {purchase.products.length}
                         <button onClick={() => purchase.delete()}>Delete</button>
                     </li>
                 ))}
@@ -93,7 +93,7 @@ const DataTesting = (props: Props) => {
                 ))}
             </ul>
 
-            <button onClick={createProduct}>Create Product</button>
+            <button onClick={()=> {createProduct(data?.purchases[0].id as string)}}>Create Product</button>
             <ul>
                 {data?.products?.map(product => (
                     <li key={product.id}>

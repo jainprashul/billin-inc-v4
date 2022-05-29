@@ -51,9 +51,7 @@ export class Stock implements IStocks {
 
     async loadStockLogs() {
         const companyDB =  db.getCompanyDB(this.companyID)
-        const logs = await companyDB.stocklogs.where('stockID').equals(this.id).toArray();
-        console.log(logs);
-        
+        const logs = await companyDB.stocklogs.where('stockID').equals(this.id).toArray();        
         this.stockLogs = logs
     }
 

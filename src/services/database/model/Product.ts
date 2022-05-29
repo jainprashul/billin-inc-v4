@@ -13,6 +13,7 @@ export interface IProduct {
     quantity: number;
     unit: ProductUnit;
     companyID: number;
+    voucherID: string;
 }
 
 type ProductUnit = "KG" | "L" | "PCS" | "BOX" | "BAG" | "BOTTLE" | "CARTON";
@@ -32,9 +33,11 @@ export class Product implements IProduct {
     gstAmount: number;
     totalAmont: number;
     grossAmount: number;
+    voucherID: string;
 
     constructor(product: IProduct) {
-        this.id = product.id || `prod_${nanoid(8)}`
+        this.id = product.id || `prod_${nanoid(8)}`;
+        this.voucherID = product.voucherID;
         this.name = product.name;
         this.categoryID = product.categoryID;
         this.gstRate = product.gstRate;
@@ -46,6 +49,49 @@ export class Product implements IProduct {
         this.grossAmount = product.price * product.quantity;
         this.gstAmount = this.grossAmount * (product.gstRate / 100);
         this.totalAmont = this.grossAmount + this.gstAmount;
+    }
+
+    addtoVoucher() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        if (this.voucherID.startsWith("inv_")) {
+            companyDB.invoices.get(this.voucherID).then(invoice => {
+                if (invoice) {
+                    invoice.productIDs.add(this.id);
+                    companyDB.invoices.update(invoice.id, invoice);
+
+                }
+            });
+        } else if (this.voucherID.startsWith("pur_")) {
+            companyDB.purchases.get(this.voucherID).then(purchase => {
+                if (purchase) {
+                    purchase.productIDs.add(this.id);
+                    companyDB.purchases.update(purchase.id, purchase);
+                }
+            });
+        }
+    }
+
+    removeFromVoucher() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        if (this.voucherID.startsWith("inv_")) {
+            console.log("invoice");
+            companyDB.invoices.get(this.voucherID).then(invoice => {
+                console.log(invoice?.id);
+                if (invoice) {
+                    invoice.productIDs.delete(this.id);
+                    console.log(invoice.productIDs);
+                    
+                    companyDB.invoices.update(invoice.id, invoice);
+                }
+            });
+        } else if (this.voucherID.startsWith("pur_")) {
+            companyDB.purchases.get(this.voucherID).then(purchase => {
+                if (purchase) {
+                    purchase.productIDs.delete(this.id);
+                    companyDB.purchases.update(purchase.id, purchase);
+                }
+            });
+        }
     }
 
     private onCreate(id: number, product: Product, tx: Transaction) {
@@ -81,11 +127,12 @@ export class Product implements IProduct {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.products.hook.creating.subscribe(this.onCreate);
 
-        return companyDB.transaction("rw", companyDB.products, companyDB.notificationlogs, (tx) => {
+        return companyDB.transaction("rw", companyDB.products, companyDB.invoices, companyDB.purchases, companyDB.notificationlogs, (tx) => {
             try {
                 const _save = companyDB.products.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Product saved", _id);
+                    this.addtoVoucher();
                     return this.id;
                 });
                 return _save;
@@ -100,10 +147,11 @@ export class Product implements IProduct {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.products.hook.deleting.subscribe(this.onDelete);
 
-        return companyDB.transaction("rw", companyDB.products, companyDB.notificationlogs, (tx) => {
+        return companyDB.transaction("rw", companyDB.products, companyDB.invoices, companyDB.purchases, companyDB.notificationlogs, (tx) => {
             try {
                 const _delete = companyDB.products.delete(this.id).then(_id => {
                     console.log("Product deleted", this.id);
+                    this.removeFromVoucher();
                     return this.id;
                 });
                 return _delete;

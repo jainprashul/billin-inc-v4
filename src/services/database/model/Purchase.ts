@@ -2,6 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
+import { Product } from "./Product";
 
 export interface IPurchase {
     id?: string;
@@ -9,9 +10,9 @@ export interface IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: string;
-    productIDs: number[];
+    productIDs: Set<string>;
     billingDate: Date;
-    categoryID: number;
+    categoryID?: number;
     gstEnabled: boolean;
     gstTotal: number;
     subTotal: number;
@@ -27,9 +28,10 @@ export class Purchase implements IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: string;
-    productIDs: number[];
+    productIDs: Set<string>;
+    products: Product[];
     billingDate: Date;
-    categoryID: number;
+    categoryID?: number;
     gstEnabled: boolean;
     gstTotal: number;
     subTotal: number;
@@ -45,6 +47,7 @@ export class Purchase implements IPurchase {
         this.voucherType = purchase.voucherType;
         this.clientID = purchase.clientID;
         this.productIDs = purchase.productIDs;
+        this.products = [];
         this.billingDate = purchase.billingDate;
         this.categoryID = purchase.categoryID;
         this.gstEnabled = purchase.gstEnabled;
@@ -54,6 +57,20 @@ export class Purchase implements IPurchase {
         this.discount = purchase.discount;
         this.discountValue = purchase.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
+                // this.loadProducts();
+                Object.defineProperty(this, 'products', {
+                    enumerable: false,
+                })
+    }
+
+    loadProducts() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        return companyDB.transaction('rw', companyDB.products, async (tx) => {
+            const products = await companyDB.products.where('voucherID').equals(this.id).toArray();
+            console.log('Purchase products', products);
+            
+            this.products = products;
+        })
     }
 
     private onCreate(id: string, purchase: Purchase, tx: Transaction) {
@@ -102,16 +119,13 @@ export class Purchase implements IPurchase {
                 tx.abort();
             }
         })
-
-        // companyDB.purchases.hook("creating", this.onCreate);
-
     }
 
     delete() {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.purchases.hook("deleting", this.onDelete);
 
-        return companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs, () => {
+        return companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs, (tx) => {
             return companyDB.purchases.delete(this.id as string).then(() => {
                 console.log("Purchase deleted", this.id);
                 return this.id;

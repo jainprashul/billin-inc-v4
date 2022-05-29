@@ -12,11 +12,19 @@ export const useTests = () => {
             users: (await db.users.toArray()).map(user => { user.loadRole(); return user; }),
             companies: await db.companies.toArray(),
             companyDB: db.companyDB,
-            invoices: await db.companyDB[Object.keys(db.companyDB)[0]]?.invoices.toArray(),
-            purchases : await db.companyDB[Object.keys(db.companyDB)[0]]?.purchases.toArray(),
+            // invoices: await db.companyDB[Object.keys(db.companyDB)[0]]?.invoices.toArray(),
+            invoices: (await db.companyDB[Object.keys(db.companyDB)[0]]?.invoices.toArray())?.map(invoice => {
+                invoice.loadProducts();
+                return invoice;
+            }),
+            // purchases : await db.companyDB[Object.keys(db.companyDB)[0]]?.purchases.toArray(),
+            purchases: await (await db.companyDB[Object.keys(db.companyDB)[0]]?.purchases.toArray())?.map(purchase => {
+                purchase.loadProducts();
+                return purchase;
+            }),
             clients: await db.companyDB[Object.keys(db.companyDB)[0]]?.clients.toArray(),
-            notifications : await db.companyDB[Object.keys(db.companyDB)[0]]?.notificationlogs.orderBy("date").filter((x)=> x.isVisible ).reverse().toArray(),
-            stocks: await (await db.companyDB[Object.keys(db.companyDB)[0]]?.stocks.toArray()).map(stock => {
+            notifications: await db.companyDB[Object.keys(db.companyDB)[0]]?.notificationlogs.orderBy("date").filter((x) => x.isVisible).reverse().toArray(),
+            stocks: (await db.companyDB[Object.keys(db.companyDB)[0]]?.stocks.toArray())?.map(stock => {
                 stock.loadStockLogs(); return stock;
             }),
             stockLogs: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocklogs.toArray(),
@@ -25,8 +33,8 @@ export const useTests = () => {
             expenses: await db.companyDB[Object.keys(db.companyDB)[0]]?.expenses.toArray(),
         }
     });
-    console.log(data);
-    
+    console.log(data?.purchases);
+
 
     const createUser = () => {
         const user = new User({
@@ -71,7 +79,7 @@ export const useTests = () => {
             voucherNo: `inv_${faker.random.number()}`,
             voucherType: 'NON_GST',
             clientID: 'c_1',
-            productIDs: [1, 2, 3],
+            productIDs: new Set([]),
             billingDate: new Date(),
             categoryID: 1,
             gstEnabled: false,
@@ -90,7 +98,7 @@ export const useTests = () => {
             voucherNo: `pur_${faker.random.number()}`,
             voucherType: 'NON_GST',
             clientID: 'c_1',
-            productIDs: [1, 2, 3],
+            productIDs: new Set([]),
             billingDate: new Date(),
             categoryID: 1,
             gstEnabled: false,
@@ -149,7 +157,7 @@ export const useTests = () => {
             clientID: 'c_1',
             message: faker.lorem.paragraph(),
             date: new Date(),
-            notificationID: 'ntf_'+ faker.random.number(),
+            notificationID: 'ntf_' + faker.random.number(),
             status: 'NEW',
             link: '/test',
         });
@@ -159,7 +167,7 @@ export const useTests = () => {
 
     const createExpense = () => {
         const expense = new Expense({
-            companyID: 1,   
+            companyID: 1,
             amount: faker.random.number({ min: 1000, max: 10000 }),
             date: new Date(),
             description: faker.lorem.paragraph(),
@@ -168,7 +176,7 @@ export const useTests = () => {
         return expense.save();
     }
 
-    const createProduct = () => {
+    const createProduct = (voucherID: string) => {
         const product = new Product({
             companyID: 1,
             name: faker.commerce.productName(),
@@ -178,6 +186,7 @@ export const useTests = () => {
             price: faker.random.number({ min: 1000, max: 10000 }),
             quantity: faker.random.number({ min: 1, max: 100 }),
             unit: 'KG',
+            voucherID,
         })
         return product.save();
     }
@@ -204,13 +213,13 @@ export const useTests = () => {
             date: new Date(),
             logType: 'PURCHASE',
             quantity: faker.random.number({ min: 1, max: 100 }),
-            rate: faker.random.number({ min: 1000, max: 10000 }), 
+            rate: faker.random.number({ min: 1000, max: 10000 }),
             stockID: `stk_2HrNWu42`,
             voucherNo: `pur_${faker.random.number()}`,
         })
         return stockLog.save();
     }
-            
+
 
 
     return {
