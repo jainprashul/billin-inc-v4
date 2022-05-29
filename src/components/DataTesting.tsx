@@ -7,7 +7,7 @@ type Props = {}
 const DataTesting = (props: Props) => {
     const { data, createCompany, createUser, createInvoice, createPurchase, createClient, createLedger, createNotification, createExpense, createProduct, createStockLog, createStock
     } = useTests();
-    // console.log(data);
+    
 
     return (
         <div>
@@ -35,12 +35,14 @@ const DataTesting = (props: Props) => {
             </ul>
             <button onClick={createUser}>Create User</button>
             <ul>
-                {data?.users.map(user => (
-                    <li key={user.id}>
-                        {user.name} - {user.username} - {user.email}
-                        <button onClick={() => user.delete()}>Delete</button>
-                    </li>
-                ))}
+                {data?.users.map((user) => {
+                    return (
+                        <li key={user.id}>
+                            {user.name} - {user.username} - {user.email} - {user.role?.name}
+                            <button onClick={() => user.delete()}>Delete</button>
+                        </li>
+                    )
+                })}
             </ul>
             <button onClick={createInvoice}>Create Invoice</button>
             <ul>

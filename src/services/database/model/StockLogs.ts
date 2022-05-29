@@ -1,11 +1,12 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
+import CompanyDB from "../companydb";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
 
 export interface IStockLogs {
     id?: string;
-    stockID: number;
+    stockID: string;
     voucherNo: string;
     logType: StockLogType;
     quantity: number;
@@ -20,7 +21,7 @@ type StockLogType = "SALE" | "PURCHASE" | "TRANSFER" | "OPENING_STOCK" | "CLOSIN
 
 export class StockLog implements IStockLogs {
     id: string;
-    stockID: number;
+    stockID: string;
     voucherNo: string;
     logType: StockLogType;
     quantity: number;
@@ -71,6 +72,26 @@ export class StockLog implements IStockLogs {
         notify.save();
     }
 
+    private addtoStock(companyDB : CompanyDB) {
+        // update stock logids
+        companyDB.stocks.get(this.stockID).then(stock => {
+            if (stock) {
+                stock.logIDs.add(this.id);
+                companyDB.stocks.update(this.stockID, stock);
+            }
+        });
+    }
+
+    private deletefromStock(companyDB : CompanyDB) {
+        // update stock logids
+        companyDB.stocks.get(this.stockID).then(stock => {
+            if (stock) {
+                stock.logIDs.delete(this.id);
+                companyDB.stocks.update(this.stockID, stock);
+            }
+        });
+    }
+
     save() {
         const companyDB = db.getCompanyDB(this.companyID);
         companyDB.stocklogs.hook.creating.subscribe(this.onCreate);
@@ -81,6 +102,7 @@ export class StockLog implements IStockLogs {
                 const _save = companyDB.stocklogs.put({ ...this }).then(_id => {
                     console.log('Saved stocklogs', _id);
                     this.id = _id;
+                    this.addtoStock(companyDB);
                     return this.id;
                 });
                 return _save;
@@ -100,6 +122,7 @@ export class StockLog implements IStockLogs {
                 // console.log(companyDB);
                 const _delete = companyDB.stocklogs.delete(this.id).then(() => {
                     console.log('Deleted stocklogs', this.id);
+                    this.deletefromStock(companyDB);
                     return this.id;
                 });
                 return _delete;

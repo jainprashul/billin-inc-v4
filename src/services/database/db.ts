@@ -36,11 +36,7 @@ db.users.hook('deleting', (id, user, trans) => {
     db.transaction('rw', db.companies, (tx) => {
         // should delete the user id from the companies when deleted
         db.companies.where('id').anyOf([...user.companyIDs]).modify((company) => {
-            let index = company.userIDs.indexOf(user.id as number)
-            if (index > -1) {
-                company.userIDs.splice(index, 1);
-                // console.log('index deleted', index);
-            }
+            company.userIDs.delete(user.id as number);
         });
     })
 })
@@ -55,28 +51,6 @@ function subscribeCompany() {
         companyDB.on('ready', () => {
             console.log('companyDB ready', companyDB.name);
         });
-
-        // companyDB.ledger.hook('creating', (id, ledger, tx) => {
-        //     // console.log('creating ledger', tx.active)
-        // })
-
-        // companyDB.invoices.hook('creating', (id, invoice, tx) => {
-        //     console.log('creating invoice', id, invoice, tx)
-        //     console.log('creating invoice', tx.active)
-        //     const notify = new NotificationLog({
-        //         companyID: invoice.companyID,
-        //         clientID: invoice.clientID,
-        //         date: new Date(),
-        //         message: `Invoice ${invoice.voucherNo} created`,
-        //         notificationID: `ntf-${nanoid(8)}`,
-        //         status: "NEW",
-        //         link: `/invoice/${invoice.id}`
-        //     })
-        //     notify.save();
-        //     console.log('notify', notify)
-        // })
-
-
     })
 }
 

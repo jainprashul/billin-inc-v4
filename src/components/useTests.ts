@@ -9,20 +9,24 @@ import { Invoice } from "../services/database/model/Invoices";
 export const useTests = () => {
     const data = useLiveQuery(async () => {
         return {
-            users: await db.users.toArray(),
+            users: (await db.users.toArray()).map(user => { user.loadRole(); return user; }),
             companies: await db.companies.toArray(),
             companyDB: db.companyDB,
             invoices: await db.companyDB[Object.keys(db.companyDB)[0]]?.invoices.toArray(),
             purchases : await db.companyDB[Object.keys(db.companyDB)[0]]?.purchases.toArray(),
             clients: await db.companyDB[Object.keys(db.companyDB)[0]]?.clients.toArray(),
             notifications : await db.companyDB[Object.keys(db.companyDB)[0]]?.notificationlogs.orderBy("date").filter((x)=> x.isVisible ).reverse().toArray(),
-            stocks: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocks.toArray(),
+            stocks: await (await db.companyDB[Object.keys(db.companyDB)[0]]?.stocks.toArray()).map(stock => {
+                stock.loadStockLogs(); return stock;
+            }),
             stockLogs: await db.companyDB[Object.keys(db.companyDB)[0]]?.stocklogs.toArray(),
             products: await db.companyDB[Object.keys(db.companyDB)[0]]?.products.toArray(),
             ledgers: await db.companyDB[Object.keys(db.companyDB)[0]]?.ledger.toArray(),
             expenses: await db.companyDB[Object.keys(db.companyDB)[0]]?.expenses.toArray(),
         }
     });
+    console.log(data);
+    
 
     const createUser = () => {
         const user = new User({
@@ -56,7 +60,7 @@ export const useTests = () => {
             gst: 'DGSH',
             lastGSTInvoiceNo: 1,
             lastInvoiceNo: 1,
-            userIDs: []
+            userIDs: new Set([]),
         })
         return company.save();
     }
@@ -182,7 +186,7 @@ export const useTests = () => {
         const stock = new Stock({
             companyID: 1,
             gstRate: 12,
-            logIDs: [],
+            logIDs: new Set([]),
             name: faker.commerce.productName(),
             quantity: faker.random.number({ min: 1, max: 100 }),
             purchasePrice: faker.random.number({ min: 1000, max: 10000 }),
@@ -201,7 +205,7 @@ export const useTests = () => {
             logType: 'PURCHASE',
             quantity: faker.random.number({ min: 1, max: 100 }),
             rate: faker.random.number({ min: 1000, max: 10000 }), 
-            stockID: 1,
+            stockID: `stk_2HrNWu42`,
             voucherNo: `pur_${faker.random.number()}`,
         })
         return stockLog.save();

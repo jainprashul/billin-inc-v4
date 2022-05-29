@@ -42,19 +42,23 @@ export class User implements IUser {
         this.roleID = user.roleID || 1; // default role is 1 i.e. admin
         this.password = user.password;
         this.companyIDs = user.companyIDs || [1]; // default company
-        this.loadRole().then((role) => {
-            this.role = role;
+        this.loadRole();
+
+        Object.defineProperty(this, 'role', {
+            enumerable: false,
+            // configurable: false, 
         });
     }
 
     async loadRole() {
         const role = await db.roles.get(this.roleID);
+        this.role = role;
         return role;
     };
 
     addUserToCompany() {
         db.companies.where('id').anyOf([...this.companyIDs]).modify((company) => {
-            company.userIDs.push(this.id as number);
+            company.userIDs.add(this.id as number);
         });
     }
 
@@ -108,7 +112,8 @@ export class User implements IUser {
 
         db.users.hook.creating.subscribe(this.onCreate);
         return db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
-            delete user.role;
+            // delete user.role;
+
             return db.users.orderBy('username').keys(async (usernames) => {
                 let usernameExists = usernames.includes(user.username);
                 console.log(usernames, user.username);

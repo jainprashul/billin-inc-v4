@@ -12,7 +12,7 @@ export interface ICompany {
     lastBackupName?: string;
     lastGSTInvoiceNo : number;
     lastInvoiceNo : number;
-    userIDs : number[];
+    userIDs : Set<number>;
     createdBy?: string;
 }
 
@@ -28,7 +28,7 @@ export class Company implements ICompany {
     lastBackupName?: string;
     lastGSTInvoiceNo : number;
     lastInvoiceNo : number;
-    userIDs : number[];
+    userIDs : Set<number>;
     createdAt: Date;
     createdBy?: string;
     constructor(company: ICompany) {
@@ -117,5 +117,5 @@ export const defaultCompany = new Company({
     lastBackupName: "",
     lastGSTInvoiceNo: 1,
     lastInvoiceNo: 1,
-    userIDs: [1]
+    userIDs: new Set([1]),
 })

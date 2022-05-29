@@ -1,5 +1,5 @@
 import Dexie from "dexie";
-import { Client, Expense, IClient, IConfig, Invoices, IProduct, IStockLogs, IStocks, Ledger, NotificationLog, Product, Purchase, Stock, StockLog } from './model';
+import { Client, Expense, IConfig, Invoices, Ledger, NotificationLog, Product, Purchase, Stock, StockLog } from './model';
 
 
 export class CompanyDB extends Dexie {
