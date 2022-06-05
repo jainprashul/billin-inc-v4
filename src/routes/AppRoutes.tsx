@@ -8,7 +8,7 @@ import Login from '../pages/Login'
 type Props = {}
 
 const AppRoutes = (props: Props) => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+  const [isAuthenticated, setIsAuthenticated] = React.useState(true)
   return (
     <BrowserRouter>
       {

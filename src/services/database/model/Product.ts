@@ -18,7 +18,7 @@ export interface IProduct {
 
 type ProductUnit = "KG" | "L" | "PCS" | "BOX" | "BAG" | "BOTTLE" | "CARTON";
 
-type GstRate = 0 | 5 | 12 | 18 | 28;
+export type GstRate = 0 | 5 | 12 | 18 | 28;
 
 export class Product implements IProduct {
     id: string;
@@ -31,7 +31,7 @@ export class Product implements IProduct {
     unit: ProductUnit;
     companyID: number;
     gstAmount: number;
-    totalAmont: number;
+    totalAmount: number;
     grossAmount: number;
     voucherID: string;
 
@@ -48,7 +48,7 @@ export class Product implements IProduct {
         this.companyID = product.companyID;
         this.grossAmount = product.price * product.quantity;
         this.gstAmount = this.grossAmount * (product.gstRate / 100);
-        this.totalAmont = this.grossAmount + this.gstAmount;
+        this.totalAmount = this.grossAmount + this.gstAmount;
     }
 
     addtoVoucher() {
