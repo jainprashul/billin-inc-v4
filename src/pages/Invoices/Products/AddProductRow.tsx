@@ -19,6 +19,7 @@ import { GstRate } from '../../../services/database/model/Product';
 import { TableFooter } from '@mui/material';
 import * as yup from 'yup';
 import { SchemaOf } from 'yup'
+import { nanoid } from '@reduxjs/toolkit';
 
 type Props = {
     sn?: number,
@@ -51,8 +52,8 @@ const AddProductRow = ({
     const formik = useFormik({
         initialValues: product,
         onSubmit: (values) => {
-            console.log(values);
-            let product = new Product(values);
+
+            let product = new Product({...values, id: `prod_${nanoid(8)}`});
             onSubmit(product);
             formik.resetForm();
         },

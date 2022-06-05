@@ -54,7 +54,7 @@ const ProductTable = ({
         <TableBody>
           {products?.map((product, i) => (
             <TableRow
-              key={product.name}
+              key={product.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">{i + 1}.</TableCell>
