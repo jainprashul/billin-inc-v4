@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
 import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND } from '../constants/routes'
+import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail } from '../pages/Invoices'
 import Login from '../pages/Login'
 
@@ -15,7 +16,7 @@ const AppRoutes = (props: Props) => {
         isAuthenticated ? (
           <Layout>
             <Routes>
-              <Route path={HOME} element={<h1>Home</h1>} />
+              <Route path={HOME} element={<Dashboard />} />
               <Route path={LOGIN} element={<Navigation/>} />
               <Route path={SIGNUP} element={<Navigation/>} />
               <Route path={INVOICES} element={<Invoices />} />

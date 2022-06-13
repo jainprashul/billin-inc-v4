@@ -51,7 +51,7 @@ export class Product implements IProduct {
         this.totalAmount = this.grossAmount + this.gstAmount;
     }
 
-    addtoVoucher() {
+    private addtoVoucher() {
         const companyDB = db.getCompanyDB(this.companyID)
         if (this.voucherID.startsWith("inv_")) {
             companyDB.invoices.get(this.voucherID).then(invoice => {
@@ -71,7 +71,7 @@ export class Product implements IProduct {
         }
     }
 
-    removeFromVoucher() {
+    private removeFromVoucher() {
         const companyDB = db.getCompanyDB(this.companyID)
         if (this.voucherID.startsWith("inv_")) {
             companyDB.invoices.get(this.voucherID).then(invoice => {

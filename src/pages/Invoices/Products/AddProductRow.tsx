@@ -16,7 +16,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useFormik } from 'formik';
 import { GstRate } from '../../../services/database/model/Product';
-import { TableFooter } from '@mui/material';
+import { Autocomplete, TableFooter } from '@mui/material';
 import * as yup from 'yup';
 import { SchemaOf } from 'yup'
 import { nanoid } from '@reduxjs/toolkit';
@@ -28,7 +28,7 @@ type Props = {
 }
 
 const productSchema = yup.object().shape({
-    name: yup.string().min(3).required('Product name is required'),
+    name: yup.string().min(2).required('Product name is required'),
     hsn: yup.string(),
     quantity: yup.number().min(0).required('Quantity is required'),
     price: yup.number().required('Unit price is required'),
@@ -53,9 +53,12 @@ const AddProductRow = ({
         initialValues: product,
         onSubmit: (values) => {
 
-            let product = new Product({...values, id: `prod_${nanoid(8)}`});
+            let product = new Product({ ...values, id: `prod_${nanoid(8)}` });
             onSubmit(product);
             formik.resetForm();
+            console.log(nameRef.current);
+
+            nameRef.current?.focus();
         },
         validationSchema: productSchema,
     })
@@ -64,151 +67,187 @@ const AddProductRow = ({
     const gstAmount = grossAmount * gstRate / 100;
     const totalAmount = grossAmount + gstAmount;
 
+    const nameRef = React.useRef<HTMLInputElement>(null);
+
     return (
         <TableFooter>
-        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell component="th" scope="row"></TableCell>
-            <TableCell padding='none' component="th" scope="row">
-                <TextField
-                    autoFocus
-                    size='small'
-                    fullWidth
-                    // label="Product Name"
-                    value={name}
-                    name="name"
-                    required
-                    onChange={formik.handleChange}
-                />
-            </TableCell>
-            <TableCell padding='checkbox' className={'table-input'} align="left">
-                <TextField
-                    sx={{ minWidth: '6rem' }}
-                    size='small'
-                    fullWidth
-                    // label="Product HSN Code"
-                    value={hsn}
-                    name="hsn"
-                    onChange={formik.handleChange}
-                />
-            </TableCell>
-            <TableCell padding='checkbox' align="right">
-                <TextField
-                    sx={{ minWidth: '5.5rem' }}
-                    size='small'
-                    fullWidth
-                    // label="Quantity"
-                    value={quantity}
-                    name="quantity"
-                    type={'number'}
-                    onChange={formik.handleChange}
-                />
-            </TableCell>
-            <TableCell padding='checkbox' align="right">
-                <TextField
-                    sx={{ minWidth: '5rem' }}
-                    size='small'
-                    fullWidth
-                    // label="Unit Price"
-                    value={price}
-                    name="price"
-                    type={'number'}
-                    onChange={formik.handleChange}
-                />
-            </TableCell>
-            <TableCell padding='checkbox' align="right">
-                <FormControl size="small">
-                    {/* <InputLabel id="demo-select-small">Unit</InputLabel> */}
-                    <Select
-                    sx={{ minWidth: '5.5rem' }}
-                        labelId="select-unit"
-                        value={unit}
-                        onChange={(e : SelectChangeEvent) => {
-                            formik.setFieldValue('unit', e.target.value);
+            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableCell component="th" scope="row"></TableCell>
+                <TableCell padding='none' component="th" scope="row">
+                    {/* <TextField
+                        autoFocus
+                        size='small'
+                        fullWidth
+                        // label="Product Name"
+                        inputRef={nameRef}
+                        value={name}
+                        name="name"
+                        required
+                        onChange={formik.handleChange}
+                    /> */}
+
+                    <Autocomplete
+                        id="product-name" 
+                        freeSolo
+                        value={name}
+                        options={[]}
+                        onChange={(event, value, reason, detail) => {
+                              console.log(value, reason, detail);
+                            //   if (reason === 'selectOption') {
+                            //     setCustomerName(value as string)
+                            //     db.getCompanyDB(invoice.companyID).clients.get({ name : value }).then(client => {
+                            //       // console.log(client);
+                            //       setClientID(client?.id)
+                            //     })
+                            //   } else if (reason === 'clear') {
+                            //     setCustomerName('')
+                            //     setClientID('')
+                            //   }
                         }}
-                    // label="Unit"
-                    >
-                        {
-                            ["KG", "L", "PCS", "BOX", "BAG", "BOTTLE", "CARTON"].map((unit, index) => (
-                                <MenuItem key={index} value={unit}>{unit}</MenuItem>
-                            ))
-                        }
-                    </Select>
-                </FormControl>
-            </TableCell>
-            <TableCell padding='checkbox' align="right"><TextField
-                size='small'
-                fullWidth
-                style={{
-                    minWidth: '5.5rem'
-                }}
-                // label="Unit Price"
-                value={grossAmount}
-                name="grossAmount"
-                type={'number'}
-                onChange={formik.handleChange}
-                InputProps={{
-                    readOnly: true,
-                }}
-            /></TableCell>
-            <TableCell padding='checkbox' align="right">
-                <FormControl size="small">
-                    {/* <InputLabel id="demo-select-small">Unit</InputLabel> */}
-                    <Select
-                        labelId="select-gst-rate"
-                        value={gstRate.toString()}
-                        // onChange={formik.handleChange}
-                        onChange={(e : SelectChangeEvent) => {
-                            formik.setFieldValue('gstRate', Number(e.target.value));
-                        }}
-                    // label="GST Rate"
-                    >
-                        {
-                            [0, 5, 12, 18, 28].map((unit, index) => (
-                                <MenuItem key={index} value={unit}>{unit}</MenuItem>
-                            ))
-                        }
-                    </Select>
-                </FormControl>
-            </TableCell>
-            <TableCell padding='checkbox' align="right">
-                <TextField
+                        renderInput={(params) => <TextField {...params} 
+                            margin="dense"
+                            required
+                            autoFocus
+                            size='small'
+                            fullWidth
+                            // label="Product Name"
+                            inputRef={nameRef}
+                            value={name}
+                            name="name"
+                            onChange={formik.handleChange}
+
+                        />}
+                    />
+                </TableCell>
+                <TableCell padding='checkbox' className={'table-input'} align="left">
+                    <TextField
+                        sx={{ minWidth: '6rem' }}
+                        size='small'
+                        fullWidth
+                        // label="Product HSN Code"
+                        value={hsn}
+                        name="hsn"
+                        onChange={formik.handleChange}
+                    />
+                </TableCell>
+                <TableCell padding='checkbox' align="right">
+                    <TextField
+                        sx={{ minWidth: '5.5rem' }}
+                        size='small'
+                        fullWidth
+                        // label="Quantity"
+                        value={quantity}
+                        name="quantity"
+                        type={'number'}
+                        onChange={formik.handleChange}
+                    />
+                </TableCell>
+                <TableCell padding='checkbox' align="right">
+                    <TextField
+                        sx={{ minWidth: '5rem' }}
+                        size='small'
+                        fullWidth
+                        // label="Unit Price"
+                        value={price}
+                        name="price"
+                        type={'number'}
+                        onChange={formik.handleChange}
+                    />
+                </TableCell>
+                <TableCell padding='checkbox' align="right">
+                    <FormControl size="small">
+                        {/* <InputLabel id="demo-select-small">Unit</InputLabel> */}
+                        <Select
+                            sx={{ minWidth: '5.5rem' }}
+                            labelId="select-unit"
+                            value={unit}
+                            onChange={(e: SelectChangeEvent) => {
+                                formik.setFieldValue('unit', e.target.value);
+                            }}
+                        // label="Unit"
+                        >
+                            {
+                                ["KG", "L", "PCS", "BOX", "BAG", "BOTTLE", "CARTON"].map((unit, index) => (
+                                    <MenuItem key={index} value={unit}>{unit}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                </TableCell>
+                <TableCell padding='checkbox' align="right"><TextField
                     size='small'
                     fullWidth
-                    style={{
-                        minWidth: '5rem'
-                    }}
-                    // label="Unit Price"
-                    value={gstAmount}
-                    name="gstAmount"
-                    type={'number'}
-                    onChange={formik.handleChange}
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                />
-            </TableCell>
-            <TableCell padding='checkbox' align="right">
-                <TextField
-                    size='small'
                     style={{
                         minWidth: '5.5rem'
                     }}
-                    fullWidth
                     // label="Unit Price"
-                    value={totalAmount}
-                    name="totalAmount"
+                    value={grossAmount}
+                    name="grossAmount"
                     type={'number'}
                     onChange={formik.handleChange}
                     InputProps={{
                         readOnly: true,
                     }}
                 /></TableCell>
-            <TableCell align="center">
-                <IconButton aria-label="add" size="small" onClick={() => { formik.handleSubmit() }}>
-                    <AddCircleIcon />
-                </IconButton>
-            </TableCell>
-        </TableRow>
+                <TableCell padding='checkbox' align="right">
+                    <FormControl size="small">
+                        {/* <InputLabel id="demo-select-small">Unit</InputLabel> */}
+                        <Select
+                            labelId="select-gst-rate"
+                            value={gstRate.toString()}
+                            // onChange={formik.handleChange}
+                            onChange={(e: SelectChangeEvent) => {
+                                formik.setFieldValue('gstRate', Number(e.target.value));
+                            }}
+                        // label="GST Rate"
+                        >
+                            {
+                                [0, 5, 12, 18, 28].map((unit, index) => (
+                                    <MenuItem key={index} value={unit}>{unit}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                </TableCell>
+                <TableCell padding='checkbox' align="right">
+                    <TextField
+                        size='small'
+                        fullWidth
+                        style={{
+                            minWidth: '5rem'
+                        }}
+                        // label="Unit Price"
+                        value={gstAmount}
+                        name="gstAmount"
+                        type={'number'}
+                        onChange={formik.handleChange}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                    />
+                </TableCell>
+                <TableCell padding='checkbox' align="right">
+                    <TextField
+                        size='small'
+                        style={{
+                            minWidth: '5.5rem'
+                        }}
+                        fullWidth
+                        // label="Unit Price"
+                        value={totalAmount}
+                        name="totalAmount"
+                        type={'number'}
+                        onChange={formik.handleChange}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                    /></TableCell>
+                <TableCell align="center">
+                    <IconButton aria-label="add" size="small" onClick={() => { formik.handleSubmit() }}>
+                        <AddCircleIcon />
+                    </IconButton>
+                </TableCell>
+            </TableRow>
         </TableFooter>
     )
 }
