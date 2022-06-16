@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react'
 import db from '../../services/database/db';
-import { Client, Invoices, Product } from '../../services/database/model';
+import { Client, Invoices, Product, Stock, StockLog } from '../../services/database/model';
 
 
 const useInvoiceForm = (invoice: Invoices) => {
@@ -28,7 +28,10 @@ const useInvoiceForm = (invoice: Invoices) => {
       gstInvoiceNo: await db.companies.get(invoice?.companyID).then(company => company?.lastGSTInvoiceNo) as number,
       clientNames: await db.getCompanyDB(invoice?.companyID).clients.orderBy("name").keys(),
     }
-  })
+  });
+
+  const invoiceNo = query ? query.invoiceNo + 1 : 1;
+  const gstInvoiceNo =  query ? `G-${query.gstInvoiceNo + 1}` : `G-${1}`;
 
   const client = useLiveQuery(async () => {
     if (clientID) {
@@ -78,18 +81,82 @@ const useInvoiceForm = (invoice: Invoices) => {
     setProducts(products.filter(p => p.id !== product.id))
   }
 
-  const updateInvoiceVoucher = ({ invoiceNo, gstInvoiceNo }: any) => {
+  const updateInvoiceVoucher = () => {
     const obj = invoice.gstEnabled ? {
-        lastGSTInvoiceNo: gstInvoiceNo,
+        lastGSTInvoiceNo:  Number(gstInvoiceNo.replace('G-', '')),
       } : {
         lastInvoiceNo: invoiceNo,
       }
     db.companies.update(invoice.companyID, obj)
   }
 
+  const updateStock = async () => {
+    products.forEach(async (product) => {
+      const stock = await db.getCompanyDB(invoice.companyID)?.stocks.get({name : product.name, companyID: invoice.companyID});
+      if (stock) {
+        db.getCompanyDB(invoice.companyID)?.stocks.update(stock.id, {
+          quantity: stock.quantity - product.quantity,
+        });
+
+        // create stock log
+        const stockLog = new StockLog({
+          companyID: invoice.companyID,
+          clientID: clientID as string,
+          date: new Date(),
+          logType:'SALE',
+          quantity: product.quantity,
+          rate: product.price,
+          amount: product.totalAmount,
+          voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+          stockID: stock.id,
+        })
+        // save stock log and update stock quantity and log ids
+        stockLog.save();
+
+        stock.logIDs.add(stockLog.id);
+        stock.quantity -= product.quantity;
+        stock.save();
+
+      } else {
+        // create stock and its opening stock log
+        const openingStockLog = new StockLog({
+          companyID: invoice.companyID,
+          clientID: clientID as string,
+          date: new Date(),
+          logType:'OPENING_STOCK',
+          quantity: product.quantity,
+          rate: product.price,
+          amount: product.totalAmount,
+          voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+          stockID: '',
+        })
+
+        openingStockLog.save();
+
+        const newStock = new Stock({
+          name: product.name,
+          quantity: -product.quantity,
+          companyID: invoice.companyID,
+          gstRate: product.gstRate,
+          unit: product.unit,
+          purchasePrice: 0,
+          salesPrice: product.price,
+          hsn: product.hsn,
+          stockValue: 0,
+          logIDs: new Set([]),
+        })
+
+        newStock.logIDs.add(openingStockLog.id);
+        newStock.save();
+        
+      }
+    }
+    )
+  }
+
   return {
-    invoiceNo: query ? query.invoiceNo + 1 : 1,
-    gstInvoiceNo: query ? `G-${query.gstInvoiceNo + 1}` : `G-${1}`,
+    invoiceNo,
+    gstInvoiceNo,
     clientNames: query ? query.clientNames : [],
     client: client ? client : new Client({
       name: customerName,
@@ -111,6 +178,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     onAddProduct,
     onDeleteProduct,
     updateInvoiceVoucher,
+    updateStock,
   }
 }
 

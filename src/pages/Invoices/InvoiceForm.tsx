@@ -44,7 +44,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   // console.log(invoice)
 
 
-  const { date, gross, gstAmt, total, clientOpen, setClientOpen, setDate, onAddProduct, onDeleteProduct, products, setProducts, invoiceNo, gstInvoiceNo, clientNames, setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName, updateInvoiceVoucher } = useInvoiceForm(invoice)
+  const { date, gross, gstAmt, total, clientOpen, setClientOpen, setDate, onAddProduct, onDeleteProduct, products, setProducts, invoiceNo, gstInvoiceNo, clientNames, setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName, updateInvoiceVoucher, updateStock } = useInvoiceForm(invoice)
 
   // console.log(client, clientID);
 
@@ -75,11 +75,9 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
       voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
     })
 
-    updateInvoiceVoucher({
-      invoiceNo,
-      gstInvoiceNo: Number(gstInvoiceNo.replace('G-', ''))
-    })
-    
+    updateInvoiceVoucher()
+    updateStock()
+
     console.log(invoice);
     handleSubmit(invoice)
     clearForm()
@@ -100,16 +98,6 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     <div className="invoice-form">
       <Grid className='form-header' container direction='row' justifyContent='space-between' component="main" >
         <Grid item xs={12} sm={4} md={3}>
-          {/* <TextField variant='standard'
-            margin="dense"
-            required
-            fullWidth
-            id="client_name"
-            label="Customer Name"
-            name="client_name"
-            autoComplete="name"
-            autoFocus
-          /> */}
           <Autocomplete
             id="client-name"
             freeSolo
