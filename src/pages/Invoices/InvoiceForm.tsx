@@ -3,11 +3,10 @@ import TextField from '@mui/material/TextField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Autocomplete, Button, Grid, Icon, InputAdornment, Typography } from '@mui/material'
+import { Autocomplete, Button, Grid, InputAdornment, Typography } from '@mui/material'
 import Fab from '@mui/material/Fab';
 import NavigationIcon from '@mui/icons-material/Navigation';
-import React, { useState } from 'react'
-import { Client, Invoices, Product } from '../../services/database/model';
+import { Invoices } from '../../services/database/model';
 import ProductTable from './Products/ProductTable';
 import { nanoid } from '@reduxjs/toolkit';
 import useInvoiceForm from './useInvoiceForm';
@@ -45,7 +44,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   // console.log(invoice)
 
 
-  const { date, gross, gstAmt, total, clientOpen, setClientOpen, setDate, onAddProduct, onDeleteProduct, products, setProducts, invoiceNo, gstInvoiceNo, clientNames, setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName } = useInvoiceForm(invoice)
+  const { date, gross, gstAmt, total, clientOpen, setClientOpen, setDate, onAddProduct, onDeleteProduct, products, setProducts, invoiceNo, gstInvoiceNo, clientNames, setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName, updateInvoiceVoucher } = useInvoiceForm(invoice)
 
   // console.log(client, clientID);
 
@@ -68,15 +67,17 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
       formik.setFieldValue('productIDs', values.productIDs)
     })
 
-    console.log(client);
-    
-
     const invoice = new Invoices({
       ...values,
       clientID: client.id,
       subTotal: gross,
       gstTotal: gstAmt,
       voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+    })
+
+    updateInvoiceVoucher({
+      invoiceNo,
+      gstInvoiceNo: Number(gstInvoiceNo.replace('G-', ''))
     })
     
     console.log(invoice);
@@ -124,6 +125,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                 })
               } else if (reason === 'clear') {
                 setCustomerName('')
+                setCustomerContact('')
                 setClientID('')
               }
             }}
@@ -153,7 +155,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             value={customerContact}
             onChange={(event) => {
               // console.log(event.target.value);
-              setCustomerContact(event.target.value.trim())
+              setCustomerContact(event.target.value)
             }}
           />
           {/* <TextField

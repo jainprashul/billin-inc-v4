@@ -14,6 +14,8 @@ export interface IStocks {
     gstRate: number;
     logIDs: Set<string>;
     companyID: number;
+    hsn : string;
+    unit : string;
 }
 
 // Ref : Stocks.logID > StockLogs.id
@@ -31,6 +33,8 @@ export class Stock implements IStocks {
     logIDs: Set<string>;
     companyID: number;
     stockLogs: StockLog[] | undefined;
+    hsn : string;
+    unit : string;
 
     constructor(stock: IStocks) {
         this.id = stock.id || `stk_${nanoid(8)}`
@@ -42,6 +46,8 @@ export class Stock implements IStocks {
         this.gstRate = stock.gstRate;
         this.logIDs = stock.logIDs;
         this.companyID = stock.companyID;
+        this.hsn = stock.hsn;
+        this.unit = stock.unit;
         this.loadStockLogs();
 
         Object.defineProperty(this, 'stockLogs', {

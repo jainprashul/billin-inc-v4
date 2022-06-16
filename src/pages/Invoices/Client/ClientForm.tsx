@@ -1,11 +1,9 @@
-import { Alert, Autocomplete, Button, Grid, TextField, Typography } from '@mui/material'
+import { Alert, Autocomplete, Button, Grid, TextField } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import React from 'react'
 import { Client } from '../../../services/database/model';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import AlertDialog from '../../../components/shared/AlertDialog';
-import { getStateCites, stateList, states } from '../../../constants/states';
+import { getStateCites, stateList } from '../../../constants/states';
 
 type Props = {
     client?: Client
@@ -34,7 +32,7 @@ const ClientForm = ({
 
     const submitHandler = (values: Client) => {
         onSubmit(values);
-        onSubmit(values)
+        // onSubmit(values)
     }
     const formik = useFormik({
         initialValues: client,

@@ -12,6 +12,8 @@ import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TableFooter } from '@mui/material';
+import { useLiveQuery } from 'dexie-react-hooks';
+import db from '../../../services/database/db';
 
 
 type Props = {
@@ -22,6 +24,7 @@ type Props = {
 const AddProduct = ({
   product, onAddProduct
 }: Props) => {
+
   return (
     <TableContainer style={{
       marginTop: '1rem',
@@ -31,7 +34,7 @@ const AddProduct = ({
          
         </TableHead>
         
-        <AddProductRow onSubmit={onAddProduct} />
+        <AddProductRow onSubmit={onAddProduct} /> 
       </Table>
     </TableContainer>
   );

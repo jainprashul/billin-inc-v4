@@ -78,11 +78,20 @@ const useInvoiceForm = (invoice: Invoices) => {
     setProducts(products.filter(p => p.id !== product.id))
   }
 
+  const updateInvoiceVoucher = ({ invoiceNo, gstInvoiceNo }: any) => {
+    const obj = invoice.gstEnabled ? {
+        lastGSTInvoiceNo: gstInvoiceNo,
+      } : {
+        lastInvoiceNo: invoiceNo,
+      }
+    db.companies.update(invoice.companyID, obj)
+  }
+
   return {
     invoiceNo: query ? query.invoiceNo + 1 : 1,
     gstInvoiceNo: query ? `G-${query.gstInvoiceNo + 1}` : `G-${1}`,
     clientNames: query ? query.clientNames : [],
-    client : client ? client : new Client({
+    client: client ? client : new Client({
       name: customerName,
       address: { address: '', city: '', state: '', },
       companyID: 1,
@@ -101,6 +110,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     gstAmt, setGstAmt,
     onAddProduct,
     onDeleteProduct,
+    updateInvoiceVoucher,
   }
 }
 

@@ -1,25 +1,18 @@
-import React from 'react'
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
+import React, { useEffect } from 'react'
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Product, IProduct } from '../../../services/database/model';
+import { Product } from '../../../services/database/model';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useFormik } from 'formik';
-import { GstRate } from '../../../services/database/model/Product';
 import { Autocomplete, TableFooter } from '@mui/material';
 import * as yup from 'yup';
-import { SchemaOf } from 'yup'
 import { nanoid } from '@reduxjs/toolkit';
+import db from '../../../services/database/db';
 
 type Props = {
     sn?: number,
@@ -48,6 +41,8 @@ const AddProductRow = ({
         voucherID: "1",
     }), onSubmit
 }: Props) => {
+    const [productList, setProductList] = React.useState<string[]>([]);
+
 
     const formik = useFormik({
         initialValues: product,
@@ -62,10 +57,18 @@ const AddProductRow = ({
         },
         validationSchema: productSchema,
     })
+    
     const { name, hsn, quantity, price, unit, gstRate } = formik.values;
     const grossAmount = quantity * price;
     const gstAmount = grossAmount * gstRate / 100;
     const totalAmount = grossAmount + gstAmount;
+
+    
+    useEffect(() => {
+        db.getCompanyDB(1)?.stocks.orderBy('name').uniqueKeys().then(productList => {
+            setProductList(productList as string[]);
+        });
+    }, [name]);
 
     const nameRef = React.useRef<HTMLInputElement>(null);
 
@@ -87,24 +90,34 @@ const AddProductRow = ({
                     /> */}
 
                     <Autocomplete
-                        id="product-name" 
+                        id="product-name"
                         freeSolo
                         value={name}
-                        options={[]}
+                        options={[...productList]}
                         onChange={(event, value, reason, detail) => {
-                              console.log(value, reason, detail);
-                            //   if (reason === 'selectOption') {
-                            //     setCustomerName(value as string)
-                            //     db.getCompanyDB(invoice.companyID).clients.get({ name : value }).then(client => {
-                            //       // console.log(client);
-                            //       setClientID(client?.id)
-                            //     })
-                            //   } else if (reason === 'clear') {
-                            //     setCustomerName('')
-                            //     setClientID('')
-                            //   }
+                            console.log(value, reason, detail);
+                            if (reason === 'selectOption') {
+                                formik.setFieldValue('name', value);
+                                db.getCompanyDB(1).stocks.get({
+                                    name: value
+                                }).then((product) => {
+                                    if (product) {
+                                        formik.setFieldValue('hsn', product.hsn);
+                                        formik.setFieldValue('unit', product.unit);
+                                        formik.setFieldValue('price', product.salesPrice);
+                                        formik.setFieldValue('gstRate', product.gstRate);
+
+                                    }
+                                })
+                            } else if (reason === 'clear') {
+                                formik.setFieldValue('name', '');
+                                formik.setFieldValue('hsn', '');
+                                formik.setFieldValue('unit', '');
+                                formik.setFieldValue('price', 0);
+                                formik.setFieldValue('gstRate', 0);
+                            }
                         }}
-                        renderInput={(params) => <TextField {...params} 
+                        renderInput={(params) => <TextField {...params}
                             margin="dense"
                             required
                             autoFocus

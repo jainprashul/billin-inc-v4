@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
+import { ErrorBoundary } from '../components/shared/ErrorBoundary'
 import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail } from '../pages/Invoices'
@@ -12,27 +13,29 @@ const AppRoutes = (props: Props) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(true)
   return (
     <BrowserRouter>
-      {
-        isAuthenticated ? (
-          <Layout>
+      {/* <ErrorBoundary> */}
+        {
+          isAuthenticated ? (
+            <Layout>
+              <Routes>
+                <Route path={HOME} element={<Dashboard />} />
+                <Route path={LOGIN} element={<Navigation />} />
+                <Route path={SIGNUP} element={<Navigation />} />
+                <Route path={INVOICES} element={<Invoices />} />
+                <Route path={INVOICE_CREATE} element={<InvoiceCreate />} />
+                <Route path={INVOICE_DETAIL} element={<InvoiceDetail />} />
+                <Route path={NOT_FOUND} element={<NotFound />} />
+              </Routes>
+            </Layout>
+          ) : (
             <Routes>
-              <Route path={HOME} element={<Dashboard />} />
-              <Route path={LOGIN} element={<Navigation/>} />
-              <Route path={SIGNUP} element={<Navigation/>} />
-              <Route path={INVOICES} element={<Invoices />} />
-              <Route path={INVOICE_CREATE} element={<InvoiceCreate />} />
-              <Route path={INVOICE_DETAIL} element={<InvoiceDetail />} />
-              <Route path={NOT_FOUND} element={<NotFound />} />
+              <Route path={LOGIN} element={<Login />} />
+              <Route path={SIGNUP} element={<h1>Signup</h1>} />
+              <Route path={NOT_FOUND} element={<Navigation path={LOGIN} />} />
             </Routes>
-          </Layout>
-        ) : (
-          <Routes>
-            <Route path={LOGIN} element={<Login />} />
-            <Route path={SIGNUP} element={<h1>Signup</h1>} />
-            <Route path={NOT_FOUND} element={<Navigation path={LOGIN}/>} />
-          </Routes>
-        )
-      }
+          )
+        }
+      {/* </ErrorBoundary> */}
 
     </BrowserRouter>
   )
@@ -41,7 +44,7 @@ const AppRoutes = (props: Props) => {
 type NavigateProp = {
   path?: string
 }
-const Navigation = ({ path = HOME  }: NavigateProp) => {
+const Navigation = ({ path = HOME }: NavigateProp) => {
   return (
     <Navigate to={path} replace />
   )
