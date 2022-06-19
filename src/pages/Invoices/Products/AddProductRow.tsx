@@ -51,7 +51,7 @@ const AddProductRow = ({
             let product = new Product({ ...values, id: `prod_${nanoid(8)}` });
             onSubmit(product);
             formik.resetForm();
-            console.log(nameRef.current);
+            // console.log(nameRef.current);
 
             nameRef.current?.focus();
         },

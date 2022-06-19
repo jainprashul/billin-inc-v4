@@ -49,7 +49,7 @@ const useInvoiceForm = (invoice: Invoices) => {
       details: '',
       gst: customerGST,
     })
-  }, [clientID, customerName, customerContact, customerGST]);
+  }, [clientID, customerName]);
 
   useEffect(() => {
     const { grossTotal, totalAmount, gstTotal } = products.reduce(

@@ -45,14 +45,14 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   // console.log(invoice)
 
 
-  const { date, gross, gstAmt, total, clientOpen, setClientOpen, 
-    setDate, onAddProduct, onDeleteProduct, 
+  const { date, gross, gstAmt, total, clientOpen, setClientOpen,
+    setDate, onAddProduct, onDeleteProduct,
     products, setProducts,
     customerGST, setCustomerGST,
     updateLedger, amountPaid, setAmountPaid,
     invoiceNo, gstInvoiceNo, clientNames,
-     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName, 
-     updateInvoiceVoucher, updateStock } = useInvoiceForm(invoice)
+    setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName,
+    updateInvoiceVoucher, updateStock } = useInvoiceForm(invoice)
 
   // console.log(client, clientID);
 
@@ -61,15 +61,16 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     setCustomerContact('')
     setCustomerName('')
     setCustomerGST('')
+    setAmountPaid(0)
     setDate(new Date())
     setClientOpen(false)
     setProducts([])
     formik.resetForm()
   }
-  
+
 
   const onSubmit = (values: Invoices) => {
-    
+
     products.forEach(product => {
       product.save()
       values.productIDs.add(product.id)
@@ -83,6 +84,11 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
       gstTotal: gstAmt,
       voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
     })
+
+    // update client data
+    client.save()
+    console.log(client);
+
 
     // check if invoice is valid
 
@@ -123,11 +129,11 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             freeSolo
             value={customerName}
             options={clientNames}
-            onChange={(event, value, reason ,detail ) => {
+            onChange={(event, value, reason, detail) => {
               console.log(value, reason, detail);
               if (reason === 'selectOption') {
                 setCustomerName(value as string)
-                db.getCompanyDB(invoice.companyID).clients.get({ name : value }).then(client => {
+                db.getCompanyDB(invoice.companyID).clients.get({ name: value }).then(client => {
                   // console.log(client);
                   setClientID(client?.id)
                 })
@@ -150,6 +156,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
               onChange={(event) => {
                 // console.log(event.target.value);
                 setCustomerName(event.target.value)
+                setClientID(client.id)
               }}
             />}
           />
@@ -165,6 +172,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             onChange={(event) => {
               // console.log(event.target.value);
               setCustomerContact(event.target.value)
+              client.contacts[0].phone = event.target.value
             }}
           />
           <TextField variant='standard'
@@ -177,6 +185,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             onChange={(event) => {
               // console.log(event.target.value);
               setCustomerGST(event.target.value)
+              client.gst = event.target.value
             }}
           />
           {/* <TextField
@@ -233,16 +242,45 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         justifyContent: 'space-between',
       }}>
 
-        <div className="subtotal">
-          <Typography variant='inherit' color='textSecondary'>Subtotal: ₹{gross.toFixed(2)}</Typography>
+        <div className="balances">
+          <div className="subtotal">
+            <Typography variant='inherit' color='textSecondary'>Subtotal: ₹{gross.toFixed(2)}</Typography>
+          </div>
+
+          <div className="tax">
+            <Typography variant='inherit' color='textSecondary'>Tax : ₹{gstAmt.toFixed(2)}</Typography>
+          </div>
+
+          <div className="total">
+            <Typography variant='inherit' color='textSecondary'>Total: ₹{total.toFixed(2)}</Typography>
+          </div>
         </div>
 
-        <div className="tax">
-          <Typography variant='inherit' color='textSecondary'>Tax : ₹{gstAmt.toFixed(2)}</Typography>
-        </div>
+        <div className="submitBtn"  style={{
+          marginTop: '-3rem',
+        }}>
 
-        <div className="total">
-          <Typography variant='h6' color='textSecondary'>Total: ₹{total.toFixed(2)}</Typography>
+          <TextField variant='standard' style={{
+            maxWidth: '12rem',
+            marginBottom: '1rem',
+          }}
+            margin="dense"
+            fullWidth
+            id="amount_paid"
+            name="amount_paid"
+            label="Amount Paid"
+            type="number"
+            value={amountPaid}
+            onChange={(event) => {
+              // console.log(event.target.value);
+              setAmountPaid(Number(event.target.value))
+            }}
+          />
+          <br />
+
+          <Button onClick={() => formik.handleSubmit()} variant="contained" color="primary" startIcon={<NavigationIcon />}>
+            {submitText}
+          </Button>
 
         </div>
 
@@ -252,18 +290,6 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           onAddProduct,
           onDeleteProduct,
         }} />
-
-      <Fab onClick={() => formik.handleSubmit()} style={{
-        // position: 'fixed',
-        // top: '2rem',
-        // right: '1rem',
-        marginTop: '1rem',
-        marginBottom: '1rem',
-        float: 'right',
-      }} variant="extended">
-        <NavigationIcon sx={{ mr: 1 }} />
-        {submitText}
-      </Fab>
 
       <ClientModel open={clientOpen} client={client} setOpen={setClientOpen} onClose={() => setClientOpen(false)} />
     </div>
