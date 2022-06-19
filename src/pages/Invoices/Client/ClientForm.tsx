@@ -4,6 +4,7 @@ import { Client } from '../../../services/database/model';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { getStateCites, stateList } from '../../../constants/states';
+import { gstPattern } from '../../../constants';
 
 type Props = {
     client?: Client
@@ -167,6 +168,9 @@ const ClientForm = ({
                         type="text"
                         autoComplete="gst"
                         value={gst}
+                        inputProps={{
+                            pattern : gstPattern
+                        }}
                         onChange={formik.handleChange}
                     />
                 </Grid>

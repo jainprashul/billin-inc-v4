@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react'
 import db from '../../services/database/db';
-import { Client, Invoices, Product, Stock, StockLog } from '../../services/database/model';
+import { Client, Invoices, Ledger, Product, Stock, StockLog } from '../../services/database/model';
 
 
 const useInvoiceForm = (invoice: Invoices) => {
@@ -12,6 +12,7 @@ const useInvoiceForm = (invoice: Invoices) => {
   const [total, setTotal] = useState<number>(invoice?.totalAmount);
   const [gross, setGross] = useState<number>(invoice?.grossTotal);
   const [gstAmt, setGstAmt] = useState<number>(invoice?.gstTotal);
+  const [amountPaid , setAmountPaid] = useState<number>(0);
 
   const [clientID, setClientID] = useState<string | undefined>(invoice?.clientID);
 
@@ -37,6 +38,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     if (clientID) {
       const res = await db.getCompanyDB(invoice?.companyID)?.clients.get(clientID);
       res ? setCustomerContact(res.contacts[0].phone as string) : setCustomerContact('');
+      res ? setCustomerGST(res.gst as string) : setCustomerGST('');
       return res;
     }
     return new Client({
@@ -45,9 +47,9 @@ const useInvoiceForm = (invoice: Invoices) => {
       companyID: 1,
       contacts: [{ name: customerName, email: '', phone: customerContact, mobile: '' }],
       details: '',
-      gst: '',
+      gst: customerGST,
     })
-  }, [clientID, customerName, customerContact])
+  }, [clientID, customerName, customerContact, customerGST]);
 
   useEffect(() => {
     const { grossTotal, totalAmount, gstTotal } = products.reduce(
@@ -88,6 +90,30 @@ const useInvoiceForm = (invoice: Invoices) => {
         lastInvoiceNo: invoiceNo,
       }
     db.companies.update(invoice.companyID, obj)
+  }
+
+  const updateLedger = async ()=> {
+    const newLedger = new Ledger({
+      companyID: invoice.companyID,
+      date : date as Date,
+      voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+      voucherType: 'SALES',
+      clientID: clientID as string,
+      clientType: 'CUSTOMER',
+      credit: amountPaid,
+      debit: total,
+      payable: 0,
+      payableType: 'CASH',
+      receivable: total - amountPaid,
+      receivableType: 'CASH',
+      cash : 0,
+    })
+
+    if (newLedger.receivableType === 'CASH') {
+      newLedger.cash = newLedger.credit;
+    }
+
+    newLedger.save();
   }
 
   const updateStock = async () => {
@@ -144,7 +170,7 @@ const useInvoiceForm = (invoice: Invoices) => {
           hsn: product.hsn,
           stockValue: 0,
           logIDs: new Set([]),
-        })
+        }) 
 
         newStock.logIDs.add(openingStockLog.id);
         newStock.save();
@@ -164,10 +190,11 @@ const useInvoiceForm = (invoice: Invoices) => {
       companyID: 1,
       contacts: [{ name: customerName, email: '', phone: customerContact, mobile: '' }],
       details: '',
-      gst: '',
+      gst: customerGST,
     }),
     customerContact, customerGST, customerName,
     setCustomerName, setCustomerGST, setCustomerContact,
+    amountPaid, setAmountPaid,
     date, setDate,
     clientID, setClientID,
     clientOpen, setClientOpen,
@@ -179,6 +206,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     onDeleteProduct,
     updateInvoiceVoucher,
     updateStock,
+    updateLedger,
   }
 }
 

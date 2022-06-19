@@ -95,6 +95,7 @@ export class Ledger implements ILedger {
                 // console.log(companyDB);
                 const _save = companyDB.ledger.put({ ...this }).then(_id => {
                     this.id = _id;
+                    console.log("Ledger saved", this.id);
                     return this.id;
                 });
                 return _save;

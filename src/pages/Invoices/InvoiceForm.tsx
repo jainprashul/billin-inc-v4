@@ -21,6 +21,7 @@ type Props = {
   submitText?: string
 }
 
+
 const id = `inv_${nanoid(8)}`
 
 const invoiceSchema = Yup.object().shape({
@@ -44,7 +45,14 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   // console.log(invoice)
 
 
-  const { date, gross, gstAmt, total, clientOpen, setClientOpen, setDate, onAddProduct, onDeleteProduct, products, setProducts, invoiceNo, gstInvoiceNo, clientNames, setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName, updateInvoiceVoucher, updateStock } = useInvoiceForm(invoice)
+  const { date, gross, gstAmt, total, clientOpen, setClientOpen, 
+    setDate, onAddProduct, onDeleteProduct, 
+    products, setProducts,
+    customerGST, setCustomerGST,
+    updateLedger, amountPaid, setAmountPaid,
+    invoiceNo, gstInvoiceNo, clientNames,
+     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName, 
+     updateInvoiceVoucher, updateStock } = useInvoiceForm(invoice)
 
   // console.log(client, clientID);
 
@@ -52,6 +60,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     setClientID('')
     setCustomerContact('')
     setCustomerName('')
+    setCustomerGST('')
     setDate(new Date())
     setClientOpen(false)
     setProducts([])
@@ -75,8 +84,19 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
       voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
     })
 
+    // check if invoice is valid
+
     updateInvoiceVoucher()
+    updateLedger()
     updateStock()
+
+    // update ledger done
+    // update stock done
+    // print invoice
+    // clear form done
+
+    // send invoice to server 
+    // send to whatsapp phone number
 
     console.log(invoice);
     handleSubmit(invoice)
@@ -114,6 +134,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
               } else if (reason === 'clear') {
                 setCustomerName('')
                 setCustomerContact('')
+                setCustomerGST('')
                 setClientID('')
               }
             }}
@@ -144,6 +165,18 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             onChange={(event) => {
               // console.log(event.target.value);
               setCustomerContact(event.target.value)
+            }}
+          />
+          <TextField variant='standard'
+            margin="dense"
+            fullWidth
+            id="client_gst"
+            name="client_gst"
+            label="Customer GST"
+            value={customerGST}
+            onChange={(event) => {
+              // console.log(event.target.value);
+              setCustomerGST(event.target.value)
             }}
           />
           {/* <TextField
@@ -221,11 +254,12 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         }} />
 
       <Fab onClick={() => formik.handleSubmit()} style={{
-        position: 'absolute',
-        bottom: '1rem',
-        right: '1rem',
+        // position: 'fixed',
+        // top: '2rem',
+        // right: '1rem',
         marginTop: '1rem',
         marginBottom: '1rem',
+        float: 'right',
       }} variant="extended">
         <NavigationIcon sx={{ mr: 1 }} />
         {submitText}
