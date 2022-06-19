@@ -234,6 +234,7 @@ const AddProductRow = ({
                         onChange={formik.handleChange}
                         InputProps={{
                             readOnly: true,
+                            
                         }}
                     />
                 </TableCell>

@@ -14,6 +14,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import db from '../../services/database/db';
 import ClientModel from './Client/Client';
+import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 type Props = {
   onSubmit: (values: Invoices) => void
@@ -43,6 +45,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   voucherType: 'NON_GST'
 }) }: Props) => {
   // console.log(invoice)
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 
   const { date, gross, gstAmt, total, clientOpen, setClientOpen,
@@ -52,7 +55,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     updateLedger, amountPaid, setAmountPaid,
     invoiceNo, gstInvoiceNo, clientNames,
     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName,
-    updateInvoiceVoucher, updateStock } = useInvoiceForm(invoice)
+    updateInvoiceVoucher, updateStock, validate } = useInvoiceForm(invoice)
 
   // console.log(client, clientID);
 
@@ -71,6 +74,23 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 
   const onSubmit = (values: Invoices) => {
 
+    // check if invoice is valid
+    let err = validate()
+    if (err) {
+      // alert(err)
+      enqueueSnackbar(err, {
+        variant: 'error',
+        autoHideDuration: 2000,
+        style: { whiteSpace: 'pre-line' },
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+      })
+      return
+    }
+
+    // save products to db
     products.forEach(product => {
       product.save()
       values.productIDs.add(product.id)
@@ -256,7 +276,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           </div>
         </div>
 
-        <div className="submitBtn"  style={{
+        <div className="submitBtn" style={{
           marginTop: '-3rem',
         }}>
 

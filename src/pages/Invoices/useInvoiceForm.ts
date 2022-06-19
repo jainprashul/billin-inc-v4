@@ -92,6 +92,28 @@ const useInvoiceForm = (invoice: Invoices) => {
     db.companies.update(invoice.companyID, obj)
   }
 
+  const validate = () => {
+    let err = '';
+    
+    if (customerName === '') {
+      err += 'Please enter customer name. \n';
+    }
+
+    if (invoice.gstEnabled && customerGST === '') {
+      err += 'Please enter customer GST. \n';
+    }
+
+    if (products.length === 0) {
+      err += 'Please add atleast one product. \n';
+    }
+
+    if (amountPaid < 0) {
+      err += 'Please enter valid amount paid.'; 
+    }
+
+    return err.trim().length > 0 ? err : null;
+  }
+
   const updateLedger = async ()=> {
     const newLedger = new Ledger({
       companyID: invoice.companyID,
@@ -207,6 +229,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     updateInvoiceVoucher,
     updateStock,
     updateLedger,
+    validate,
   }
 }
 
