@@ -53,9 +53,10 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     products, setProducts,
     customerGST, setCustomerGST,
     updateLedger, amountPaid, setAmountPaid,
+    discount, setDiscount,
     invoiceNo, gstInvoiceNo, clientNames,
     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName,
-    updateInvoiceVoucher, updateStock, validateInvoice, printInvoice } = useInvoiceForm(invoice)
+    updateInvoiceVoucher, updateStock, validateInvoice, getVoucherType, printInvoice } = useInvoiceForm(invoice)
 
   // console.log(client, clientID);
 
@@ -65,6 +66,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     setCustomerName('')
     setCustomerGST('')
     setAmountPaid(0)
+    setDiscount(0)
     setDate(new Date())
     setClientOpen(false)
     setProducts([])
@@ -106,7 +108,12 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         subTotal: gross,
         gstTotal: gstAmt,
         voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+        voucherType: gstEnabled ? getVoucherType() : "NON_GST",
+        discount: discount > 0,
+        discountValue: discount,
       })
+
+      console.log('inv', invoice)
 
       // update client data
       client.save()
@@ -276,15 +283,47 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             <Typography variant='inherit' color='textSecondary'>Tax : ₹{gstAmt.toFixed(2)}</Typography>
           </div>
 
-          <div className="total">
-            <Typography variant='inherit' color='textSecondary'>Total: ₹{total.toFixed(2)}</Typography>
-          </div>
+          {discount > 0 ? (
+            <>
+              <div className="gross">
+                <Typography variant='inherit' color='textSecondary'>Gross Amount: ₹{total.toFixed(2)}</Typography>
+              </div>
+              <div className="discount">
+                <Typography variant='inherit' color='textSecondary'>Discount: ₹{discount.toFixed(2)}</Typography>
+              </div>
+              <div className="total">
+                <Typography variant='inherit' color='textSecondary'>Total: ₹{(total - discount).toFixed(2)}</Typography>
+              </div>
+            </>
+          ) : (<div className="total">
+                <Typography variant='inherit' color='textSecondary'>Total: ₹{total.toFixed(2)}</Typography>
+              </div>)}
+
+
+
         </div>
 
         <div className="submitBtn" style={{
           marginTop: '-3rem',
         }}>
 
+          <TextField variant='standard' style={{
+            maxWidth: '12rem',
+            marginBottom: '1rem',
+            marginRight: '1rem',
+          }}
+            margin="dense"
+            fullWidth
+            id="discount"
+            name="discount"
+            label="Discount"
+            type="number"
+            value={discount}
+            onChange={(event) => {
+              // console.log(event.target.value);
+              setDiscount(Number(event.target.value))
+            }}
+          />
           <TextField variant='standard' style={{
             maxWidth: '12rem',
             marginBottom: '1rem',
@@ -303,7 +342,9 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           />
           <br />
 
-          <Button onClick={() => formik.handleSubmit()} variant="contained" color="primary" startIcon={<NavigationIcon />}>
+          <Button style={{
+            float: 'right',
+          }} onClick={() => formik.handleSubmit()} variant="contained" color="primary" startIcon={<NavigationIcon />}>
             {submitText}
           </Button>
 

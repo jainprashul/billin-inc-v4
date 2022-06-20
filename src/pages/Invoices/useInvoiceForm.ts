@@ -15,6 +15,7 @@ const useInvoiceForm = (invoice: Invoices) => {
   const [gross, setGross] = useState<number>(invoice?.grossTotal);
   const [gstAmt, setGstAmt] = useState<number>(invoice?.gstTotal);
   const [amountPaid, setAmountPaid] = useState<number>(0);
+  const [discount, setDiscount] = useState<number>(0);
 
   const [clientID, setClientID] = useState<string | undefined>(invoice?.clientID);
 
@@ -135,16 +136,20 @@ const useInvoiceForm = (invoice: Invoices) => {
       ...invoice,
       products,
       client,
-      voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+      // voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
       company: query?.company,
-      date: date?.toLocaleDateString(),
-      totalAmount: total,
-      grossTotal: gross,
-      gstTotal: gstAmt,
       amountPaid: amountPaid,
-      saletype: 'interstate'
     }
     printBill(printInv);
+  }
+
+  const getVoucherType = () => {
+    let companyGST =  query?.company.gst.substring(0, 2);
+    let clientGST = client?.gst.substring(0, 2);
+    if (companyGST === clientGST) {
+      return "INTER_STATE";
+    }
+    return "INTRA_STATE";
   }
 
   const updateLedger = async () => {
@@ -250,6 +255,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     customerContact, customerGST, customerName,
     setCustomerName, setCustomerGST, setCustomerContact,
     amountPaid, setAmountPaid,
+    discount, setDiscount,
     date, setDate,
     clientID, setClientID,
     clientOpen, setClientOpen,
@@ -264,6 +270,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     updateLedger,
     validateInvoice,
     printInvoice,
+    getVoucherType,
   }
 }
 

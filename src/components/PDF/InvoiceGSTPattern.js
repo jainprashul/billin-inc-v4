@@ -3,8 +3,8 @@ import moment from 'moment';
 import numWords from 'num-words'
 
 /** Invoice Template */
-const invoicePatternGST = ({ company, gstEnabled, client, voucherNo, billingDate, products, grossTotal, gstTotal, totalAmount, discount, discountValue, saletype }) => {
-    const {name, address, contacts, gst} = company;
+const invoicePatternGST = ({ company, gstEnabled, client, voucherNo, billingDate, products, grossTotal, gstTotal, subTotal, totalAmount, discount, discountValue, amountPaid, voucherType }) => {
+    const { name, address, contacts, gst } = company;
     console.log(company);
     return `
 <!DOCTYPE html >
@@ -188,7 +188,16 @@ table th {
     margin: 20px 0 0 0;
 }
 
+.footer {
+
+}
+
+#payment {
+    margin: 16px 0 0 0;
+}
+
 #signature {
+    margin-top: -56px;
     text-align: right;
     padding-top: 5px;
 }
@@ -278,16 +287,16 @@ thead.itembox{
             <th>Unit</th>
             <th>Price</th>
             <th>Amount</th>
-            ${saletype === 'intrastate' ? (`
+            ${voucherType === 'INTRA_STATE' ? (`
             <th colspan='2'>CGST</th>
             <th colspan='2'>SGST</th>`) : ('')}
-            ${saletype === 'interstate' ? (`
+            ${voucherType === 'INTER_STATE' ? (`
             <th colspan='2'>IGST</th>`) : ('')}
             <th>Total</th>
             </tr>
             <tr>
             <th colspan='7'></th>
-            ${saletype === 'intrastate' ? (`
+            ${voucherType === 'INTRA_STATE' ? (`
             <th>%</th>
             <th>Amt</th>`) : ('')}
             <th>%</th>
@@ -307,21 +316,22 @@ thead.itembox{
                     <td>${product.unit}</td>
                     <td>${(product.price).toFixed(2)}</td>
                     <td>${(product.grossAmount).toFixed(2)}</td>    
-            ${saletype === 'intrastate' ? (`
+            ${voucherType === 'INTRA_STATE' ? (`
                     <td>${product.gstRate / 2}</td>
                     <td>${(product.gstAmount / 2).toFixed(2)}</td>
                     <td>${product.gstRate / 2}</td>
-                    <td>${(product.gstAmount / 2).toFixed(2)}</td>`) : ('')}
-            ${saletype === 'interstate' ? (`
+                    <td>${(product.gstAmount / 2).toFixed(2)}</td>`)
+                : ('')}
+            ${voucherType === 'INTER_STATE' ? (`
                     <td>${product.gstRate}</td>
-                    <td>${(product.gstAmount).toFixed(2)}</td>`) : ('')}
-
+                    <td>${(product.gstAmount).toFixed(2)}</td>`)
+                : ('')}
                     
-                    <td>${(product.gstAmount).toFixed(2)}</td>
+                    <td>${(product.totalAmount).toFixed(2)}</td>
 		        </tr> `;
     })}
         
-        ${products.length < 6 ? saletype === "intrastate" ? (`
+        ${products.length < 6 ? voucherType === "INTRA_STATE" ? (`
         <tr class="item-row"><td colspan='12'></td></tr>
         <tr class="item-row"><td colspan='12'></td></tr>
         <tr class="item-row"><td colspan='12'></td></tr>
@@ -329,7 +339,7 @@ thead.itembox{
         <tr class="item-row"><td colspan='12'></td></tr>
         <tr class="item-row"><td colspan='12'></td></tr>
         <tr class="item-row"><td colspan='12'></td></tr>`)
-            : saletype === 'interstate' ? (`
+            : voucherType === 'INTER_STATE' ? (`
         <tr class="item-row"><td colspan='10'></td></tr>
         <tr class="item-row"><td colspan='10'></td></tr>
         <tr class="item-row"><td colspan='10'></td></tr>
@@ -339,19 +349,19 @@ thead.itembox{
         <tr class="item-row"><td colspan='10'></td></tr>`) : ('') : ('')}
             
 
-		${saletype === 'intrastate' ? (
-        `
+		${voucherType === 'INTRA_STATE' ? (
+            `
         <tr class='item-row start'>
             <td colSpan="6" style='text-align : left' className="">Total :  </td>
             <td colSpan="1" className="">${(grossTotal).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal / 2).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal / 2).toFixed(2)}</td>
-            <td colSpan="1" >${(totalAmount).toFixed(2)}</td>
+            <td colSpan="1" >${(subTotal).toFixed(2)}</td>
         </tr >
          <tr className=''>
             <td colSpan="8" class="blank"> </td>
             <td colSpan="2" class="total-line">SubTotal : </td>
-            <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
+            <td colSpan="2" class="total-value"><span id="total">Rs. ${(subTotal).toFixed(2)}</span></td>
         </tr >
         <tr className=''>
             <td colSpan="8" class="blank "></td>
@@ -366,6 +376,11 @@ thead.itembox{
         ${discount ? (`
         <tr className=''>
             <td colSpan="6" class="blank"></td>
+            <td colSpan="2" class="total-line">Gross Total :</td>
+            <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
+        </tr>
+        <tr className=''>
+            <td colSpan="6" class="blank"></td>
             <td colSpan="2" class="total-line">Discount :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(discountValue).toFixed(2)}</span></td>
         </tr>
@@ -378,18 +393,18 @@ thead.itembox{
 
         ) : ('')
         }
-        ${saletype === 'interstate' ? (
+        ${voucherType === 'INTER_STATE' ? (
             `
             <tr class='item-row start'>
             <td colSpan="6" style='text-align : left' className="">Total  </td>
-            <td colSpan="1" className="">${(grossTotal).toFixed(2)}</td>
+            <td colSpan="1" className="">${(subTotal).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal).toFixed(2)}</td>
-            <td colSpan="1" >${(totalAmount).toFixed(2)}</td>
+            <td colSpan="1" >${(grossTotal).toFixed(2)}</td>
         </tr >
             <tr className=''>
             <td colSpan="6" class="blank start"> </td>
             <td colSpan="2" class="total-line">Sub Total :</td>
-            <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal.toFixed(2))}</span></td>
+            <td colSpan="2" class="total-value"><span id="total">Rs. ${(subTotal.toFixed(2))}</span></td>
         </tr >
         <tr className=''>
             <td colSpan="6" class="blank"></td>
@@ -397,6 +412,11 @@ thead.itembox{
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(gstTotal).toFixed(2)}</span></td>
         </tr>
         ${discount ? (`
+        <tr className=''>
+            <td colSpan="6" class="blank"></td>
+            <td colSpan="2" class="total-line">Gross Total :</td>
+            <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
+        </tr>
         <tr className=''>
             <td colSpan="6" class="blank"></td>
             <td colSpan="2" class="total-line">Discount :</td>
@@ -414,10 +434,17 @@ thead.itembox{
         
         </tbody>
         </table>
+
+        <div class="footer">
+        <div id="payment">
+        <p> For the current bill. </p>
+        <p> <span class="payment-due">Paid:</span> <span id="totalDue">Rs. ${amountPaid.toFixed(2)}</span> </p>
+        <p> <span class="payment-due">Remaining:</span> <span id="totalDue">Rs. ${(totalAmount - amountPaid).toFixed(2)}</span> </p>
         
         <div id="signature">
         <p >For ${name}</p>
         <p id='sign'>Authorized Signature</p>
+        </div>
         </div>
 		
 		<div id="terms">
