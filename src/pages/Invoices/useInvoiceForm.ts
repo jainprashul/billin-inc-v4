@@ -2,8 +2,10 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react'
+import invoicePatternGST from '../../components/PDF/InvoiceGSTPattern';
 import db from '../../services/database/db';
-import { Client, Invoices, Ledger, Product, Stock, StockLog } from '../../services/database/model';
+import { Client, Company, Invoices, Ledger, Product, Stock, StockLog } from '../../services/database/model';
+import { Invoice } from '../../services/database/model/Invoices';
 
 
 const useInvoiceForm = (invoice: Invoices) => {
@@ -12,7 +14,7 @@ const useInvoiceForm = (invoice: Invoices) => {
   const [total, setTotal] = useState<number>(invoice?.totalAmount);
   const [gross, setGross] = useState<number>(invoice?.grossTotal);
   const [gstAmt, setGstAmt] = useState<number>(invoice?.gstTotal);
-  const [amountPaid , setAmountPaid] = useState<number>(0);
+  const [amountPaid, setAmountPaid] = useState<number>(0);
 
   const [clientID, setClientID] = useState<string | undefined>(invoice?.clientID);
 
@@ -25,14 +27,14 @@ const useInvoiceForm = (invoice: Invoices) => {
 
   const query = useLiveQuery(async () => {
     return {
-      invoiceNo: await db.companies.get(invoice?.companyID).then(company => company?.lastInvoiceNo) as number,
-      gstInvoiceNo: await db.companies.get(invoice?.companyID).then(company => company?.lastGSTInvoiceNo) as number,
+      company: await db.companies.get(invoice?.companyID) as Company,
+      // gstInvoiceNo: await db.companies.get(invoice?.companyID).then(company => company?.lastGSTInvoiceNo) as number,
       clientNames: await db.getCompanyDB(invoice?.companyID).clients.orderBy("name").keys(),
     }
   });
 
-  const invoiceNo = query ? query.invoiceNo + 1 : 1;
-  const gstInvoiceNo =  query ? `G-${query.gstInvoiceNo + 1}` : `G-${1}`;
+  const invoiceNo = query ? query.company.lastInvoiceNo  + 1 : 1;
+  const gstInvoiceNo = query ? `G-${query.company.lastGSTInvoiceNo + 1}` : `G-${1}`;
 
   const client = useLiveQuery(async () => {
     if (clientID) {
@@ -73,9 +75,8 @@ const useInvoiceForm = (invoice: Invoices) => {
   }, [invoice.grossTotal, invoice.gstTotal, invoice.totalAmount, products])
 
   const onAddProduct = (product: Product) => {
-    product.voucherID = invoice.id;
+    // product.voucherID = invoice.id;
     console.log('useInvFOrm', product)
-
     setProducts([...products, product])
   }
 
@@ -85,16 +86,16 @@ const useInvoiceForm = (invoice: Invoices) => {
 
   const updateInvoiceVoucher = () => {
     const obj = invoice.gstEnabled ? {
-        lastGSTInvoiceNo:  Number(gstInvoiceNo.replace('G-', '')),
-      } : {
-        lastInvoiceNo: invoiceNo,
-      }
+      lastGSTInvoiceNo: Number(gstInvoiceNo.replace('G-', '')),
+    } : {
+      lastInvoiceNo: invoiceNo,
+    }
     db.companies.update(invoice.companyID, obj)
   }
 
-  const validate = () => {
+  const validateInvoice = () => {
     let err = '';
-    
+
     if (customerName === '') {
       err += 'Please enter customer name. \n';
     }
@@ -108,16 +109,48 @@ const useInvoiceForm = (invoice: Invoices) => {
     }
 
     if (amountPaid < 0) {
-      err += 'Please enter valid amount paid.'; 
+      err += 'Please enter valid amount paid.';
     }
 
     return err.trim().length > 0 ? err : null;
   }
 
-  const updateLedger = async ()=> {
+  /** Print Bill from PDF
+ * @param invoice
+ */
+  const printBill = (invoice: any) => {
+    console.log('printBill', invoice)
+    const w = window.open( '', '_blank', 'top=0,left=0,height=100%,width=auto');
+    if(w) {
+      w.document.write(invoicePatternGST(invoice));
+      w.document.close();
+      w.focus();
+      w.print();
+      // w.close();
+    }
+  }
+
+  const printInvoice = (invoice: Invoice) => {
+    const printInv = {
+      ...invoice,
+      products,
+      client,
+      voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+      company: query?.company,
+      date: date?.toLocaleDateString(),
+      totalAmount: total,
+      grossTotal: gross,
+      gstTotal: gstAmt,
+      amountPaid: amountPaid,
+      saletype: 'interstate'
+    }
+    printBill(printInv);
+  }
+
+  const updateLedger = async () => {
     const newLedger = new Ledger({
       companyID: invoice.companyID,
-      date : date as Date,
+      date: date as Date,
       voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
       voucherType: 'SALES',
       clientID: clientID as string,
@@ -128,7 +161,7 @@ const useInvoiceForm = (invoice: Invoices) => {
       payableType: 'CASH',
       receivable: total - amountPaid,
       receivableType: 'CASH',
-      cash : 0,
+      cash: 0,
     })
 
     if (newLedger.receivableType === 'CASH') {
@@ -140,7 +173,7 @@ const useInvoiceForm = (invoice: Invoices) => {
 
   const updateStock = async () => {
     products.forEach(async (product) => {
-      const stock = await db.getCompanyDB(invoice.companyID)?.stocks.get({name : product.name, companyID: invoice.companyID});
+      const stock = await db.getCompanyDB(invoice.companyID)?.stocks.get({ name: product.name, companyID: invoice.companyID });
       if (stock) {
         db.getCompanyDB(invoice.companyID)?.stocks.update(stock.id, {
           quantity: stock.quantity - product.quantity,
@@ -151,7 +184,7 @@ const useInvoiceForm = (invoice: Invoices) => {
           companyID: invoice.companyID,
           clientID: clientID as string,
           date: new Date(),
-          logType:'SALE',
+          logType: 'SALE',
           quantity: product.quantity,
           rate: product.price,
           amount: product.totalAmount,
@@ -171,7 +204,7 @@ const useInvoiceForm = (invoice: Invoices) => {
           companyID: invoice.companyID,
           clientID: clientID as string,
           date: new Date(),
-          logType:'OPENING_STOCK',
+          logType: 'OPENING_STOCK',
           quantity: product.quantity,
           rate: product.price,
           amount: product.totalAmount,
@@ -192,11 +225,11 @@ const useInvoiceForm = (invoice: Invoices) => {
           hsn: product.hsn,
           stockValue: 0,
           logIDs: new Set([]),
-        }) 
+        })
 
         newStock.logIDs.add(openingStockLog.id);
         newStock.save();
-        
+
       }
     }
     )
@@ -229,7 +262,8 @@ const useInvoiceForm = (invoice: Invoices) => {
     updateInvoiceVoucher,
     updateStock,
     updateLedger,
-    validate,
+    validateInvoice,
+    printInvoice,
   }
 }
 

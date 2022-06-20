@@ -6,7 +6,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Product } from '../../../services/database/model';
-import AddProductRow from './AddProductRow';
+import AddGSTProductRow from './AddGSTProductRow';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -35,7 +35,7 @@ const ProductTable = ({
         <TableHead>
           <TableRow>
             <TableCell>S.N.</TableCell>
-            <TableCell align="left">Product Name</TableCell>
+            <TableCell align="left">Product Name* </TableCell>
             <TableCell align="center">HSN Code</TableCell>
             <TableCell align="center">Quantity</TableCell>
             <TableCell align="center">Unit Price</TableCell>
@@ -72,7 +72,7 @@ const ProductTable = ({
             </TableRow>
           ))}
         </TableBody>
-        <AddProductRow onSubmit={onAddProduct} />
+        <AddGSTProductRow onSubmit={onAddProduct} />
       </Table>
       {/* <AddProduct onAddProduct={onAddProduct} /> */}
     </TableContainer>

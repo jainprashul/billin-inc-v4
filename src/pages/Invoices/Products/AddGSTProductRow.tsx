@@ -29,7 +29,7 @@ const productSchema = yup.object().shape({
     unit: yup.string(),
 });
 
-const AddProductRow = ({
+const AddGSTProductRow = ({
     product = new Product({
         companyID: 1,
         gstRate: 0,
@@ -57,13 +57,13 @@ const AddProductRow = ({
         },
         validationSchema: productSchema,
     })
-    
+
     const { name, hsn, quantity, price, unit, gstRate } = formik.values;
     const grossAmount = quantity * price;
     const gstAmount = grossAmount * gstRate / 100;
     const totalAmount = grossAmount + gstAmount;
 
-    
+
     useEffect(() => {
         db.getCompanyDB(1)?.stocks.orderBy('name').uniqueKeys().then(productList => {
             setProductList(productList as string[]);
@@ -77,20 +77,9 @@ const AddProductRow = ({
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell component="th" scope="row"></TableCell>
                 <TableCell padding='none' component="th" scope="row">
-                    {/* <TextField
-                        autoFocus
-                        size='small'
-                        fullWidth
-                        // label="Product Name"
-                        inputRef={nameRef}
-                        value={name}
-                        name="name"
-                        required
-                        onChange={formik.handleChange}
-                    /> */}
-
                     <Autocomplete
                         id="product-name"
+                        style={{ marginTop: '-4px' }}
                         freeSolo
                         value={name}
                         options={[...productList]}
@@ -98,7 +87,7 @@ const AddProductRow = ({
                             console.log(value, reason, detail);
                             if (reason === 'selectOption') {
                                 formik.setFieldValue('name', value);
-                                db.getCompanyDB(1).stocks.get({name: value}).then((product) => {
+                                db.getCompanyDB(1).stocks.get({ name: value }).then((product) => {
                                     if (product) {
                                         formik.setFieldValue('hsn', product.hsn);
                                         formik.setFieldValue('unit', product.unit);
@@ -126,7 +115,6 @@ const AddProductRow = ({
                             value={name}
                             name="name"
                             onChange={formik.handleChange}
-
                         />}
                     />
                 </TableCell>
@@ -234,7 +222,7 @@ const AddProductRow = ({
                         onChange={formik.handleChange}
                         InputProps={{
                             readOnly: true,
-                            
+
                         }}
                     />
                 </TableCell>
@@ -264,4 +252,4 @@ const AddProductRow = ({
     )
 }
 
-export default AddProductRow;
+export default AddGSTProductRow;

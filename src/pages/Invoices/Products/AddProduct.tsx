@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Product } from '../../../services/database/model';
-import AddProductRow from './AddProductRow';
+import AddGSTProductRow from './AddGSTProductRow';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,6 +18,7 @@ import db from '../../../services/database/db';
 
 type Props = {
   product?: Product,
+  gstEnabled?: boolean,
   onAddProduct: (product: Product) => void,
 }
 
@@ -34,7 +35,7 @@ const AddProduct = ({
          
         </TableHead>
         
-        <AddProductRow onSubmit={onAddProduct} /> 
+        <AddGSTProductRow onSubmit={onAddProduct} /> 
       </Table>
     </TableContainer>
   );

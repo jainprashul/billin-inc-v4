@@ -55,7 +55,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     updateLedger, amountPaid, setAmountPaid,
     invoiceNo, gstInvoiceNo, clientNames,
     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName,
-    updateInvoiceVoucher, updateStock, validate } = useInvoiceForm(invoice)
+    updateInvoiceVoucher, updateStock, validateInvoice, printInvoice } = useInvoiceForm(invoice)
 
   // console.log(client, clientID);
 
@@ -75,7 +75,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   const onSubmit = (values: Invoices) => {
 
     // check if invoice is valid
-    let err = validate()
+    let err = validateInvoice()
     if (err) {
       // alert(err)
       enqueueSnackbar(err, {
@@ -90,42 +90,47 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
       return
     }
 
-    // save products to db
-    products.forEach(product => {
-      product.save()
-      values.productIDs.add(product.id)
-      formik.setFieldValue('productIDs', values.productIDs)
+    let companyDB = db.getCompanyDB(values.companyID)
+    companyDB.transaction('rw', [...companyDB.tables], async () => {
+      // save products to db
+      products.forEach(product => {
+        product.voucherID = values.id
+        product.save()
+        values.productIDs.add(product.id)
+        formik.setFieldValue('productIDs', values.productIDs)
+      })
+
+      const invoice = new Invoices({
+        ...values,
+        clientID: client.id,
+        subTotal: gross,
+        gstTotal: gstAmt,
+        voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+      })
+
+      // update client data
+      client.save()
+      console.log(client);
+
+
+      // check if invoice is valid
+
+      updateInvoiceVoucher()
+      updateLedger()
+      updateStock()
+
+      // update ledger done
+      // update stock done
+      // print invoice
+      // clear form done
+
+      // send invoice to server 
+      // send to whatsapp phone number
+
+      console.log(invoice);
+      handleSubmit(invoice)
+      printInvoice(invoice)
     })
-
-    const invoice = new Invoices({
-      ...values,
-      clientID: client.id,
-      subTotal: gross,
-      gstTotal: gstAmt,
-      voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
-    })
-
-    // update client data
-    client.save()
-    console.log(client);
-
-
-    // check if invoice is valid
-
-    updateInvoiceVoucher()
-    updateLedger()
-    updateStock()
-
-    // update ledger done
-    // update stock done
-    // print invoice
-    // clear form done
-
-    // send invoice to server 
-    // send to whatsapp phone number
-
-    console.log(invoice);
-    handleSubmit(invoice)
     clearForm()
   }
 
@@ -312,6 +317,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         }} />
 
       <ClientModel open={clientOpen} client={client} setOpen={setClientOpen} onClose={() => setClientOpen(false)} />
+      <iframe className='hide' id='print' title='Print Invoice'></iframe>
     </div>
   )
 }
