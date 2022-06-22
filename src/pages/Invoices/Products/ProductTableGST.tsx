@@ -10,7 +10,6 @@ import AddGSTProductRow from './AddGSTProductRow';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddProductRow from './AddProductRow';
-import ProductTableGST from './ProductTableGST';
 
 
 
@@ -18,24 +17,17 @@ import ProductTableGST from './ProductTableGST';
 
 type Props = {
   products: Product[],
-  gstEnabled : boolean,
   eventFunctions: {
     onAddProduct: (product: Product) => void,
     onDeleteProduct: (product: Product) => void,
   }
 }
 
-const ProductTable = ({
-  gstEnabled,
+const ProductTableGST = ({
   products,
   eventFunctions,
 }: Props) => {
   const { onAddProduct, onDeleteProduct } = eventFunctions;
-
-  if (gstEnabled) {
-    return <ProductTableGST products={products} eventFunctions={eventFunctions}  />
-  }
-
   return (
     <TableContainer style={{
       marginTop: '1rem',
@@ -45,10 +37,13 @@ const ProductTable = ({
           <TableRow>
             <TableCell>S.N.</TableCell>
             <TableCell align="left">Product Name* </TableCell>
+            <TableCell align="center">HSN Code</TableCell>
             <TableCell align="center">Quantity</TableCell>
             <TableCell align="center">Unit Price</TableCell>
             <TableCell align="center">Unit Type</TableCell>
             <TableCell align="center">Gross Value</TableCell>
+            <TableCell align="center">GST Rate</TableCell>
+            <TableCell align="center">GST Amount</TableCell>
             <TableCell align="center">Total</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
@@ -60,25 +55,29 @@ const ProductTable = ({
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">{i + 1}.</TableCell>
-              <TableCell component="th" scope="row">{ product.name }</TableCell>
-              <TableCell align="center">{ product.quantity }</TableCell>
-              <TableCell align="center">{ product.price }</TableCell>
-              <TableCell align="center">{ product.unit }</TableCell>
-              <TableCell align="center">{ product.grossAmount }</TableCell>
-              <TableCell align="center">{ product.totalAmount }</TableCell>
+              <TableCell component="th" scope="row">{product.name}</TableCell>
+              <TableCell align="center">{product.hsn}</TableCell>
+              <TableCell align="center">{product.quantity}</TableCell>
+              <TableCell align="center">{product.price}</TableCell>
+              <TableCell align="center">{product.unit}</TableCell>
+              <TableCell align="center">{product.grossAmount}</TableCell>
+              <TableCell align="center">{product.gstRate}</TableCell>
+              <TableCell align="center">{product.gstAmount}</TableCell>
+              <TableCell align="center">{product.totalAmount}</TableCell>
               <TableCell align="center">
-              <IconButton aria-label="delete" size="small" onClick={()=>{
-                onDeleteProduct(product)
-              }}>  <DeleteIcon />
+                <IconButton aria-label="delete" size="small" onClick={() => {
+                  onDeleteProduct(product)
+                }}>
+                  <DeleteIcon />
                 </IconButton></TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <AddProductRow onSubmit={onAddProduct} />
+        <AddGSTProductRow onSubmit={onAddProduct} />
       </Table>
       {/* <AddProduct onAddProduct={onAddProduct} /> */}
     </TableContainer>
   );
 }
 
-export default ProductTable;
+export default ProductTableGST;

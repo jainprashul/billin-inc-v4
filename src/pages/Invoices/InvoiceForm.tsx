@@ -37,7 +37,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   companyID: 1,
   discount: false,
   discountValue: 0,
-  gstEnabled: true,
+  gstEnabled: false,
   gstTotal: 0,
   productIDs: new Set<string>([]),
   subTotal: 0,
@@ -351,7 +351,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         </div>
 
       </div>
-      <ProductTable products={products}
+      <ProductTable gstEnabled={gstEnabled}  products={products}
         eventFunctions={{
           onAddProduct,
           onDeleteProduct,

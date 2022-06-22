@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { TableFooter } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import db from '../../../services/database/db';
+import AddProductRow from './AddProductRow';
 
 
 type Props = {
@@ -36,6 +37,8 @@ const AddProduct = ({
         </TableHead>
         
         <AddGSTProductRow onSubmit={onAddProduct} /> 
+        <AddProductRow onSubmit={onAddProduct} />
+        
       </Table>
     </TableContainer>
   );

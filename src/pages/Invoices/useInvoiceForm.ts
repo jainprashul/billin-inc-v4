@@ -24,17 +24,20 @@ const useInvoiceForm = (invoice: Invoices) => {
   const [customerGST, setCustomerGST] = useState<string>('');
   const [customerContact, setCustomerContact] = useState<string>('');
 
+  const companyDB = db.getCompanyDB(invoice?.companyID);
+
+
   // console.log(invoice?.companyID);
 
   const query = useLiveQuery(async () => {
     return {
       company: await db.companies.get(invoice?.companyID) as Company,
       // gstInvoiceNo: await db.companies.get(invoice?.companyID).then(company => company?.lastGSTInvoiceNo) as number,
-      clientNames: await db.getCompanyDB(invoice?.companyID).clients.orderBy("name").keys(),
+      clientNames: await companyDB?.clients.orderBy("name").keys() ?? [],
     }
-  });
+  }, [companyDB]);
 
-  const invoiceNo = query ? query.company.lastInvoiceNo  + 1 : 1;
+  const invoiceNo = query ? query.company.lastInvoiceNo + 1 : 1;
   const gstInvoiceNo = query ? `G-${query.company.lastGSTInvoiceNo + 1}` : `G-${1}`;
 
   const client = useLiveQuery(async () => {
@@ -71,7 +74,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     return () => {
       setGross(invoice.grossTotal);
       setTotal(invoice.totalAmount);
-      setGstAmt(invoice.gstTotal);
+      setGstAmt(gstTotal);
     }
   }, [invoice.grossTotal, invoice.gstTotal, invoice.totalAmount, products])
 
@@ -121,8 +124,8 @@ const useInvoiceForm = (invoice: Invoices) => {
  */
   const printBill = (invoice: any) => {
     console.log('printBill', invoice)
-    const w = window.open( '', '_blank', 'top=0,left=0,height=100%,width=auto');
-    if(w) {
+    const w = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+    if (w) {
       w.document.write(invoicePatternGST(invoice));
       w.document.close();
       w.focus();
@@ -144,7 +147,7 @@ const useInvoiceForm = (invoice: Invoices) => {
   }
 
   const getVoucherType = () => {
-    let companyGST =  query?.company.gst.substring(0, 2);
+    let companyGST = query?.company.gst.substring(0, 2);
     let clientGST = client?.gst.substring(0, 2);
     if (companyGST === clientGST) {
       return "INTER_STATE";
