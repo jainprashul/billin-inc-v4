@@ -388,12 +388,12 @@ thead.itembox{
         </tr>
         ${discount ? (`
         <tr className=''>
-            <td colSpan="6" class="blank"></td>
+            <td colSpan="8" class="blank"></td>
             <td colSpan="2" class="total-line">Gross Total :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
         </tr>
         <tr className=''>
-            <td colSpan="6" class="blank"></td>
+            <td colSpan="8" class="blank"></td>
             <td colSpan="2" class="total-line">Discount :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(discountValue).toFixed(2)}</span></td>
         </tr>

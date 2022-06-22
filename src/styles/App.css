@@ -53,3 +53,13 @@
 .hide {
   display: none;
 }
+
+.rotate-icon {
+  transition: 0.2s;
+  transform: (-90deg);
+}
+
+.rotate-icon:hover {
+  transition: 0.2s;
+  transform: rotate(90deg);
+}

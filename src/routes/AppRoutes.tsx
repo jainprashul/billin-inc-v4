@@ -1,7 +1,6 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { ErrorBoundary } from '../components/shared/ErrorBoundary'
 import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail } from '../pages/Invoices'
@@ -10,9 +9,11 @@ import Login from '../pages/Login'
 type Props = {}
 
 const AppRoutes = (props: Props) => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(true)
+  const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+
+
   return (
-    <BrowserRouter>
+    <BrowserRouter >
       {/* <ErrorBoundary> */}
         {
           isAuthenticated ? (

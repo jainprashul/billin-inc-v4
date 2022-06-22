@@ -1,6 +1,5 @@
 
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useFormik } from 'formik';
 import { useEffect, useState } from 'react'
 import invoicePattern from '../../components/PDF/InvoicePattern';
 import db from '../../services/database/db';
@@ -124,14 +123,13 @@ const useInvoiceForm = (invoice: Invoices) => {
  */
   const printBill = (invoice: any) => {
     console.log('printBill', invoice)
-    const w = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-    if (w) {
-      w.document.write(invoicePattern(invoice));
-      w.document.close();
-      w.focus();
-      w.print();
-      // w.close();
-    }
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    iframe.contentDocument?.write(invoicePattern(invoice));
+    iframe.contentDocument?.close();
+    iframe.contentWindow?.focus();
+    iframe.contentWindow?.print();
   }
 
   const printInvoice = (invoice: Invoice) => {

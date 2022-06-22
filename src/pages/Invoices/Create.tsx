@@ -14,6 +14,7 @@ const Create = (props: Props) => {
         invoice.save().then(()=>{
           enqueueSnackbar('Invoice Created', { variant: 'success' });
           console.log('Saved')
+          window.location.reload();
         })
       }}/>
     </div>

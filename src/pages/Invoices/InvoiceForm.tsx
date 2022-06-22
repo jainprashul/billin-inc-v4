@@ -4,7 +4,6 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Autocomplete, Button, Grid, InputAdornment, Typography } from '@mui/material'
-import Fab from '@mui/material/Fab';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import { Invoices } from '../../services/database/model';
 import ProductTable from './Products/ProductTable';
@@ -14,8 +13,10 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import db from '../../services/database/db';
 import ClientModel from './Client/Client';
-import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { useAppSelector } from '../../app/hooks';
+import { selectGstEnabled } from '../../utils/utilsSlice';
+import { useEffect } from 'react';
 
 type Props = {
   onSubmit: (values: Invoices) => void
@@ -47,6 +48,15 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   // console.log(invoice)
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+  const gstEnable = useAppSelector(selectGstEnabled)
+
+  useEffect(() => {
+    formik.setFieldValue('gstEnabled', gstEnable)
+    return () => {
+      
+    }
+  }, [gstEnable])
+  
 
   const { date, gross, gstAmt, total, clientOpen, setClientOpen,
     setDate, onAddProduct, onDeleteProduct,
@@ -128,7 +138,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 
       // update ledger done
       // update stock done
-      // print invoice
+      // print invoice done
       // clear form done
 
       // send invoice to server 
@@ -358,7 +368,6 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         }} />
 
       <ClientModel open={clientOpen} client={client} setOpen={setClientOpen} onClose={() => setClientOpen(false)} />
-      <iframe className='hide' id='print' title='Print Invoice'></iframe>
     </div>
   )
 }
