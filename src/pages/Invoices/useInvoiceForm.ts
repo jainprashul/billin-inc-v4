@@ -2,7 +2,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react'
-import invoicePatternGST from '../../components/PDF/InvoiceGSTPattern';
+import invoicePattern from '../../components/PDF/InvoicePattern';
 import db from '../../services/database/db';
 import { Client, Company, Invoices, Ledger, Product, Stock, StockLog } from '../../services/database/model';
 import { Invoice } from '../../services/database/model/Invoices';
@@ -126,7 +126,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     console.log('printBill', invoice)
     const w = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
     if (w) {
-      w.document.write(invoicePatternGST(invoice));
+      w.document.write(invoicePattern(invoice));
       w.document.close();
       w.focus();
       w.print();
