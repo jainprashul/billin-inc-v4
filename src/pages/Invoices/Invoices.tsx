@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import CompanyDB from '../../services/database/companydb';
 import db from '../../services/database/db';
 import { Invoice } from '../../services/database/model/Invoices';
-import InoviceTable from './InoviceTable';
+import InvoiceTable from './InoviceTable';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ const Invoices = (props: Props) => {
 
   return (
     <div>
-      <InoviceTable data={invoices as Invoice[]} />
+      <InvoiceTable data={invoices as Invoice[]} />
       <Fab color="primary" style={{
           position: 'absolute',
           bottom: 16,
