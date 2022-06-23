@@ -32,3 +32,34 @@
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
+
+.fab-submit {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.table-input {
+  padding: 0;
+  margin: 0 !important;
+}
+
+.client-footer  {
+  float: right;
+}
+
+.hide {
+  display: none;
+}
+
+.rotate-icon {
+  transition: 0.2s;
+  transform: (-90deg);
+}
+
+.rotate-icon:hover {
+  transition: 0.2s;
+  transform: rotate(90deg);
+}

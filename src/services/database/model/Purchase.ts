@@ -1,6 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
+import { Client } from "./Client";
 import { NotificationLog } from "./NotificationLog";
 import { Product } from "./Product";
 
@@ -10,6 +11,8 @@ export interface IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: string;
+    client? : Client;
+    products? : Product[];
     productIDs: Set<string>;
     billingDate: Date;
     categoryID?: number;
@@ -20,6 +23,7 @@ export interface IPurchase {
     discount: boolean
     discountValue?: number;
     // totalAmount: number;
+    amountPaid? : number;
 }
 
 export class Purchase implements IPurchase {
@@ -28,6 +32,7 @@ export class Purchase implements IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: string;
+    client: Client | undefined;
     productIDs: Set<string>;
     products: Product[];
     billingDate: Date;
@@ -39,6 +44,7 @@ export class Purchase implements IPurchase {
     discount: boolean
     discountValue?: number;
     totalAmount: number;
+    amountPaid : number;
 
     constructor(purchase: IPurchase) {
         this.id = purchase.id || `pur_${nanoid(8)}`;
@@ -47,7 +53,8 @@ export class Purchase implements IPurchase {
         this.voucherType = purchase.voucherType;
         this.clientID = purchase.clientID;
         this.productIDs = purchase.productIDs;
-        this.products = [];
+        this.products = purchase.products ? purchase.products.map(p => new Product(p)) : [];
+        this.client = purchase.client ? new Client({...purchase.client}) : undefined;
         this.billingDate = purchase.billingDate;
         this.categoryID = purchase.categoryID;
         this.gstEnabled = purchase.gstEnabled;
@@ -57,6 +64,7 @@ export class Purchase implements IPurchase {
         this.discount = purchase.discount;
         this.discountValue = purchase.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
+        this.amountPaid = purchase.amountPaid || 0;
         // this.loadProducts();
         Object.defineProperty(this, 'products', {
             enumerable: false,
@@ -71,6 +79,12 @@ export class Purchase implements IPurchase {
 
             this.products = products;
         })
+    }
+
+    async loadClient() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        const client = await companyDB.clients.get(this.clientID) 
+        this.client = client;
     }
 
     private onCreate(id: string, purchase: Purchase, tx: Transaction) {

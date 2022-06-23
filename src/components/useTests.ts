@@ -64,8 +64,8 @@ export const useTests = () => {
                 }
             ],
             gst: 'DGSH',
-            lastGSTInvoiceNo: 1,
-            lastInvoiceNo: 1,
+            lastGSTInvoiceNo: 0,
+            lastInvoiceNo: 0,
             userIDs: new Set([]),
         })
         return company.save();
@@ -199,6 +199,8 @@ export const useTests = () => {
             purchasePrice: faker.random.number({ min: 1000, max: 10000 }),
             salesPrice: faker.random.number({ min: 1000, max: 10000 }),
             stockValue: faker.random.number({ min: 1000, max: 10000 }),
+            unit: 'KG',
+            hsn: `hsn_${faker.random.number()}`,
         })
         return stock.save();
     }

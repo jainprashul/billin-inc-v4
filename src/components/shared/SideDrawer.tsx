@@ -10,6 +10,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import {DRAWER_WIDTH as drawerWidth , DRAWER_MENU } from '../../constants';
 import { useNavigate } from 'react-router-dom';
+import { Tooltip } from '@mui/material';
 
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -91,6 +92,7 @@ const SideDrawer = ({open , handleDrawerClose, theme}: Props) => {
                 navigate(route)
               }}
             >
+              <Tooltip title={text}>
               <ListItemIcon
                 sx={{
                   minWidth: 0,
@@ -101,6 +103,7 @@ const SideDrawer = ({open , handleDrawerClose, theme}: Props) => {
                 {/* <icon /> */}
                 <Icon />
               </ListItemIcon>
+              </Tooltip>
               <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           ))}

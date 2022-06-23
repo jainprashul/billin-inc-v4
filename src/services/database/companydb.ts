@@ -19,11 +19,11 @@ export class CompanyDB extends Dexie {
         // Declare tables
         this.version(1).stores({
             expenses: 'id, companyID, amount, date, categoryID',
-            stocks: '++id, companyID, name, quantity',
+            stocks: '++id, companyID, &name, quantity',
             ledger: '++id, companyID, assetID, clientID, amount, date, categoryID',
             purchases: 'id, companyID, voucherNo, clientID, date, categoryID',
             invoices: 'id, companyID, voucherNo, clientID, date, categoryID',
-            clients: 'id, companyID, name, gst , address.city, address.state',
+            clients: 'id, companyID, &name, gst , address.city, address.state',
             settings: '++id, companyID, name, value',
             notificationlogs: '++id, companyID, clientID, date, isVisible',
             products: 'id, companyID, name, hsn, unit, voucherID, categoryID',

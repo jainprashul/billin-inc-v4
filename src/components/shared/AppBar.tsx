@@ -6,6 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { DRAWER_WIDTH as drawerWidth, APP_NAME } from '../../constants';
 import UserMenu from './UserMenu';
+import { Tooltip } from '@mui/material';
+import SharedSettting from './SharedSettting';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -57,7 +59,7 @@ const AppBar = ({ open, handleDrawerOpen }: Props) => {
             {APP_NAME}
           </Typography>
         </div>
-
+        <SharedSettting/>
         <UserMenu />
       </Toolbar>
     </Bar>

@@ -93,7 +93,7 @@ const DataTesting = (props: Props) => {
                 ))}
             </ul>
 
-            <button onClick={()=> {createProduct(data?.purchases[0].id as string)}}>Create Product</button>
+            <button onClick={()=> {createProduct(data?.invoices[0].id as string)}}>Create Product</button>
             <ul>
                 {data?.products?.map(product => (
                     <li key={product.id}>
