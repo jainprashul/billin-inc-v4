@@ -1,18 +1,14 @@
 import MaterialTable, { Action, Column } from '@material-table/core';
-import { Delete, EditAttributes, Filter, Print, RemoveRedEye } from '@mui/icons-material';
+import { Delete, Print, RemoveRedEye } from '@mui/icons-material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import AlertDialog from '../../components/shared/AlertDialog';
 import { Invoice } from '../../services/database/model/Invoices';
 import invoicePattern from '../../components/PDF/InvoicePattern';
-import { useLiveQuery } from 'dexie-react-hooks';
-import db from '../../services/database/db';
-import { Company } from '../../services/database/model';
-import { theme } from '../../styles/theme';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import { useDataUtils } from '../../utils/useDataUtils';
 
 type Props = {
     data: Array<Invoice>
@@ -21,15 +17,11 @@ type Props = {
 
 const InoviceTable = ({ data }: Props) => {
     const loading = !(data ? data.length !== 0 : false)
-    const navigate = useNavigate();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState(false);
+    const { company, navigate } = useDataUtils()
 
-
-    const company = useLiveQuery( async ()=> {
-        return db.companies.get(1);
-    }) as Company;
 
 
     const [dialog, setDialog] = React.useState({
@@ -44,9 +36,19 @@ const InoviceTable = ({ data }: Props) => {
     };
 
     const viewInvoice = async (invoice: Invoice) => {
-        navigate(`/invoice/${invoice.id}`, {
-            state: invoice
-        });
+        // navigate(`/invoice/${invoice.id}`, {
+        //     state: invoice
+        // });
+
+        const w = window.open( '', `Invoice ${invoice.voucherNo}`, 'width=800,height=720');
+        if (w) {
+            const data : any = {
+                ...invoice,
+                company,
+            }
+            w.document.write(invoicePattern(data));
+            w.document.close(); 
+        }
     }
 
     const editInvoice = async (invoice: Invoice) => {
@@ -64,14 +66,13 @@ const InoviceTable = ({ data }: Props) => {
         const data : any = {
             ...invoice,
             company,
-            amountPaid : 0,
         }
 
 
         iframe.contentDocument?.write(invoicePattern(data));
         iframe.contentDocument?.close();
         iframe.contentWindow?.focus();
-        iframe.contentWindow?.print();
+        iframe.contentWindow?.print(); 
     }
 
     const columns: Array<Column<Invoice>> = [

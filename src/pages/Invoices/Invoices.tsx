@@ -23,7 +23,6 @@ const Invoices = (props: Props) => {
     });
   }, []);
   const invoices = useLiveQuery(async () => {
-    console.log('Fetching Invoices', companyDB);
     if (companyDB) {
       const invoices = await Promise.all((await companyDB?.invoices.toArray())?.map(async invoice => {
         await invoice.loadProducts();
