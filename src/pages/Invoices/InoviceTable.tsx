@@ -1,5 +1,5 @@
 import MaterialTable, { Action, Column } from '@material-table/core';
-import { Delete, EditAttributes, Print, RemoveRedEye } from '@mui/icons-material';
+import { Delete, EditAttributes, Filter, Print, RemoveRedEye } from '@mui/icons-material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,9 @@ import invoicePattern from '../../components/PDF/InvoicePattern';
 import { useLiveQuery } from 'dexie-react-hooks';
 import db from '../../services/database/db';
 import { Company } from '../../services/database/model';
+import { theme } from '../../styles/theme';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 
 type Props = {
     data: Array<Invoice>
@@ -21,6 +24,8 @@ const InoviceTable = ({ data }: Props) => {
     const navigate = useNavigate();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [open, setOpen] = React.useState(false);
+    const [filter, setFilter] = React.useState(false);
+
 
     const company = useLiveQuery( async ()=> {
         return db.companies.get(1);
@@ -186,6 +191,15 @@ const InoviceTable = ({ data }: Props) => {
                 });
             },
         },
+        {
+            icon: () => filter ?  <FilterListOffIcon /> : <FilterListIcon />,
+            tooltip: (filter ? 'Hide Filters' : 'Show Filters'),
+            position: 'toolbar',
+            onClick: (event, rowData) => {
+                setFilter(!filter);
+            },
+
+        }
     ];
 
     return (
@@ -201,6 +215,11 @@ const InoviceTable = ({ data }: Props) => {
                     pageSize: 5,
                     pageSizeOptions: [5, 10, 20, 30, 50],
                     selection: true,
+                    draggable: true,
+                    filtering : filter,
+                    headerStyle: {
+                        fontWeight: 'bold',    
+                    },
                 }}
             />
 
