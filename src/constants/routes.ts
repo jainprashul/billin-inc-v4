@@ -3,10 +3,17 @@ export const LOGIN = '/login';
 export const SIGNUP = '/signup';
 export const SETTINGS = '/settings';
 export const PROFILE = '/profile';
+
 export const INVOICES = '/invoice';
 export const INVOICE_DETAIL = '/invoice/:id';
 export const INVOICE_EDIT = '/invoice/:id/edit';
 export const INVOICE_CREATE = '/invoice/create';
 export const INVOICE_PAY = '/invoice/:id/pay';
+
+export const PURCHASE = '/purchase';
+export const PURCHASE_DETAIL = '/purchase/:id';
+export const PURCHASE_EDIT = '/purchase/:id/edit';
+export const PURCHASE_CREATE = '/purchase/create';
+export const PURCHASE_PAY = '/purchase/:id/pay';
 
 export const NOT_FOUND = '*';

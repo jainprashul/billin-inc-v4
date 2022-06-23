@@ -1,4 +1,4 @@
-import { HOME, INVOICES, INVOICE_CREATE, PROFILE , SETTINGS ,  } from "./routes";
+import { HOME, INVOICES, INVOICE_CREATE, PROFILE , PURCHASE, PURCHASE_CREATE, SETTINGS ,  } from "./routes";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import TaskIcon from '@mui/icons-material/Task';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -50,6 +50,16 @@ export const DRAWER_MENU : DrawerMenu[] = [
         name: "Create Invoice",
         icon: AddTaskIcon,
         route: INVOICE_CREATE
+    },
+    {
+        name: "Purchase Orders",
+        icon: TaskIcon,
+        route: PURCHASE
+    },
+    {
+        name: "Purchase Entry",
+        icon: AddTaskIcon,
+        route: PURCHASE_CREATE
     },
     {
         name: "Settings",
