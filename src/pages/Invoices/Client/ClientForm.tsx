@@ -169,7 +169,7 @@ const ClientForm = ({
                         autoComplete="gst"
                         value={gst}
                         inputProps={{
-                            pattern : gstPattern
+                            // pattern : gstPattern
                         }}
                         onChange={formik.handleChange}
                     />

@@ -12,6 +12,8 @@ export interface IInvoice {
     voucherNo: string;
     voucherType: InvoiceVoucherType;
     clientID: string;
+    client? : Client;
+    products? : Product[];
     productIDs: Set<string>;
     billingDate: Date;
     categoryID?: number;
@@ -22,6 +24,7 @@ export interface IInvoice {
     discount: boolean
     discountValue?: number;
     // totalAmount: number;
+    amountPaid? : number;
 }
 
 export class Invoice implements IInvoice {
@@ -42,6 +45,7 @@ export class Invoice implements IInvoice {
     discount: boolean
     discountValue?: number;
     totalAmount: number;
+    amountPaid : number;
 
     constructor(invoice: IInvoice) {
         this.id = invoice.id || `inv_${nanoid(8)}`;
@@ -50,8 +54,8 @@ export class Invoice implements IInvoice {
         this.voucherType = invoice.voucherType;
         this.clientID = invoice.clientID;
         this.productIDs = invoice.productIDs;
-        this.products = [];
-        this.client = undefined; // invoice.client;
+        this.products = invoice.products ? invoice.products.map(p => new Product(p)) : [];
+        this.client = invoice.client ? new Client({...invoice.client}) : undefined;
         this.billingDate = invoice.billingDate;
         this.categoryID = invoice.categoryID;
         this.gstEnabled = invoice.gstEnabled;
@@ -61,6 +65,7 @@ export class Invoice implements IInvoice {
         this.discount = invoice.discount;
         this.discountValue = invoice.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
+        this.amountPaid = invoice.amountPaid || 0;
         // this.loadProducts();
         Object.defineProperty(this, 'products', {
             enumerable: false,

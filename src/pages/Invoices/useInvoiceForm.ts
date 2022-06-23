@@ -1,4 +1,3 @@
-
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react'
 import invoicePattern from '../../components/PDF/InvoicePattern';
@@ -8,25 +7,23 @@ import { Invoice } from '../../services/database/model/Invoices';
 
 
 const useInvoiceForm = (invoice: Invoices) => {
+  console.log(invoice)
   const [date, setDate] = useState<Date | null>(new Date())
   const [products, setProducts] = useState<Product[]>(invoice?.products || []);
   const [total, setTotal] = useState<number>(invoice?.totalAmount);
   const [gross, setGross] = useState<number>(invoice?.grossTotal);
   const [gstAmt, setGstAmt] = useState<number>(invoice?.gstTotal);
-  const [amountPaid, setAmountPaid] = useState<number>(0);
-  const [discount, setDiscount] = useState<number>(0);
+  const [amountPaid, setAmountPaid] = useState<number>(invoice?.amountPaid || 0);
+  const [discount, setDiscount] = useState<number>(invoice?.discountValue || 0);
 
   const [clientID, setClientID] = useState<string | undefined>(invoice?.clientID);
 
   const [clientOpen, setClientOpen] = useState<boolean>(false);
-  const [customerName, setCustomerName] = useState<string>('');
+  const [customerName, setCustomerName] = useState<string>(invoice?.client?.name || '');
   const [customerGST, setCustomerGST] = useState<string>('');
   const [customerContact, setCustomerContact] = useState<string>('');
 
   const companyDB = db.getCompanyDB(invoice?.companyID);
-
-
-  // console.log(invoice?.companyID);
 
   const query = useLiveQuery(async () => {
     return {
@@ -42,6 +39,7 @@ const useInvoiceForm = (invoice: Invoices) => {
   const client = useLiveQuery(async () => {
     if (clientID) {
       const res = await db.getCompanyDB(invoice?.companyID)?.clients.get(clientID);
+      // res && setCustomerName(res.name) ;
       res ? setCustomerContact(res.contacts[0].phone as string) : setCustomerContact('');
       res ? setCustomerGST(res.gst as string) : setCustomerGST('');
       return res;

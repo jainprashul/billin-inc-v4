@@ -17,6 +17,7 @@ import { useSnackbar } from 'notistack';
 import { useAppSelector } from '../../app/hooks';
 import { selectGstEnabled } from '../../utils/utilsSlice';
 import { useEffect } from 'react';
+import moment from 'moment';
 
 type Props = {
   onSubmit: (values: Invoices) => void
@@ -25,7 +26,7 @@ type Props = {
 }
 
 
-const id = `inv_${nanoid(8)}`
+let id = `inv_${nanoid(8)}`
 
 const invoiceSchema = Yup.object().shape({
   // productIDs: Yup.array().of(Yup.string()).min(1, 'At least one product is required').required(),
@@ -53,10 +54,11 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   useEffect(() => {
     formik.setFieldValue('gstEnabled', gstEnable)
     return () => {
-      
+
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gstEnable])
-  
+
 
   const { date, gross, gstAmt, total, clientOpen, setClientOpen,
     setDate, onAddProduct, onDeleteProduct,
@@ -80,6 +82,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     setDate(new Date())
     setClientOpen(false)
     setProducts([])
+    id = `inv_${nanoid(8)}`
     formik.resetForm()
   }
 
@@ -121,6 +124,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         voucherType: gstEnabled ? getVoucherType() : "NON_GST",
         discount: discount > 0,
         discountValue: discount,
+        amountPaid: amountPaid,
       })
 
       console.log('inv', invoice)
@@ -260,9 +264,24 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           <div className="date" style={{
             marginTop: '0.5rem',
           }}>
-            
-            {/* eslint-disable-line */}
-            <LocalizationProvider dateAdapter={AdapterMoment}>
+
+            <TextField variant='standard'
+              margin="dense"
+              required
+              fullWidth
+              id="billing_date"
+              label="Billing Date"
+              name="billing_date"
+              type={'date'}
+              value={moment(date).format('YYYY-MM-DD')}
+              onChange={(event) => {
+                console.log(event.target.value);
+                setDate(new Date(event.target.value))
+              }}
+            />
+
+
+            {/* <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 label="Billing Date"
                 value={date}
@@ -272,7 +291,8 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
-            </LocalizationProvider>
+            </LocalizationProvider> */}
+
           </div>
 
         </Grid>
@@ -306,8 +326,8 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
               </div>
             </>
           ) : (<div className="total">
-                <Typography variant='inherit' color='textSecondary'>Total: ₹{total.toFixed(2)}</Typography>
-              </div>)}
+            <Typography variant='inherit' color='textSecondary'>Total: ₹{total.toFixed(2)}</Typography>
+          </div>)}
 
 
 
@@ -361,7 +381,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         </div>
 
       </div>
-      <ProductTable gstEnabled={gstEnabled}  products={products}
+      <ProductTable gstEnabled={gstEnabled} products={products}
         eventFunctions={{
           onAddProduct,
           onDeleteProduct,

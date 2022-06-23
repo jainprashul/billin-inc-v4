@@ -11,6 +11,8 @@ export interface IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: string;
+    client? : Client;
+    products? : Product[];
     productIDs: Set<string>;
     billingDate: Date;
     categoryID?: number;
@@ -21,6 +23,7 @@ export interface IPurchase {
     discount: boolean
     discountValue?: number;
     // totalAmount: number;
+    amountPaid? : number;
 }
 
 export class Purchase implements IPurchase {
@@ -41,6 +44,7 @@ export class Purchase implements IPurchase {
     discount: boolean
     discountValue?: number;
     totalAmount: number;
+    amountPaid : number;
 
     constructor(purchase: IPurchase) {
         this.id = purchase.id || `pur_${nanoid(8)}`;
@@ -48,9 +52,9 @@ export class Purchase implements IPurchase {
         this.voucherNo = purchase.voucherNo;
         this.voucherType = purchase.voucherType;
         this.clientID = purchase.clientID;
-        this.client = undefined; // to be loaded later
         this.productIDs = purchase.productIDs;
-        this.products = [];
+        this.products = purchase.products ? purchase.products.map(p => new Product(p)) : [];
+        this.client = purchase.client ? new Client({...purchase.client}) : undefined;
         this.billingDate = purchase.billingDate;
         this.categoryID = purchase.categoryID;
         this.gstEnabled = purchase.gstEnabled;
@@ -60,6 +64,7 @@ export class Purchase implements IPurchase {
         this.discount = purchase.discount;
         this.discountValue = purchase.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
+        this.amountPaid = invoice.amountPaid || 0;
         // this.loadProducts();
         Object.defineProperty(this, 'products', {
             enumerable: false,
