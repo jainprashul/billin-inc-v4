@@ -1,6 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
+import { Client } from "./Client";
 import { NotificationLog } from "./NotificationLog";
 import { Product } from "./Product";
 
@@ -29,6 +30,7 @@ export class Invoice implements IInvoice {
     voucherNo: string;
     voucherType: InvoiceVoucherType;
     clientID: string;
+    client: Client | undefined;
     productIDs: Set<string>;
     products: Product[];
     billingDate: Date;
@@ -49,6 +51,7 @@ export class Invoice implements IInvoice {
         this.clientID = invoice.clientID;
         this.productIDs = invoice.productIDs;
         this.products = [];
+        this.client = undefined; // invoice.client;
         this.billingDate = invoice.billingDate;
         this.categoryID = invoice.categoryID;
         this.gstEnabled = invoice.gstEnabled;
@@ -71,6 +74,12 @@ export class Invoice implements IInvoice {
             // console.log('Invoice products', products);
             this.products = products;
         })
+    }
+
+    async loadClient() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        const client = await companyDB.clients.get(this.clientID) 
+        this.client = client;
     }
 
     private onCreate(id: string, invoice: Invoice, tx: Transaction) {

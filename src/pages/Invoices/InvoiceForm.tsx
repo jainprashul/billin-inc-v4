@@ -38,7 +38,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   companyID: 1,
   discount: false,
   discountValue: 0,
-  gstEnabled: false,
+  gstEnabled: JSON.parse(localStorage.getItem("gstEnabled") || "false"),
   gstTotal: 0,
   productIDs: new Set<string>([]),
   subTotal: 0,
@@ -131,8 +131,6 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 
 
       // check if invoice is valid
-
-      updateInvoiceVoucher()
       updateLedger()
       updateStock()
 
@@ -143,10 +141,10 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 
       // send invoice to server 
       // send to whatsapp phone number
-
       console.log(invoice);
       handleSubmit(invoice)
       printInvoice(invoice)
+      updateInvoiceVoucher()
     })
     clearForm()
   }
@@ -262,6 +260,8 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           <div className="date" style={{
             marginTop: '0.5rem',
           }}>
+            
+            {/* eslint-disable-line */}
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 label="Billing Date"

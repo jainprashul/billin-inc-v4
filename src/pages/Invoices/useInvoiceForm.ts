@@ -46,15 +46,16 @@ const useInvoiceForm = (invoice: Invoices) => {
       res ? setCustomerGST(res.gst as string) : setCustomerGST('');
       return res;
     }
-    return new Client({
-      name: customerName,
-      address: { address: '', city: '', state: '', },
-      companyID: 1,
-      contacts: [{ name: customerName, email: '', phone: customerContact, mobile: '' }],
-      details: '',
-      gst: customerGST,
-    })
   }, [clientID, customerName]);
+
+  const clientX = client ? client : new Client({
+    name: customerName,
+    address: { address: '', city: '', state: '', },
+    companyID: 1,
+    contacts: [{ name: customerName, email: '', phone: customerContact, mobile: '' }],
+    details: '',
+    gst: customerGST,
+  })
 
   useEffect(() => {
     const { grossTotal, totalAmount, gstTotal } = products.reduce(
@@ -136,7 +137,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     const printInv = {
       ...invoice,
       products,
-      client,
+      client : clientX,
       // voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
       company: query?.company,
       amountPaid: amountPaid,
@@ -245,14 +246,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     invoiceNo,
     gstInvoiceNo,
     clientNames: query ? query.clientNames : [],
-    client: client ? client : new Client({
-      name: customerName,
-      address: { address: '', city: '', state: '', },
-      companyID: 1,
-      contacts: [{ name: customerName, email: '', phone: customerContact, mobile: '' }],
-      details: '',
-      gst: customerGST,
-    }),
+    client : clientX,
     customerContact, customerGST, customerName,
     setCustomerName, setCustomerGST, setCustomerContact,
     amountPaid, setAmountPaid,

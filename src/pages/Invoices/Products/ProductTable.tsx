@@ -6,15 +6,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Product } from '../../../services/database/model';
-import AddGSTProductRow from './AddGSTProductRow';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddProductRow from './AddProductRow';
 import ProductTableGST from './ProductTableGST';
-
-
-
-
 
 type Props = {
   products: Product[],

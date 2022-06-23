@@ -5,7 +5,6 @@ import numWords from 'num-words'
 /** Invoice Template */
 const invoicePattern = ({ company, gstEnabled, client, voucherNo, billingDate, products, grossTotal, gstTotal, subTotal, totalAmount, discount, discountValue, amountPaid, voucherType }) => {
     const { name, address, contacts, gst } = company;
-    console.log(company);
     return `
 <!DOCTYPE html >
 <html >
@@ -389,7 +388,7 @@ thead.itembox{
         ${discount ? (`
         <tr className=''>
             <td colSpan="8" class="blank"></td>
-            <td colSpan="2" class="total-line">Gross Total :</td>
+            <td colSpan="2" class="total-line">GrossTotal :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
         </tr>
         <tr className=''>
@@ -427,7 +426,7 @@ thead.itembox{
         ${discount ? (`
         <tr className=''>
             <td colSpan="6" class="blank"></td>
-            <td colSpan="2" class="total-line">Gross Total :</td>
+            <td colSpan="2" class="total-line">GrossTotal :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
         </tr>
         <tr className=''>
@@ -459,7 +458,7 @@ thead.itembox{
         ${discount ? (`
         <tr className=''>
             <td colSpan="6" class="blank"></td>
-            <td colSpan="1" class="total-line">Gross Total :</td>
+            <td colSpan="1" class="total-line">GrossTotal :</td>
             <td colSpan="1" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
         </tr>
         <tr className=''>

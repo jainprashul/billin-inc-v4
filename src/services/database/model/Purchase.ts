@@ -1,6 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
+import { Client } from "./Client";
 import { NotificationLog } from "./NotificationLog";
 import { Product } from "./Product";
 
@@ -28,6 +29,7 @@ export class Purchase implements IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: string;
+    client: Client | undefined;
     productIDs: Set<string>;
     products: Product[];
     billingDate: Date;
@@ -46,6 +48,7 @@ export class Purchase implements IPurchase {
         this.voucherNo = purchase.voucherNo;
         this.voucherType = purchase.voucherType;
         this.clientID = purchase.clientID;
+        this.client = undefined; // to be loaded later
         this.productIDs = purchase.productIDs;
         this.products = [];
         this.billingDate = purchase.billingDate;
@@ -71,6 +74,12 @@ export class Purchase implements IPurchase {
 
             this.products = products;
         })
+    }
+
+    async loadClient() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        const client = await companyDB.clients.get(this.clientID) 
+        this.client = client;
     }
 
     private onCreate(id: string, purchase: Purchase, tx: Transaction) {
