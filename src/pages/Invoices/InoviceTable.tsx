@@ -15,7 +15,7 @@ type Props = {
 }
 
 
-const InoviceTable = ({ data }: Props) => {
+const InvoiceTable = ({ data }: Props) => {
     const loading = !(data ? data.length !== 0 : false)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [open, setOpen] = React.useState(false);
@@ -230,4 +230,4 @@ const InoviceTable = ({ data }: Props) => {
     )
 }
 
-export default InoviceTable
+export default InvoiceTable

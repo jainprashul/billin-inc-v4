@@ -1,6 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { INVOICES } from '../../constants/routes';
 import { IInvoice, Invoices } from '../../services/database/model';
 import InvoiceForm from './InvoiceForm';
 
@@ -20,7 +21,7 @@ const Edit = (props: Props) => {
         invoice.save().then(()=>{
           enqueueSnackbar('Invoice Updated', { variant: 'success' });
           console.log('Saved')
-          navigate('/invoice');
+          navigate(INVOICES);
         })
       }}/>
     </div>

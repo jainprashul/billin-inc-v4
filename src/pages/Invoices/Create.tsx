@@ -1,6 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { INVOICES } from '../../constants/routes';
 import InvoiceForm from './InvoiceForm';
 
 type Props = {}
@@ -16,7 +17,7 @@ const Create = (props: Props) => {
         invoice.save().then(()=>{
           enqueueSnackbar('Invoice Created', { variant: 'success' });
           console.log('Saved')
-          navigate('/invoice');
+          navigate(INVOICES);
         })
       }}/>
     </div>

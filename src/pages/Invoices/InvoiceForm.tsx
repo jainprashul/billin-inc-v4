@@ -1,8 +1,5 @@
 import { Add } from '@mui/icons-material'
 import TextField from '@mui/material/TextField';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Autocomplete, Button, Grid, InputAdornment, Typography } from '@mui/material'
 import NavigationIcon from '@mui/icons-material/Navigation';
 import { Invoices } from '../../services/database/model';
