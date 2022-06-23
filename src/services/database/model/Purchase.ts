@@ -64,7 +64,7 @@ export class Purchase implements IPurchase {
         this.discount = purchase.discount;
         this.discountValue = purchase.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
-        this.amountPaid = invoice.amountPaid || 0;
+        this.amountPaid = purchase.amountPaid || 0;
         // this.loadProducts();
         Object.defineProperty(this, 'products', {
             enumerable: false,
