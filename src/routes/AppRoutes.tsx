@@ -1,9 +1,10 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
+import Purchases, { PurchaseCreate, PurchaseEdit } from '../pages/Purchases'
 import Login from '../pages/Login'
 
 type Props = {}
@@ -26,6 +27,9 @@ const AppRoutes = (props: Props) => {
                 <Route path={INVOICE_CREATE} element={<InvoiceCreate />} />
                 <Route path={INVOICE_EDIT} element={<InvoiceEdit />} />
                 <Route path={INVOICE_DETAIL} element={<InvoiceDetail />} />
+                <Route path={PURCHASE} element={<Purchases />} />
+                <Route path={PURCHASE_CREATE} element={<PurchaseCreate />} />
+                <Route path={PURCHASE_EDIT} element={<PurchaseEdit />} />
                 <Route path={NOT_FOUND} element={<NotFound />} />
               </Routes>
             </Layout>
