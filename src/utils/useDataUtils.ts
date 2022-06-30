@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useSnackbar } from "notistack";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import db from "../services/database/db";
 import { Company } from "../services/database/model";
 
@@ -12,6 +12,8 @@ export const useDataUtils = () => {
     }) as Company;
 
     const navigate = useNavigate();
+    const location  = useLocation();
+    const params = useParams();
 
     const toast = useSnackbar();
 
@@ -19,6 +21,8 @@ export const useDataUtils = () => {
     return {
         company,
         navigate,
+        location,
+        params,
         toast,
     }
 }

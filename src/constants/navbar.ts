@@ -1,8 +1,9 @@
-import { HOME, INVOICES, INVOICE_CREATE, PROFILE , PURCHASE, PURCHASE_CREATE, SETTINGS ,  } from "./routes";
+import { HOME, INVOICES, INVOICE_CREATE, PROFILE , PURCHASE, PURCHASE_CREATE, SETTINGS, STOCKS ,  } from "./routes";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import TaskIcon from '@mui/icons-material/Task';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 type DrawerMenu = {
     name: string
@@ -60,6 +61,11 @@ export const DRAWER_MENU : DrawerMenu[] = [
         name: "Purchase Entry",
         icon: AddTaskIcon,
         route: PURCHASE_CREATE
+    },
+    {
+        name: "Stocks & Inventory",
+        icon: InventoryIcon,
+        route: STOCKS,
     },
     {
         name: "Settings",

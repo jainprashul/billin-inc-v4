@@ -16,4 +16,9 @@ export const PURCHASE_EDIT = '/purchase/:id/edit';
 export const PURCHASE_CREATE = '/purchase/create';
 export const PURCHASE_PAY = '/purchase/:id/pay';
 
+export const STOCKS = '/stocks';
+export const STOCK_DETAIL = '/stocks/:id';
+export const STOCK_EDIT = '/stocks/:id/edit';
+export const STOCK_CREATE = '/stocks/create';
+
 export const NOT_FOUND = '*';
