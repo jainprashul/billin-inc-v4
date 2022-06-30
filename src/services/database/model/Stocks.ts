@@ -7,6 +7,7 @@ import { StockLog } from "./StockLogs";
 export interface IStocks {
     id?: string;
     name: string;
+    description?: string;
     quantity: number;
     salesPrice: number;
     purchasePrice: number;
@@ -16,6 +17,7 @@ export interface IStocks {
     companyID: number;
     hsn : string;
     unit : string;
+    stockLogs? : StockLog[];
 }
 
 // Ref : Stocks.logID > StockLogs.id
@@ -25,6 +27,7 @@ export interface IStocks {
 export class Stock implements IStocks {
     id: string;
     name: string;
+    description?: string;
     quantity: number;
     salesPrice: number;
     purchasePrice: number;
@@ -32,13 +35,14 @@ export class Stock implements IStocks {
     gstRate: number;
     logIDs: Set<string>;
     companyID: number;
-    stockLogs: StockLog[] | undefined;
+    stockLogs: StockLog[];
     hsn : string;
     unit : string;
 
     constructor(stock: IStocks) {
         this.id = stock.id || `stk_${nanoid(8)}`
         this.name = stock.name;
+        this.description = stock.description;
         this.quantity = stock.quantity;
         this.salesPrice = stock.salesPrice;
         this.purchasePrice = stock.purchasePrice;
@@ -48,7 +52,8 @@ export class Stock implements IStocks {
         this.companyID = stock.companyID;
         this.hsn = stock.hsn;
         this.unit = stock.unit;
-        this.loadStockLogs();
+        this.stockLogs = stock.stockLogs ? stock.stockLogs.map(log => new StockLog(log)) : [];
+        // this.loadStockLogs();
 
         Object.defineProperty(this, 'stockLogs', {
             enumerable: false,
@@ -58,7 +63,8 @@ export class Stock implements IStocks {
     async loadStockLogs() {
         const companyDB = db.getCompanyDB(this.companyID)
         const logs = await companyDB.stocklogs.where('stockID').equals(this.id).toArray();
-        this.stockLogs = logs
+        this.stockValue = logs.reduce((acc, log) => acc + log.amount, 0);
+        this.stockLogs = logs;
     }
 
     private onCreate(id: number, stock: Stock, tx: Transaction) {

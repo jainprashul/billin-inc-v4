@@ -1,27 +1,16 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import React, { useEffect } from 'react'
-import CompanyDB from '../../services/database/companydb';
-import db from '../../services/database/db';
 import { Invoice } from '../../services/database/model/Invoices';
 import InvoiceTable from './InoviceTable';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import { useNavigate } from 'react-router-dom';
 import { INVOICE_CREATE } from '../../constants/routes';
+import { useDataUtils } from '../../utils/useDataUtils';
 
 type Props = {}
 
 const Invoices = (props: Props) => {
-  const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
-  const navigate = useNavigate();
+  const { companyDB, navigate} = useDataUtils();
 
-  useEffect(() => {
-    db.on('ready', () => {
-      setTimeout(() => {
-        setCompanyDB(db.getCompanyDB(1));
-      }, 200);
-    });
-  }, []);
   const invoices = useLiveQuery(async () => {
     if (companyDB) {
       const invoices = await Promise.all((await companyDB?.invoices.toArray())?.map(async invoice => {

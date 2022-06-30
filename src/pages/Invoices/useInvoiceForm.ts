@@ -188,9 +188,11 @@ const useInvoiceForm = (invoice: Invoices) => {
         const stockLog = new StockLog({
           companyID: invoice.companyID,
           clientID: clientID as string,
+          clientName : client?.name as string,
+
           date: new Date(),
           logType: 'SALE',
-          quantity: product.quantity,
+          quantity: -1 * product.quantity,
           rate: product.price,
           amount: product.totalAmount,
           voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
@@ -205,23 +207,9 @@ const useInvoiceForm = (invoice: Invoices) => {
 
       } else {
         // create stock and its opening stock log
-        const openingStockLog = new StockLog({
-          companyID: invoice.companyID,
-          clientID: clientID as string,
-          date: new Date(),
-          logType: 'OPENING_STOCK',
-          quantity: product.quantity,
-          rate: product.price,
-          amount: product.totalAmount,
-          voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
-          stockID: '',
-        })
-
-        openingStockLog.save();
-
         const newStock = new Stock({
           name: product.name,
-          quantity: -product.quantity,
+          quantity: -1 * product.quantity,
           companyID: invoice.companyID,
           gstRate: product.gstRate,
           unit: product.unit,
@@ -231,6 +219,23 @@ const useInvoiceForm = (invoice: Invoices) => {
           stockValue: 0,
           logIDs: new Set([]),
         })
+
+        const openingStockLog = new StockLog({
+          companyID: invoice.companyID,
+          clientID: clientID as string,
+          clientName : client?.name as string,
+          date: new Date(),
+          logType: 'OPENING_STOCK',
+          quantity: -1 * product.quantity,
+          rate: product.price,
+          amount: product.totalAmount,
+          voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+          stockID: newStock.id,
+        })
+
+        openingStockLog.save();
+
+        
 
         newStock.logIDs.add(openingStockLog.id);
         newStock.save();

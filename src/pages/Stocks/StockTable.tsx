@@ -201,7 +201,7 @@ const StockTable = ({ data }: Props) => {
                 title="Stocks"
                 data={data}
                 onRowClick={ (event , row) => {
-                    navigate(`/stock/${row?.id}`, {
+                    navigate(`/stocks/${row?.id}`, {
                         state: row
                     })
                 }}

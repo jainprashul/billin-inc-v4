@@ -1,12 +1,12 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
 import Purchases, { PurchaseCreate, PurchaseEdit } from '../pages/Purchases'
 import Login from '../pages/Login'
-import { Stocks } from '../pages/Stocks'
+import { StockDetail, Stocks } from '../pages/Stocks'
 
 type Props = {}
 
@@ -32,6 +32,7 @@ const AppRoutes = (props: Props) => {
                 <Route path={PURCHASE_CREATE} element={<PurchaseCreate />} />
                 <Route path={PURCHASE_EDIT} element={<PurchaseEdit />} />
                 <Route path={STOCKS} element={<Stocks />} />
+                <Route path={STOCK_DETAIL} element={<StockDetail/>} />
                 <Route path={NOT_FOUND} element={<NotFound />} />
               </Routes>
             </Layout>

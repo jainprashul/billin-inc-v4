@@ -10,20 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import { INVOICE_CREATE } from '../../constants/routes';
 import { Stock } from '../../services/database/model';
 import StockTable from './StockTable';
+import { useDataUtils } from '../../utils/useDataUtils';
 
 type Props = {}
 
 const Stocks = (props: Props) => {
-  const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
-  const navigate = useNavigate();
+  const { companyDB, navigate} = useDataUtils();
 
-  useEffect(() => {
-    db.on('ready', () => {
-      setTimeout(() => {
-        setCompanyDB(db.getCompanyDB(1));
-      }, 200);
-    });
-  }, []);
   const stocks = useLiveQuery(async () => {
     if (companyDB) {
       const stocks = await Promise.all((await companyDB?.stocks.toArray())?.map(async stock => {
