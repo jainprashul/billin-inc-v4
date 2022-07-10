@@ -1,13 +1,5 @@
-import MaterialTable, { Action, Column } from '@material-table/core';
-import { Delete, DeleteForeverTwoTone, Edit, Print, RemoveRedEye } from '@mui/icons-material';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import React from 'react'
-import { useSnackbar } from 'notistack';
-import AlertDialog from '../../components/shared/AlertDialog';
+import { Delete, Edit as EditIcon } from '@mui/icons-material';
 import { Stock } from '../../services/database/model/Stocks';
-import invoicePattern from '../../components/PDF/InvoicePattern';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { useLiveQuery } from 'dexie-react-hooks';
 import LogTable from './Logs/LogTable';
@@ -16,8 +8,9 @@ import { STOCKS } from '../../constants/routes';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Edit from './Edit';
+import React from 'react';
 
 
 type Props = {
@@ -26,13 +19,14 @@ type Props = {
 
 
 const StockDetail = (props: Props) => {
-    const { params, location, companyDB, toast, navigate } = useDataUtils();
+    const [open, setOpen] = React.useState(false);
+    const { params, companyDB, toast, navigate } = useDataUtils();
     const stockID = params.id as string;
 
     const stock = useLiveQuery(async () => {
         const stk = await companyDB?.stocks.where('id').equals(stockID).first();
         await stk?.loadStockLogs();
-        const X = stk?.stockLogs.map(async (log) => { await log.loadClient(); return log; });
+        stk?.stockLogs.map(async (log) => { await log.loadClient(); return log; });
         return stk;
     }, [companyDB, stockID]) as Stock;
 
@@ -50,7 +44,7 @@ const StockDetail = (props: Props) => {
 
     return (
         <>
-            <Grid  container spacing={2} justifyContent='space-between'>
+            <Grid container spacing={2} justifyContent='space-between'>
                 <Grid item md={3}>
                     <Card style={{
                         height: '100%',
@@ -83,12 +77,16 @@ const StockDetail = (props: Props) => {
                         <CardActions>
                             {/* <Button size="small">Learn More</Button>  */}
                             <Tooltip title="Edit">
-                                <IconButton color='primary'>
-                                    <Edit />
+                                <IconButton color='primary' onClick={()=> {
+                                    setOpen(true);
+                                }}>
+                                    <EditIcon />
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title="Delete">
-                                <IconButton color='primary'>
+                                <IconButton color='primary' onClick={()=>{
+                                    onDelete();
+                                }} >
                                     <Delete />
                                 </IconButton>
                             </Tooltip>
@@ -99,6 +97,8 @@ const StockDetail = (props: Props) => {
                     <LogTable data={stock?.stockLogs} />
                 </Grid>
             </Grid>
+
+            <Edit open={open} stock={stock} setOpen={setOpen} />
         </>
     )
 }
