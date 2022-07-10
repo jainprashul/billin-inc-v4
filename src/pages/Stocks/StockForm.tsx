@@ -12,11 +12,12 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@m
 type Prop = {
   open: boolean;
   stock?: Stock;
+  edit?: boolean;
   setOpen: (open: boolean) => void;
   onClose: () => void;
   onSubmit: (data: Stock) => void;
 }
-export default function StockForm({ open, setOpen, onClose, onSubmit, stock = new Stock({
+export default function StockForm({ open, setOpen, onClose, onSubmit, edit=false, stock = new Stock({
   name: '',
   quantity: 0,
   companyID: 1,
@@ -27,6 +28,7 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, stock = ne
   hsn: '',
   stockValue: 0,
   logIDs: new Set([]),
+  description: '',
 }) }: Prop) {
 
   console.log(stock);
@@ -34,7 +36,7 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, stock = ne
   const formik = useFormik({
     initialValues: stock,
     onSubmit: onSubmit,
-    enableReinitialize: true,
+    enableReinitialize: edit,
   });
 
   const handleClose = () => {
@@ -51,9 +53,12 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, stock = ne
   const { name, description, gstRate, hsn, purchasePrice, salesPrice, quantity, unit } = formik.values;
 
   return (
-    <form>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Stock - {name} </DialogTitle>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>{
+        edit ? `Edit Stock - ${name}` : 'Create Stock'  
+        }</DialogTitle>
+      <form>
+
         <DialogContent>
           <TextField
             margin="dense"
@@ -98,7 +103,7 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, stock = ne
             fullWidth
             label="Quantity"
             value={quantity}
-            disabled={true}
+            disabled={edit}
             name="quantity"
             type={'number'}
             onChange={formik.handleChange}
@@ -179,9 +184,10 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, stock = ne
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" onClick={handleSubmit}>Update</Button>
+          <Button type="submit" onClick={handleSubmit}>{ edit ? "Update" : "Save"}</Button>
         </DialogActions>
-      </Dialog>
-    </form>
+      </form>
+
+    </Dialog>
   );
 }

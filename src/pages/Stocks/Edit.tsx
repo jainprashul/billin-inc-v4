@@ -28,7 +28,7 @@ const Edit = ({open , setOpen, stock}: Props) => {
     }
 
     return (
-        <StockForm stock={stock} open={open} setOpen={setOpen} onClose={onClose} onSubmit={onSubmit} />
+        <StockForm stock={stock} open={open} edit setOpen={setOpen} onClose={onClose} onSubmit={onSubmit} />
     )
 }
 
