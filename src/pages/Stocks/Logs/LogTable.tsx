@@ -1,15 +1,7 @@
-import MaterialTable, { Action, Column } from '@material-table/core';
-import { Delete, Print, RemoveRedEye } from '@mui/icons-material';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import React from 'react'
-import FilterListIcon from '@mui/icons-material/FilterList';
-import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import MaterialTable, { Column } from '@material-table/core';
 import { StockLog } from '../../../services/database/model';
-import { useDataUtils } from '../../../utils/useDataUtils';
-import AlertDialog from '../../../components/shared/AlertDialog';
 import { Link } from 'react-router-dom';
 import { theme } from '../../../styles/theme';
-import { Card, CardHeader } from '@mui/material';
 
 
 
@@ -20,16 +12,6 @@ type Props = {
 
 const LogTable = ({ data }: Props) => {
     const loading = !(data ? data.length !== 0 : false)
-    const [open, setOpen] = React.useState(false);
-    const [filter, setFilter] = React.useState(false);
-    const { company, navigate, toast } = useDataUtils();
-
-    const [dialog, setDialog] = React.useState({
-        title: '',
-        message: '',
-        onCancel: () => { },
-        onConfirm: () => { },
-    });
 
     const columns: Array<Column<StockLog>> = [
         {
@@ -40,7 +22,7 @@ const LogTable = ({ data }: Props) => {
         {
             title: 'Voucher',
             field: 'voucherNo',
-            render: (data, type) => {
+            render: (data) => {
                 let link = `/invoice/${data.voucherNo}`;
 
                 return <Link style={{
@@ -101,9 +83,6 @@ const LogTable = ({ data }: Props) => {
 
                 }}
             />
-
-            <AlertDialog message={dialog.message} open={open} setOpen={setOpen} title={dialog.title} onConfirm={dialog.onConfirm} onCancel={dialog.onCancel} />
-
         </>
     )
 }

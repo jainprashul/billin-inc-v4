@@ -7,8 +7,7 @@ import AppBar from './shared/AppBar';
 import { Container } from '@mui/material';
 import { setCurrentRoute } from '../routes/routeSlice';
 import { useLocation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { URLParamstoObject } from '../utils'
+import { useAppDispatch } from '../app/hooks';
 
 type Props = {
   children: React.ReactNode;
@@ -22,7 +21,7 @@ export default function Layout({ children }: Props) {
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    const { pathname, search } = location;
+    const { pathname } = location;
     dispatch(setCurrentRoute(pathname));
 
   }, [dispatch, location]);
