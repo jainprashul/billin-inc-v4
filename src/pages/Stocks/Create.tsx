@@ -25,11 +25,11 @@ const Create = ({ open, setOpen }: Props) => {
             quantity: 1 * stk.quantity,
             rate: stk.purchasePrice,
             amount: stk.purchasePrice * stk.quantity,
-            voucherNo: 'none',
-            stockID: stk.id,
+            voucherNo: '',
+            stockID: stk.id, 
         })
 
-        openingStockLog.save();
+        openingStockLog.save();      
         stk.logIDs.add(openingStockLog.id);
         // console.log("eift ",data);      
         stk.save().then(() => {

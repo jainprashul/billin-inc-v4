@@ -10,7 +10,7 @@ import Create from './Create';
 type Props = {}
 
 const Stocks = (props: Props) => {
-  const { companyDB, navigate} = useDataUtils();
+  const { companyDB} = useDataUtils();
   const [open, setOpen] = React.useState(false);
 
   const stocks = useLiveQuery(async () => {
