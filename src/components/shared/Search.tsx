@@ -8,13 +8,13 @@ import { useMemo, useState } from 'react';
 
 
 type Props = {
-    query: string;
+    query?: string;
     onSearch: (query: string) => void;
-    onClear: () => void;
+    onClear?: () => void;
 }
 
 const Search = ({ query, onClear, onSearch }: Props) => {
-    const [searchQuery, setSearchQuery] = useState(query);
+    const [searchQuery, setSearchQuery] = useState(query || '');
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         onSearch(e.target.value.trim());
     };
@@ -38,13 +38,13 @@ const Search = ({ query, onClear, onSearch }: Props) => {
                             <SearchIcon />
                         </InputAdornment>
                     ),
-                    endAdornment: query.length ? (
+                    endAdornment: searchQuery.length ? (
                         <InputAdornment position="end">
                             <ClearIcon style={{
                                 cursor: 'pointer'
                             }} onClick={() => {
                                 setSearchQuery('');
-                                onClear();
+                                onClear && onClear();
                             }} />
                         </InputAdornment>
                     ) : null,
