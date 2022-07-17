@@ -24,6 +24,7 @@ const Search = ({ query, onClear, onSearch }: Props) => {
             <TextField
                 inputProps={{ "data-testid": "req-search" }}
                 id="search-input"
+                autoFocus
                 label="Search"
                 value={searchQuery}
                 margin='normal'

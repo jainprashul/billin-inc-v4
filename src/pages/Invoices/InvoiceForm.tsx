@@ -9,7 +9,7 @@ import useInvoiceForm from './useInvoiceForm';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import db from '../../services/database/db';
-import ClientModel from './Client/Client';
+import ClientModel from './Client';
 import { useSnackbar } from 'notistack';
 import { useAppSelector } from '../../app/hooks';
 import { selectGstEnabled } from '../../utils/utilsSlice';

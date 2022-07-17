@@ -2,8 +2,8 @@ import { People } from '@mui/icons-material'
 import { Dialog, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
 import React, { useEffect } from 'react'
-import Search from '../../components/shared/Search'
-import { useDataUtils } from '../../utils/useDataUtils'
+import Search from '../../../components/shared/Search'
+import { useDataUtils } from '../../../utils/useDataUtils'
 
 type Props = {
     open: boolean

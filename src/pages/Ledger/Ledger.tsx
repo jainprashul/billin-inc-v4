@@ -3,7 +3,7 @@ import { Avatar, Box, Button, Card, CardContent, Divider, Typography } from '@mu
 import { green, red, amber } from '@mui/material/colors';
 import React from 'react'
 import Search from '../../components/shared/Search';
-import ClientList from './ClientList';
+import ClientList from './Client/ClientList';
 
 type Props = {}
 
