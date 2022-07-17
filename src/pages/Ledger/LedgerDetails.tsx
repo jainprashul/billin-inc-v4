@@ -1,17 +1,19 @@
-import { ArrowBack, Delete, Edit as EditIcon } from '@mui/icons-material';
+import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, NorthEast, SouthWest } from '@mui/icons-material';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Grid, IconButton, Tooltip } from '@mui/material';
-import { LEDGER, STOCKS } from '../../constants/routes';
+import { Avatar, Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
+import { LEDGER } from '../../constants/routes';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AlertDialog from '../../components/shared/AlertDialog';
 import { Client, Ledger } from '../../services/database/model';
 import LedgerTable from './LedgerTable';
 import ClientEdit from './Client/Edit';
+import { green, red, amber } from '@mui/material/colors';
+
 
 
 type Props = {
@@ -31,11 +33,40 @@ const LedgerDetails = (props: Props) => {
         // await stk?.loadStockLogs();
         // stk?.stockLogs.map(async (log) => { await log.loadClient(); return log; });
         return {
-            ledger , client
+            ledger, client
         }
     }, [companyDB, clientID])
 
     const { ledger, client } = queries ? queries : { ledger: [], client: null };
+
+    const [total, setTotal] = React.useState({
+        debit: 0,
+        credit: 0,
+        balance: 0,
+        // receivable: 0
+    });
+
+    useEffect(() => {
+        if (ledger) {
+            
+    const { credit , debit, balance } = [...ledger].reduce(
+        (acc, cur) => {
+          acc.credit += cur.credit;
+          acc.debit += cur.debit;
+          acc.balance += (cur.debit - cur.credit);
+          return acc;
+        }
+        , { credit: 0, debit: 0, balance: 0 }
+      );
+        setTotal({
+            credit,
+            debit,
+            balance,
+            // receivable: client.receivable
+        });
+        }
+    }, [ledger]);
+
 
     const onDelete = () => {
         // ledger?.forEach((led)=> {
@@ -85,7 +116,7 @@ const LedgerDetails = (props: Props) => {
                                     <Grid item xs={3} color='text.secondary'> State :</Grid> <Grid item xs={9}>{client?.address.state} </Grid>
                                     <Grid item xs={3} color='text.secondary'> Phone :</Grid> <Grid item xs={9}>{client?.contacts[0].phone}</Grid>
                                     <Grid item xs={3} color='text.secondary'> Mobile :</Grid> <Grid item xs={9}>{client?.contacts[0].mobile}</Grid>
-                                    <Grid item xs={3} color='text.secondary'> Email :</Grid> <Grid item xs={9}>{client?.contacts[0].email }</Grid>
+                                    <Grid item xs={3} color='text.secondary'> Email :</Grid> <Grid item xs={9}>{client?.contacts[0].email}</Grid>
                                 </Grid>
                             </Typography>
 
@@ -110,13 +141,49 @@ const LedgerDetails = (props: Props) => {
                     </Card>
                 </Grid>
                 <Grid item md={8}>
+
+                    <Card sx={{ minHeight: 100, mb: 1 }}>
+                        <CardContent >
+                            <Box display="flex" alignItems="center" justifyContent={'space-around'}>
+                                <Box display="flex" alignItems="center" justifyContent='space-around' minWidth={200}>
+                                    <Avatar sx={{
+                                        bgcolor: red[500],
+                                    }} > <NorthEast /> </Avatar>
+                                    <div>
+                                        <Typography variant="h6"> Debit</Typography>
+                                        <Typography variant="h5"> ₹ {total.debit}</Typography>
+                                    </div>
+                                </Box>
+                                <Divider orientation="vertical" flexItem />
+                                <Box display="flex" alignItems="center" justifyContent='space-around' minWidth={200}>
+                                    <Avatar sx={{
+                                        bgcolor: green[500],
+                                    }}> <SouthWest /> </Avatar>
+                                    <div>
+                                        <Typography variant="h6"> Credit</Typography>
+                                        <Typography variant="h5"> ₹ {total.credit}</Typography>
+                                    </div>
+                                </Box>
+                                <Divider orientation="vertical" flexItem />
+                                <Box display="flex" alignItems="center" justifyContent='space-around' minWidth={200}>
+                                    <Avatar sx={{
+                                        bgcolor: amber[500],
+                                    }}> <AccountBalance /> </Avatar>
+                                    <div>
+                                        <Typography variant="h6"> Balance</Typography>
+                                        <Typography variant="h5"> ₹ {total.balance} </Typography>
+                                    </div>
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
                     <LedgerTable data={ledger} />
                 </Grid>
             </Grid>
 
             {/* <Edit open={open} stock={ledger} setOpen={setOpen} /> */}
             <ClientEdit open={open} client={client as Client} setOpen={setOpen} />
-            
+
             <AlertDialog
                 open={openDelete}
                 setOpen={setOpenDelete}

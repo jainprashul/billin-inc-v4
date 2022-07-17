@@ -161,7 +161,7 @@ const useInvoiceForm = (invoice: Invoices) => {
       clientID: clientID as string,
       clientType: 'CUSTOMER',
       credit: amountPaid,
-      debit: total,
+      debit: total - discount,
       payable: 0,
       payableType: 'CASH',
       receivable: total - amountPaid,

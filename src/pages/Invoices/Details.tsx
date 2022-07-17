@@ -33,7 +33,6 @@ const Details = (props: Props) => {
     const data: any = {
       ...invoice,
       company,
-      amountPaid: 0,
     }
 
     if (invoice) {
