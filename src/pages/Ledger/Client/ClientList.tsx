@@ -12,9 +12,9 @@ type Props = {
 }
 
 const ClientList = (props: Props) => {
-    const { open, setOpen, q='' } = props
+    const { open, setOpen } = props
     const { companyDB, navigate } = useDataUtils()
-    const [query, setQuery] = React.useState(q)
+    const [query, setQuery] = React.useState('')
     const clients = useLiveQuery(async () => {
         if (companyDB) {
             return await companyDB.clients.where('name').startsWithIgnoreCase(query).toArray()
@@ -39,7 +39,7 @@ const ClientList = (props: Props) => {
                         will send updates occasionally.
                     </DialogContentText> */}
 
-                    <Search query={q} onSearch={(q) => {
+                    <Search query={query} onSearch={(q) => {
                         console.log(q)
                         setQuery(q)
                     }} onClear={() => { setQuery('') }} />  

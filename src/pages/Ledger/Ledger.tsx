@@ -1,15 +1,29 @@
-import { AccountBalance, Folder, NorthEast, SouthWest, TrendingDown, TrendingUp } from '@mui/icons-material'
-import { Avatar, Box, Button, Card, CardContent, Divider, Typography } from '@mui/material'
+import { AccountBalance, Folder, NorthEast, SearchTwoTone, SouthWest, TrendingDown, TrendingUp } from '@mui/icons-material'
+import { Avatar, Box, Button, Card, CardContent, Chip, Divider, IconButton, Typography } from '@mui/material'
 import { green, red, amber } from '@mui/material/colors';
-import React from 'react'
+import React, { useEffect } from 'react'
 import Search from '../../components/shared/Search';
 import ClientList from './Client/ClientList';
 
 type Props = {}
 
 const Ledger = (props: Props) => {
-    const [open, setOpen] = React.useState(false);
-    const [query, setQuery] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+  // const [query, setQuery] = React.useState('');
+
+  function onKeyPress(e: KeyboardEvent) {
+    e.preventDefault();
+    if (e.ctrlKey && e.key === 'k') {
+      setOpen(true);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyPress);
+    return () => {
+      document.removeEventListener('keydown', onKeyPress);
+    }
+  }, [])
 
   const DetailCards = () => (
     <Card sx={{ minWidth: 800, minHeight: 100 }}>
@@ -72,14 +86,16 @@ const Ledger = (props: Props) => {
   return (
     <div>
       <DetailCards />
-      <Search onSearch={(q)=>{
-        setQuery(q)
-        setTimeout(() => {
-          setOpen(true)
-        }, 100);
-      }} />
-      
-      <ClientList q={query} open={open} setOpen={setOpen} />
+
+      <Box display="flex" justifyContent='end' py={1}>
+          <Button variant="text" color="primary" startIcon={<SearchTwoTone />} onClick={() => setOpen(true)}>
+            Search Ledger
+            <Chip size='small' variant='outlined' label={
+              <Typography variant="caption" color='text.secondary'> Ctrl + K </Typography>
+            } />
+          </Button>
+      </Box>
+      <ClientList open={open} setOpen={setOpen} />
 
     </div>
   )
