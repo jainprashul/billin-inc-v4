@@ -1,4 +1,4 @@
-import { AccountBalance, NorthEast, SearchTwoTone, SouthWest } from '@mui/icons-material'
+import { AccountBalance, NorthEast, SearchTwoTone, SouthWest, TrendingDownOutlined, TrendingUpOutlined } from '@mui/icons-material'
 import { Avatar, Box, Button, Card, CardContent, Chip, Divider, Grid, Typography } from '@mui/material'
 import { green, red, amber } from '@mui/material/colors';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -31,7 +31,7 @@ const Ledgers = () => {
 
 
   const queries = useLiveQuery(async () => {
-    const ledger = await companyDB?.ledger.orderBy('date').toArray() as Ledger[];
+    const ledger = await companyDB?.ledger.orderBy('date').reverse().toArray() as Ledger[];
     // const client = await companyDB?.clients.where('id').equals(clientID).first() as Client;
     // await stk?.loadStockLogs();
     // stk?.stockLogs.map(async (log) => { await log.loadClient(); return log; });
@@ -167,7 +167,7 @@ const Ledgers = () => {
             <Avatar sx={{
               mx: orientation === 'row' ? 0 : 3,
               bgcolor: green[500],
-            }}> <SouthWest /> </Avatar>
+            }}> <TrendingDownOutlined /> </Avatar>
             <div>
               <Typography variant="h6"> Receivable</Typography>
               <Typography variant="h5"> ₹ {total.receivable}</Typography>
@@ -178,7 +178,7 @@ const Ledgers = () => {
             <Avatar sx={{
               mx: orientation === 'row' ? 0 : 3,
               bgcolor: red[500],
-            }}> <NorthEast /> </Avatar>
+            }}> <TrendingUpOutlined /> </Avatar>
             <div>
               <Typography variant="h6"> Payable</Typography>
               <Typography variant="h5"> ₹ {total.payable}</Typography>

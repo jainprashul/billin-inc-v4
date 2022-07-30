@@ -13,7 +13,7 @@ const Invoices = (props: Props) => {
 
   const invoices = useLiveQuery(async () => {
     if (companyDB) {
-      const invoices = await Promise.all((await companyDB?.invoices.toArray())?.map(async invoice => {
+      const invoices = await Promise.all((await companyDB?.invoices.orderBy('billingDate').reverse().toArray())?.map(async invoice => {
         await invoice.loadProducts();
         await invoice.loadClient();
         return invoice;
