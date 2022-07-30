@@ -23,7 +23,7 @@ const Details = (props: Props) => {
 
   const ref = React.useRef<HTMLDivElement>(null)
 
-  const printInvoice = (invoice: Invoice) => {
+  const showInvoice = (invoice: Invoice) => {
     console.log('printBill', invoice)
 
     iframe.style.border = 'none'
@@ -46,7 +46,7 @@ const Details = (props: Props) => {
     ref.current?.appendChild(iframe);
   }, [])
 
-  printInvoice(invoice as Invoice)
+  showInvoice(invoice as Invoice)
 
   return (
     <div>

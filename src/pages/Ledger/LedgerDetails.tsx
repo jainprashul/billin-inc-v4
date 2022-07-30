@@ -1,4 +1,4 @@
-import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, NorthEast, SouthWest } from '@mui/icons-material';
+import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, NorthEast, Print, SouthWest } from '@mui/icons-material';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Avatar, Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
@@ -13,18 +13,16 @@ import { Client, Ledger } from '../../services/database/model';
 import LedgerTable from './LedgerTable';
 import ClientEdit from './Client/Edit';
 import { green, red, amber } from '@mui/material/colors';
+import ledgerPattern from '../../components/PDF/LedgerPattern';
 
 
 
-type Props = {
-
-}
-
+type Props = {}
 
 const LedgerDetails = (props: Props) => {
     const [open, setOpen] = React.useState(false);
     const [openDelete, setOpenDelete] = React.useState(false);
-    const { params, companyDB, toast, navigate } = useDataUtils();
+    const { params, companyDB, company, toast, navigate } = useDataUtils();
     const clientID = params.id as string;
 
     const queries = useLiveQuery(async () => {
@@ -48,22 +46,21 @@ const LedgerDetails = (props: Props) => {
 
     useEffect(() => {
         if (ledger) {
-            
-    const { credit , debit, balance } = [...ledger].reduce(
-        (acc, cur) => {
-          acc.credit += cur.credit;
-          acc.debit += cur.debit;
-          acc.balance += (cur.debit - cur.credit);
-          return acc;
-        }
-        , { credit: 0, debit: 0, balance: 0 }
-      );
-        setTotal({
-            credit,
-            debit,
-            balance,
-            // receivable: client.receivable
-        });
+            const { credit, debit, balance } = [...ledger].reduce(
+                (acc, cur) => {
+                    acc.credit += cur.credit;
+                    acc.debit += cur.debit;
+                    acc.balance += (cur.debit - cur.credit);
+                    return acc;
+                }
+                , { credit: 0, debit: 0, balance: 0 }
+            );
+            setTotal({
+                credit,
+                debit,
+                balance,
+                // receivable: client.receivable
+            });
         }
     }, [ledger]);
 
@@ -86,6 +83,28 @@ const LedgerDetails = (props: Props) => {
             toast.enqueueSnackbar(`Error Deleting Client ${client?.name}`, { variant: 'error' });
         });
     }
+
+    const printLedger = (ledgers: Ledger[]) => {
+
+        // add iframe to print
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        const data = {
+            company,
+            date: new Date(),
+            client,
+            ledger: ledgers,
+            total
+        }
+
+        iframe.contentDocument?.write(ledgerPattern(data));
+        iframe.contentDocument?.close();
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+    }
+
 
     return (
         <>
@@ -135,6 +154,13 @@ const LedgerDetails = (props: Props) => {
                                     setOpenDelete(true);
                                 }} >
                                     <Delete />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Print Ledger">
+                                <IconButton color='primary' onClick={() => {
+                                    printLedger(ledger);
+                                }} >
+                                    <Print />
                                 </IconButton>
                             </Tooltip>
                         </CardActions>
