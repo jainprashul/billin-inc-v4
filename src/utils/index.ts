@@ -59,3 +59,19 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   };
   return [storedValue, setValue] as const;
 }
+
+/**
+ * Filter data based on date range
+ * @param data 
+ * @param startDate 
+ * @param endDate 
+ * @returns 
+ */
+export function filterDataByDate(data: any[], startDate: Date, endDate: Date) {
+  const filteredData = data.filter(
+    (item: any) =>
+      new Date(item.date).getTime() >= new Date(startDate).getTime() &&
+      new Date(item.date).getTime() <= new Date(endDate).getTime()
+  );
+  return filteredData;
+}

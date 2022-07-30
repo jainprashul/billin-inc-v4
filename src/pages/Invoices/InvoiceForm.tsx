@@ -15,6 +15,10 @@ import { useAppSelector } from '../../app/hooks';
 import { selectGstEnabled } from '../../utils/utilsSlice';
 import { useEffect } from 'react';
 import moment from 'moment';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+
 
 type Props = {
   onSubmit: (values: Invoices) => void
@@ -262,7 +266,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             marginTop: '0.5rem',
           }}>
 
-            <TextField variant='standard'
+            {/* <TextField variant='standard'
               margin="dense"
               required
               fullWidth
@@ -275,10 +279,10 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                 console.log(event.target.value);
                 setDate(new Date(event.target.value))
               }}
-            />
+            /> */}
 
 
-            {/* <LocalizationProvider dateAdapter={AdapterMoment}>
+            <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 label="Billing Date"
                 value={date}
@@ -286,9 +290,9 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                   setDate(newValue)
 
                 }}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField variant='standard' {...params} />}
               />
-            </LocalizationProvider> */}
+            </LocalizationProvider>
 
           </div>
 
