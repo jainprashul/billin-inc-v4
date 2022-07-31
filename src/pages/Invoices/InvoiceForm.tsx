@@ -60,6 +60,12 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gstEnable])
 
+  const formik = useFormik({
+    initialValues: invoice,
+    onSubmit: onSubmit,
+    validationSchema: invoiceSchema,
+  });
+
 
   const { date, gross, gstAmt, total, clientOpen, setClientOpen,
     setDate, onAddProduct, onDeleteProduct,
@@ -69,7 +75,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     discount, setDiscount,
     invoiceNo, gstInvoiceNo, clientNames,
     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName,
-    updateInvoiceVoucher, updateStock, validateInvoice, getVoucherType, printInvoice } = useInvoiceForm(invoice)
+    updateInvoiceVoucher, updateStock, validateInvoice, getVoucherType, printInvoice } = useInvoiceForm(formik.values)
 
   // console.log(client, clientID);
 
@@ -88,10 +94,10 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   }
 
 
-  const onSubmit = (values: Invoices) => {
+  function onSubmit(values: Invoices) {
 
     // check if invoice is valid
-    let err = validateInvoice()
+    let err = validateInvoice();
     if (err) {
       // alert(err)
       enqueueSnackbar(err, {
@@ -102,19 +108,19 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           vertical: 'top',
           horizontal: 'center',
         },
-      })
-      return
+      });
+      return;
     }
 
-    let companyDB = db.getCompanyDB(values.companyID)
+    let companyDB = db.getCompanyDB(values.companyID);
     companyDB.transaction('rw', [...companyDB.tables], async () => {
       // save products to db
       products.forEach(product => {
-        product.voucherID = values.id
-        product.save()
-        values.productIDs.add(product.id)
-        formik.setFieldValue('productIDs', values.productIDs)
-      })
+        product.voucherID = values.id;
+        product.save();
+        values.productIDs.add(product.id);
+        formik.setFieldValue('productIDs', values.productIDs);
+      });
 
       const invoice = new Invoices({
         ...values,
@@ -126,41 +132,34 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         discount: discount > 0,
         discountValue: discount,
         amountPaid: amountPaid,
-      })
+      });
 
-      console.log('inv', invoice)
+      console.log('inv', invoice);
 
       // update client data
-      client.save()
+      client.save();
       console.log(client);
 
 
       // check if invoice is valid
-      updateLedger()
-      updateStock()
+      updateLedger();
+      updateStock();
 
       // update ledger done
       // update stock done
       // print invoice done
       // clear form done
-
       // send invoice to server 
       // send to whatsapp phone number
       console.log(invoice);
-      handleSubmit(invoice)
-      printInvoice(invoice)
-      updateInvoiceVoucher()
-    })
-    clearForm()
+      printInvoice(invoice);
+      handleSubmit(invoice);
+      updateInvoiceVoucher();
+
+      // once all done, clear form
+      clearForm();
+    });
   }
-
-
-
-  const formik = useFormik({
-    initialValues: invoice,
-    onSubmit: onSubmit,
-    validationSchema: invoiceSchema,
-  });
 
   Object.entries(formik.errors).length > 0 && console.log(formik.errors)
 
@@ -287,8 +286,8 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                 label="Billing Date"
                 value={date}
                 onChange={(newValue) => {
-                  setDate(newValue)
-
+                  setDate(moment(newValue).toDate())
+                  formik.setFieldValue('billingDate', moment(newValue).toDate())
                 }}
                 renderInput={(params) => <TextField variant='standard' {...params} />}
               />

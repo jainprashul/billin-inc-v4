@@ -18,6 +18,9 @@ const Create = (props: Props) => {
           enqueueSnackbar('Invoice Created', { variant: 'success' });
           console.log('Saved')
           navigate(INVOICES);
+        }).catch((err)=>{
+          console.log("Create: Error",err)
+          enqueueSnackbar('Error Creating Invoice', { variant: 'error' });
         })
       }}/>
     </div>

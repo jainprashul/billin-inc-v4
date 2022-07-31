@@ -29,6 +29,7 @@ const Ledgers = () => {
   const [date, setDate] = React.useState<Date>(new Date());
   const { companyDB } = useDataUtils();
 
+  // TODO : Add Date Range Filter Setting in Settings
 
   const queries = useLiveQuery(async () => {
     const ledger = await companyDB?.ledger.orderBy('date').reverse().toArray() as Ledger[];
