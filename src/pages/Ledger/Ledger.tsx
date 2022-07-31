@@ -1,5 +1,5 @@
 import { AccountBalance, NorthEast, SearchTwoTone, SouthWest, TrendingDownOutlined, TrendingUpOutlined } from '@mui/icons-material'
-import { Avatar, Box, Button, Card, CardContent, Chip, Divider, Grid, Typography } from '@mui/material'
+import { Avatar, Box, Button, Card, CardContent, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material'
 import { green, red, amber } from '@mui/material/colors';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect } from 'react'
@@ -207,12 +207,16 @@ const Ledgers = () => {
           </LocalizationProvider>
         </Typography>
 
+        <Tooltip title="Press Ctrl + K to search">
+
         <Button variant="text" color="primary" startIcon={<SearchTwoTone />} onClick={() => setOpen(true)}>
           Search Ledger
-          <Chip size='small' variant='outlined' label={
+          {/* <Chip size='small' variant='outlined' label={
             <Typography variant="caption" color='text.secondary'> Ctrl + K </Typography>
-          } />
+          } /> */}
         </Button>
+        </Tooltip>
+
       </Box>
 
       <Grid container spacing={1}>

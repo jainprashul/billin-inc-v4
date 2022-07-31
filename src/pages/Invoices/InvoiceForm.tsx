@@ -127,7 +127,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         clientID: client.id,
         subTotal: gross,
         gstTotal: gstAmt,
-        voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+        voucherNo: values.voucherNo.length > 0 ? values.voucherNo : gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
         voucherType: gstEnabled ? getVoucherType() : "NON_GST",
         discount: discount > 0,
         discountValue: discount,
@@ -163,7 +163,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 
   Object.entries(formik.errors).length > 0 && console.log(formik.errors)
 
-  const { gstEnabled } = formik.values
+  const { gstEnabled, voucherNo : billNo } = formik.values
   return (
     <div className="invoice-form">
       <Grid className='form-header' container direction='row' justifyContent='space-between' component="main" >
@@ -254,7 +254,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             label="Invoice No."
             name="invoice_number"
             autoComplete="invoiceNo"
-            value={gstEnabled ? gstInvoiceNo : invoiceNo}
+            value={billNo.length > 0 ? billNo : gstEnabled ? gstInvoiceNo : invoiceNo}
             disabled={true}
             InputProps={{
               startAdornment: <InputAdornment position="start">Inv.</InputAdornment>,
