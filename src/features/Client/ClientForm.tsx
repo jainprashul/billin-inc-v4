@@ -53,6 +53,7 @@ const ClientForm = ({
             })).min(1, 'At least one contact is required'),
             
         }),
+        validateOnChange: false,
     })
 
     const { name, address, contacts, details, gst } = formik.values;
@@ -92,6 +93,7 @@ const ClientForm = ({
                         id="address"
                         name="address"
                         label="Address"
+                        required
                         multiline
                         minRows={2}
                         value={address.address}
@@ -128,6 +130,7 @@ const ClientForm = ({
                             variant='standard'
                             margin="dense"
                             fullWidth
+                            required
                             id="state"
                             name="state"
                             label="State"
@@ -149,6 +152,7 @@ const ClientForm = ({
                         renderInput={(params) => <TextField {...params}
                             variant='standard'
                             margin="dense"
+                            required
                             fullWidth
                             id="city"
                             name="city"
@@ -182,6 +186,7 @@ const ClientForm = ({
                         name="contact"
                         label="Contact"
                         type="tel"
+                        required
                         autoComplete="phone"
                         value={contacts[0].phone}
                         error={formik.errors.contacts ? true : false}

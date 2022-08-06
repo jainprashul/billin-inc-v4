@@ -1,5 +1,5 @@
 import { AccountBalance, NorthEast, SearchTwoTone, SouthWest, TrendingDownOutlined, TrendingUpOutlined } from '@mui/icons-material'
-import { Avatar, Box, Button, Card, CardContent, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Button, Card, CardContent, Chip, Divider, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import { green, red, amber } from '@mui/material/colors';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect } from 'react'
@@ -13,6 +13,8 @@ import { useDataUtils } from '../../utils/useDataUtils';
 import { Ledger } from '../../services/database/model';
 import { filterDataByDate } from '../../utils';
 import moment from 'moment';
+import AddIcon from '@mui/icons-material/Add';
+import ClientCreate from './Client/Create';
 
 type Props = {}
 
@@ -26,6 +28,7 @@ type Total = {
 
 const Ledgers = () => {
   const [open, setOpen] = React.useState(false);
+  const [openClient, setOpenClient] = React.useState(false);
   const [date, setDate] = React.useState<Date>(new Date());
   const { companyDB } = useDataUtils();
 
@@ -108,21 +111,21 @@ const Ledgers = () => {
   }, [queries.ledger]);
 
 
+  // Will add keyboard shortcuts with useKeyboardShortcuts
 
+  // function onKeyPress(e: KeyboardEvent) {
+  //   e.preventDefault();
+  //   if (e.ctrlKey && e.key === 'k') {
+  //     setOpen(true);
+  //   }
+  // }
 
-  function onKeyPress(e: KeyboardEvent) {
-    e.preventDefault();
-    if (e.ctrlKey && e.key === 'k') {
-      setOpen(true);
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyPress);
-    return () => {
-      document.removeEventListener('keydown', onKeyPress);
-    }
-  }, [])
+  // useEffect(() => {
+  //   document.addEventListener('keydown', onKeyPress);
+  //   return () => {
+  //     document.removeEventListener('keydown', onKeyPress);
+  //   }
+  // }, [])
 
   const DetailCards = ({ total, orientation = 'row' }: {
     total: Total,
@@ -131,7 +134,7 @@ const Ledgers = () => {
     <Card sx={orientation === 'row' ? { minWidth: 800, minHeight: 100 } : {}}>
       <CardContent >
         <Box display="flex" flexDirection={orientation} alignItems="center" justifyContent={'space-around'}>
-          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly': ''} minWidth={200}>
+          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly' : ''} minWidth={200}>
             <Avatar sx={{
               mx: orientation === 'row' ? 0 : 3,
               bgcolor: red[500],
@@ -142,7 +145,7 @@ const Ledgers = () => {
             </div>
           </Box>
           <Divider orientation="vertical" flexItem />
-          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly': ''} minWidth={200}>
+          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly' : ''} minWidth={200}>
             <Avatar sx={{
               mx: orientation === 'row' ? 0 : 3,
               bgcolor: green[500],
@@ -153,7 +156,7 @@ const Ledgers = () => {
             </div>
           </Box>
           <Divider orientation="vertical" flexItem />
-          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly': ''} minWidth={200}>
+          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly' : ''} minWidth={200}>
             <Avatar sx={{
               mx: orientation === 'row' ? 0 : 3,
               bgcolor: amber[500],
@@ -164,7 +167,7 @@ const Ledgers = () => {
             </div>
           </Box>
           <Divider orientation="vertical" flexItem />
-          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly': ''} minWidth={200}>
+          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly' : ''} minWidth={200}>
             <Avatar sx={{
               mx: orientation === 'row' ? 0 : 3,
               bgcolor: green[500],
@@ -175,7 +178,7 @@ const Ledgers = () => {
             </div>
           </Box>
           <Divider orientation="vertical" flexItem />
-          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly': ''} minWidth={200}>
+          <Box display="flex" alignItems="center" justifyContent={orientation === 'row' ? 'space-evenly' : ''} minWidth={200}>
             <Avatar sx={{
               mx: orientation === 'row' ? 0 : 3,
               bgcolor: red[500],
@@ -209,19 +212,19 @@ const Ledgers = () => {
 
         <Tooltip title="Press Ctrl + K to search">
 
-        <Button variant="text" color="primary" startIcon={<SearchTwoTone />} onClick={() => setOpen(true)}>
-          Search Ledger
-          {/* <Chip size='small' variant='outlined' label={
+          <Button variant="text" color="primary" startIcon={<SearchTwoTone />} onClick={() => setOpen(true)}>
+            Search Ledger
+            {/* <Chip size='small' variant='outlined' label={
             <Typography variant="caption" color='text.secondary'> Ctrl + K </Typography>
           } /> */}
-        </Button>
+          </Button>
         </Tooltip>
 
       </Box>
 
       <Grid container spacing={1}>
         <Grid item xs={3}>
-      <DetailCards total={currentTotal} orientation='column' />
+          <DetailCards total={currentTotal} orientation='column' />
 
         </Grid>
         <Grid item xs={9}>
@@ -229,9 +232,17 @@ const Ledgers = () => {
         </Grid>
       </Grid>
 
-
-
+      <Fab size="medium" color="primary" style={{
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+      }}  aria-label="add" onClick={()=> {
+        setOpenClient(true);
+      }}>
+        <AddIcon />
+      </Fab>
       <ClientList open={open} setOpen={setOpen} />
+      <ClientCreate open={openClient} setOpen={setOpenClient} />
     </div>
   )
 }
