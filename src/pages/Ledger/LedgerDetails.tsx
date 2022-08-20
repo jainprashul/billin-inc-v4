@@ -1,4 +1,4 @@
-import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, NorthEast, Print, SouthWest } from '@mui/icons-material';
+import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, NorthEast, People, Print, SouthWest, Storefront } from '@mui/icons-material';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Avatar, Box, Button, Divider, FormControl, Grid, IconButton, MenuItem, Select, TextField, Tooltip } from '@mui/material';
@@ -126,14 +126,14 @@ const LedgerDetails = (props: Props) => {
             cash: 0,
         })
         let bal = data.debit - data.credit;
-        data.receivable = type === 'received' ?  bal : type === 'paid' ? -bal : 0;
+        data.receivable = type === 'received' ? bal : type === 'paid' ? -bal : 0;
         data.payable = type === 'deposited' ? -bal : type === 'dues' ? bal : 0;
 
         if (amount === 0) {
             toast.enqueueSnackbar(`Please enter an amount`, { variant: 'error' });
             return;
         }
-        
+
         data.save().then(() => {
             setAmount(0);
             setType('received');
@@ -161,8 +161,13 @@ const LedgerDetails = (props: Props) => {
                                     navigate(-1);
                                 }} size='small'><ArrowBack /></IconButton> Ledger Details
                             </Typography>
-                            <Typography variant="h5" component="div">
-                                {client?.name}
+                            <Typography variant="h5" component="div" >
+                                <div style={{ display: 'flex', justifyContent: '' }}>
+                                <div>
+                                {client?.isCustomer ? <People /> : <Storefront /> }
+                                </div>
+                                 {client?.name}
+                                 </div>
                             </Typography>
                             <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                 {client?.details}
@@ -207,8 +212,12 @@ const LedgerDetails = (props: Props) => {
                                 </IconButton>
                             </Tooltip>
                         </CardActions>
+
+                        <br/>
+                        <br/>
+
                         <Box p={2}  >
-                        <Typography variant="h6"> Adjustments</Typography>
+                            <Typography variant="h6"> Adjustments</Typography>
                             <Grid container spacing={1}>
                                 <Grid item xs={6}>
                                     <TextField fullWidth label="Amount" type='number' variant='standard' value={amount} onChange={(e) => {
@@ -216,10 +225,10 @@ const LedgerDetails = (props: Props) => {
                                     }} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <FormControl  fullWidth variant='standard' style={{
+                                    <FormControl fullWidth variant='standard' style={{
                                         marginTop: '1rem'
                                     }}>
-                                        
+
                                         {/* <InputLabel id="type-label">Type</InputLabel> */}
                                         <Select
                                             labelId="type-label"
@@ -243,7 +252,7 @@ const LedgerDetails = (props: Props) => {
                                 </Grid>
                                 {/* <br/> */}
                                 <Grid item xs={12}>
-                                <Button variant="contained" color="primary" onClick={updateAdjustment}> Add </Button>
+                                    <Button variant="contained" color="primary" onClick={updateAdjustment}> Add </Button>
                                 </Grid>
                             </Grid>
                         </Box>
