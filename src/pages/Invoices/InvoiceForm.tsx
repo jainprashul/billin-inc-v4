@@ -9,12 +9,16 @@ import useInvoiceForm from './useInvoiceForm';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import db from '../../services/database/db';
-import ClientModel from './Client/Client';
+import ClientModel from './Client';
 import { useSnackbar } from 'notistack';
 import { useAppSelector } from '../../app/hooks';
 import { selectGstEnabled } from '../../utils/utilsSlice';
 import { useEffect } from 'react';
 import moment from 'moment';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+
 
 type Props = {
   onSubmit: (values: Invoices) => void
@@ -56,6 +60,12 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gstEnable])
 
+  const formik = useFormik({
+    initialValues: invoice,
+    onSubmit: onSubmit,
+    validationSchema: invoiceSchema,
+  });
+
 
   const { date, gross, gstAmt, total, clientOpen, setClientOpen,
     setDate, onAddProduct, onDeleteProduct,
@@ -65,7 +75,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     discount, setDiscount,
     invoiceNo, gstInvoiceNo, clientNames,
     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName,
-    updateInvoiceVoucher, updateStock, validateInvoice, getVoucherType, printInvoice } = useInvoiceForm(invoice)
+    updateInvoiceVoucher, updateStock, validateInvoice, getVoucherType, printInvoice } = useInvoiceForm(formik.values)
 
   // console.log(client, clientID);
 
@@ -84,10 +94,10 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   }
 
 
-  const onSubmit = (values: Invoices) => {
+  function onSubmit(values: Invoices) {
 
     // check if invoice is valid
-    let err = validateInvoice()
+    let err = validateInvoice();
     if (err) {
       // alert(err)
       enqueueSnackbar(err, {
@@ -98,69 +108,62 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           vertical: 'top',
           horizontal: 'center',
         },
-      })
-      return
+      });
+      return;
     }
 
-    let companyDB = db.getCompanyDB(values.companyID)
+    let companyDB = db.getCompanyDB(values.companyID);
     companyDB.transaction('rw', [...companyDB.tables], async () => {
       // save products to db
       products.forEach(product => {
-        product.voucherID = values.id
-        product.save()
-        values.productIDs.add(product.id)
-        formik.setFieldValue('productIDs', values.productIDs)
-      })
+        product.voucherID = values.id;
+        product.save();
+        values.productIDs.add(product.id);
+        formik.setFieldValue('productIDs', values.productIDs);
+      });
 
       const invoice = new Invoices({
         ...values,
         clientID: client.id,
         subTotal: gross,
         gstTotal: gstAmt,
-        voucherNo: gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+        voucherNo: values.voucherNo.length > 0 ? values.voucherNo : gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
         voucherType: gstEnabled ? getVoucherType() : "NON_GST",
         discount: discount > 0,
         discountValue: discount,
         amountPaid: amountPaid,
-      })
+      });
 
-      console.log('inv', invoice)
+      console.log('inv', invoice);
 
       // update client data
-      client.save()
+      client.save();
       console.log(client);
 
 
       // check if invoice is valid
-      updateLedger()
-      updateStock()
+      updateLedger();
+      updateStock();
 
       // update ledger done
       // update stock done
       // print invoice done
       // clear form done
-
       // send invoice to server 
       // send to whatsapp phone number
       console.log(invoice);
-      handleSubmit(invoice)
-      printInvoice(invoice)
-      updateInvoiceVoucher()
-    })
-    clearForm()
+      printInvoice(invoice);
+      handleSubmit(invoice);
+      updateInvoiceVoucher();
+
+      // once all done, clear form
+      clearForm();
+    });
   }
-
-
-
-  const formik = useFormik({
-    initialValues: invoice,
-    onSubmit: onSubmit,
-    validationSchema: invoiceSchema,
-  });
 
   Object.entries(formik.errors).length > 0 && console.log(formik.errors)
 
-  const { gstEnabled } = formik.values
+  const { gstEnabled, voucherNo : billNo } = formik.values
   return (
     <div className="invoice-form">
       <Grid className='form-header' container direction='row' justifyContent='space-between' component="main" >
@@ -251,7 +254,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             label="Invoice No."
             name="invoice_number"
             autoComplete="invoiceNo"
-            value={gstEnabled ? gstInvoiceNo : invoiceNo}
+            value={billNo.length > 0 ? billNo : gstEnabled ? gstInvoiceNo : invoiceNo}
             disabled={true}
             InputProps={{
               startAdornment: <InputAdornment position="start">Inv.</InputAdornment>,
@@ -262,7 +265,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             marginTop: '0.5rem',
           }}>
 
-            <TextField variant='standard'
+            {/* <TextField variant='standard'
               margin="dense"
               required
               fullWidth
@@ -275,20 +278,20 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                 console.log(event.target.value);
                 setDate(new Date(event.target.value))
               }}
-            />
+            /> */}
 
 
-            {/* <LocalizationProvider dateAdapter={AdapterMoment}>
+            <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 label="Billing Date"
                 value={date}
                 onChange={(newValue) => {
-                  setDate(newValue)
-
+                  setDate(moment(newValue).toDate())
+                  formik.setFieldValue('billingDate', moment(newValue).toDate())
                 }}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField variant='standard' {...params} />}
               />
-            </LocalizationProvider> */}
+            </LocalizationProvider>
 
           </div>
 

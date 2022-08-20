@@ -1,10 +1,10 @@
-import { Alert, Autocomplete, Button, Grid, TextField } from '@mui/material'
+import { Alert, Autocomplete, Button, Checkbox, FormControlLabel, Grid, TextField } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Client } from '../../../services/database/model';
+import { Client } from '../../services/database/model';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { getStateCites, stateList } from '../../../constants/states';
-import { gstPattern } from '../../../constants';
+import { getStateCites, stateList } from '../../constants/states';
+import { gstPattern } from '../../constants';
 
 type Props = {
     client?: Client
@@ -51,11 +51,12 @@ const ClientForm = ({
                 phone: Yup.string().required('Phone is required'),
                 mobile: Yup.string(),
             })).min(1, 'At least one contact is required'),
-            
+
         }),
+        validateOnChange: false,
     })
 
-    const { name, address, contacts, details, gst } = formik.values;
+    const { name, address, contacts, details, gst, isCustomer } = formik.values;
     console.log(address);
 
     const cityOptions = getStateCites(address.state) || [];
@@ -92,6 +93,7 @@ const ClientForm = ({
                         id="address"
                         name="address"
                         label="Address"
+                        required
                         multiline
                         minRows={2}
                         value={address.address}
@@ -128,6 +130,7 @@ const ClientForm = ({
                             variant='standard'
                             margin="dense"
                             fullWidth
+                            required
                             id="state"
                             name="state"
                             label="State"
@@ -149,6 +152,7 @@ const ClientForm = ({
                         renderInput={(params) => <TextField {...params}
                             variant='standard'
                             margin="dense"
+                            required
                             fullWidth
                             id="city"
                             name="city"
@@ -182,6 +186,7 @@ const ClientForm = ({
                         name="contact"
                         label="Contact"
                         type="tel"
+                        required
                         autoComplete="phone"
                         value={contacts[0].phone}
                         error={formik.errors.contacts ? true : false}
@@ -234,6 +239,16 @@ const ClientForm = ({
                         minRows={3}
                         value={details}
                         onChange={formik.handleChange}
+                    />
+
+                    <FormControlLabel
+                        label="Customer"
+                        control={
+                            <Checkbox
+                                checked={isCustomer}
+                                onChange={formik.handleChange}
+                            />
+                        }
                     />
                 </Grid>
             </Grid>

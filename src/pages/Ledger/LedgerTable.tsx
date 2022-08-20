@@ -1,19 +1,21 @@
 import MaterialTable, { Column } from '@material-table/core';
-import { StockLog } from '../../../services/database/model';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { theme } from '../../../styles/theme';
+import { Ledger } from '../../services/database/model';
+import { theme } from '../../styles/theme';
 
 
 
 type Props = {
-    data: Array<StockLog>
+    data: Array<Ledger>
+
 }
 
 
-const LogTable = ({ data }: Props) => {
-    const loading = !(data ? data.length !== 0 : false)
+const LedgerTable = ({ data }: Props) => {
+    let loading = !(data ? data.length > 0 : false);
 
-    const columns: Array<Column<StockLog>> = [
+    const columns: Array<Column<Ledger>> = [
         {
             title: 'Date',
             field: 'date',
@@ -34,34 +36,27 @@ const LogTable = ({ data }: Props) => {
             }
         },
         {
-            title: 'Client',
-            field: 'clientName',
+            title: 'Voucher Type',
+            field: 'voucherType',
+            type: 'string',
         },
         {
-            title: 'Transaction Type',
-            field: 'logType',
-        },
-        {
-            title: 'Quantity',
-            field: 'quantity',
-            type: 'numeric',
-        },
-        {
-            title: 'Price',
-            field: 'rate',
+            title: 'Debit',
+            field: 'debit',
             type: 'currency',
             currencySetting: {
                 currencyCode: 'INR',
             }
         },
         {
-            title: "StockLog Value",
-            field: 'amount',
+            title: "Credit",
+            field: 'credit',
             type: 'currency',
             currencySetting: {
                 currencyCode: 'INR',
             }
-        }
+        },
+
     ];
 
     return (
@@ -87,4 +82,4 @@ const LogTable = ({ data }: Props) => {
     )
 }
 
-export default LogTable
+export default LedgerTable

@@ -21,7 +21,7 @@ export interface ILedger {
 }
 
 type ClientType = "CUSTOMER" | "VENDOR" | "EMPLOYEE" | "SUPPLIER";
-type LedgerVoucherType = "SALES" | "PURCHASE" | "PAYMENT" | "RECEIPT" | "JOURNAL" | "TRANSFER";
+type LedgerVoucherType = "SALES" | "PURCHASE" | "PAYMENT" | "RECEIPT" | "JOURNAL" | "TRANSFER" | "INVOICE" | "BALANCE" | "GRN_RETURN" | "BILL" | "BILL_RETURN" | "ADJUSTMENT" | "ADJUSTMENT_RETURN" | "OTHER";
 type PayableType = "CASH" | "UPI" | "NEFT" | "CARD" | "CHEQUE" | "CREDIT" | "DEBIT" | "OTHER";
 
 export class Ledger implements ILedger {

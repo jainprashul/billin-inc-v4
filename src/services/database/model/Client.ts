@@ -12,6 +12,7 @@ export interface IClient {
     address: IAddress;
     contacts: IContact[];
     companyID: number;
+    isCustomer? : boolean;
 }
 
 export class Client implements IClient {
@@ -22,6 +23,7 @@ export class Client implements IClient {
     address: IAddress;
     contacts: IContact[];
     companyID: number;
+    isCustomer : boolean;
 
     constructor(client: IClient) {
         this.id = client.id || `c_${nanoid(8)}`;
@@ -31,6 +33,7 @@ export class Client implements IClient {
         this.address = client.address;
         this.contacts = client.contacts;
         this.companyID = client.companyID;
+        this.isCustomer = client.isCustomer ?? true;
     }
 
     private onCreate(id: string, client: Client, tx: Transaction) {

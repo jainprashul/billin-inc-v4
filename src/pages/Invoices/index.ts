@@ -6,7 +6,7 @@ import Details from "./Details"
 import InvoiceTable from "./InoviceTable"
 import ProductTable from "./Products/ProductTable"
 import ProductTableGST from "./Products/ProductTableGST"
-import ClientModel from './Client/Client';
+import ClientModel from './Client';
 import useInvoiceForm from "./useInvoiceForm"
 
 export {

@@ -1,3 +1,4 @@
+import { nanoid } from '@reduxjs/toolkit';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react'
 import invoicePattern from '../../components/PDF/InvoicePattern';
@@ -5,6 +6,8 @@ import db from '../../services/database/db';
 import { Client, Company, Invoices, Ledger, Product, Stock, StockLog } from '../../services/database/model';
 import { Invoice } from '../../services/database/model/Invoices';
 
+// Create client ID if it doesn't exist yet
+let cid = `c_${nanoid(12)}`
 
 const useInvoiceForm = (invoice: Invoices) => {
   console.log(invoice)
@@ -47,6 +50,7 @@ const useInvoiceForm = (invoice: Invoices) => {
   }, [clientID, customerName]);
 
   const clientX = client ? client : new Client({
+    id: cid,
     name: customerName,
     address: { address: '', city: '', state: '', },
     companyID: 1,
@@ -161,10 +165,10 @@ const useInvoiceForm = (invoice: Invoices) => {
       clientID: clientID as string,
       clientType: 'CUSTOMER',
       credit: amountPaid,
-      debit: total,
+      debit: total - discount,
       payable: 0,
       payableType: 'CASH',
-      receivable: total - amountPaid,
+      receivable: total - (discount + amountPaid),
       receivableType: 'CASH',
       cash: 0,
     })
@@ -190,7 +194,7 @@ const useInvoiceForm = (invoice: Invoices) => {
           clientID: clientID as string,
           clientName : client?.name as string,
 
-          date: new Date(),
+          date: date as Date,
           logType: 'SALE',
           quantity: -1 * product.quantity,
           rate: product.price,
@@ -224,7 +228,7 @@ const useInvoiceForm = (invoice: Invoices) => {
           companyID: invoice.companyID,
           clientID: clientID as string,
           clientName : client?.name as string,
-          date: new Date(),
+          date: date as Date,
           logType: 'OPENING_STOCK',
           quantity: -1 * product.quantity,
           rate: product.price,

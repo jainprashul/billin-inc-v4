@@ -1,4 +1,4 @@
-import { Delete, Edit as EditIcon } from '@mui/icons-material';
+import { ArrowBack, Delete, Edit as EditIcon } from '@mui/icons-material';
 import { Stock } from '../../services/database/model/Stocks';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -11,6 +11,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Edit from './Edit';
 import React from 'react';
+import AlertDialog from '../../components/shared/AlertDialog';
 
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
 
 const StockDetail = (props: Props) => {
     const [open, setOpen] = React.useState(false);
+    const [openDelete, setOpenDelete] = React.useState(false);
     const { params, companyDB, toast, navigate } = useDataUtils();
     const stockID = params.id as string;
 
@@ -51,7 +53,9 @@ const StockDetail = (props: Props) => {
                     }} >
                         <CardContent>
                             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                Stock Details
+                                <IconButton onClick={() => {
+                                    navigate(-1);
+                                }} size='small'><ArrowBack /></IconButton> Stock Details
                             </Typography>
                             <Typography variant="h5" component="div">
                                 {stock?.name}
@@ -77,15 +81,15 @@ const StockDetail = (props: Props) => {
                         <CardActions>
                             {/* <Button size="small">Learn More</Button>  */}
                             <Tooltip title="Edit">
-                                <IconButton color='primary' onClick={()=> {
+                                <IconButton color='primary' onClick={() => {
                                     setOpen(true);
                                 }}>
                                     <EditIcon />
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title="Delete">
-                                <IconButton color='primary' onClick={()=>{
-                                    onDelete();
+                                <IconButton color='primary' onClick={() => {
+                                    setOpenDelete(true);
                                 }} >
                                     <Delete />
                                 </IconButton>
@@ -99,6 +103,15 @@ const StockDetail = (props: Props) => {
             </Grid>
 
             <Edit open={open} stock={stock} setOpen={setOpen} />
+            <AlertDialog
+                open={openDelete}
+                setOpen={setOpenDelete}
+                message={`Are you sure you want to delete ${stock?.name}?`}
+                title={`Delete ${stock?.name}`}
+                onConfirm={() => {
+                    onDelete();
+                }} />
+
         </>
     )
 }
