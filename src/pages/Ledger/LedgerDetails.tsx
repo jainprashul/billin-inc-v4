@@ -1,7 +1,7 @@
 import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, NorthEast, Print, SouthWest } from '@mui/icons-material';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Avatar, Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Box, Button, Divider, FormControl, Grid, IconButton, MenuItem, Select, TextField, Tooltip } from '@mui/material';
 import { LEDGER } from '../../constants/routes';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -105,6 +105,48 @@ const LedgerDetails = (props: Props) => {
         iframe.contentWindow?.print();
     }
 
+    const [amount, setAmount] = React.useState(0);
+    const [type, setType] = React.useState('received');
+
+    const updateAdjustment = () => {
+
+        let data = new Ledger({
+            companyID: client?.companyID as number,
+            date: new Date(),
+            voucherNo: '',
+            voucherType: 'ADJUSTMENT',
+            clientID: clientID as string,
+            clientType: 'CUSTOMER',
+            credit: type === 'received' ? amount : 0,
+            debit: type === 'paid' ? amount : 0,
+            payable: 0,
+            payableType: 'CASH',
+            receivable: 0,
+            receivableType: 'CASH',
+            cash: 0,
+        })
+        let bal = data.debit - data.credit;
+        data.receivable = type === 'received' ?  bal : type === 'paid' ? -bal : 0;
+        data.payable = type === 'deposited' ? -bal : type === 'dues' ? bal : 0;
+
+        if (amount === 0) {
+            toast.enqueueSnackbar(`Please enter an amount`, { variant: 'error' });
+            return;
+        }
+        
+        data.save().then(() => {
+            setAmount(0);
+            setType('received');
+            toast.enqueueSnackbar('Amount Adjustment added successfully', {
+                variant: 'success',
+            });
+        }).catch(() => {
+            toast.enqueueSnackbar('Amount Adjustment failed', {
+                variant: 'error',
+            });
+
+        })
+    }
 
     return (
         <>
@@ -136,6 +178,7 @@ const LedgerDetails = (props: Props) => {
                                     <Grid item xs={3} color='text.secondary'> Phone :</Grid> <Grid item xs={9}>{client?.contacts[0].phone}</Grid>
                                     <Grid item xs={3} color='text.secondary'> Mobile :</Grid> <Grid item xs={9}>{client?.contacts[0].mobile}</Grid>
                                     <Grid item xs={3} color='text.secondary'> Email :</Grid> <Grid item xs={9}>{client?.contacts[0].email}</Grid>
+                                    {client?.isCustomer && <Grid item xs={3} color='text.secondary'> Customer</Grid>}
                                 </Grid>
                             </Typography>
 
@@ -164,6 +207,46 @@ const LedgerDetails = (props: Props) => {
                                 </IconButton>
                             </Tooltip>
                         </CardActions>
+                        <Box p={2}  >
+                        <Typography variant="h6"> Adjustments</Typography>
+                            <Grid container spacing={1}>
+                                <Grid item xs={6}>
+                                    <TextField fullWidth label="Amount" type='number' variant='standard' value={amount} onChange={(e) => {
+                                        setAmount(parseFloat(e.target.value));
+                                    }} />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <FormControl  fullWidth variant='standard' style={{
+                                        marginTop: '1rem'
+                                    }}>
+                                        
+                                        {/* <InputLabel id="type-label">Type</InputLabel> */}
+                                        <Select
+                                            labelId="type-label"
+                                            id="type"
+                                            value={type}
+                                            variant='standard'
+                                            margin='dense'
+                                            onChange={(e) => {
+                                                setType(e.target.value);
+                                            }
+                                            }
+                                            label="Type"
+                                        >
+                                            <MenuItem value='received'>Received</MenuItem>
+                                            <MenuItem value='paid'>Paid</MenuItem>
+                                            <MenuItem value='deposited'>Deposited</MenuItem>
+                                            <MenuItem value='dues'>Dues</MenuItem>
+
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                {/* <br/> */}
+                                <Grid item xs={12}>
+                                <Button variant="contained" color="primary" onClick={updateAdjustment}> Add </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
                     </Card>
                 </Grid>
                 <Grid item md={8}>
