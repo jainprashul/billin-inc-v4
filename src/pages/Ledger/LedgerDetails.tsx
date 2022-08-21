@@ -163,7 +163,10 @@ const LedgerDetails = (props: Props) => {
                             </Typography>
                             <Typography variant="h5" component="div" >
                                 <div style={{ display: 'flex', justifyContent: '' }}>
-                                <div>
+                                <div style={{
+                                    marginTop: '3px',
+                                    marginRight: '6px',
+                                }}>
                                 {client?.isCustomer ? <People /> : <Storefront /> }
                                 </div>
                                  {client?.name}
