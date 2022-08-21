@@ -1,20 +1,32 @@
 import React from 'react'
 import '../styles/NotFound.css'
-import { Link } from 'react-router-dom'
+import { Button, Typography } from '@mui/material'
 
 type Props = {}
 
 const NotFound = (props: Props) => {
   return (
-    <div data-testid="not-found-container" className='NotFound'>
-        <h1>404  - Not Found</h1>
-        <p>The page you are looking for does not exist. 
-            <br/>
-            <Link to='/'>Go back to the home page</Link>
-        </p>
-        
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '70vh'
+  }}>
+      
+      <img src={'./404.png'} width={400}  alt="error" />
+      <Typography variant="h4" >
+          The page you are looking for is not available.
+      </Typography>
+      <br/>
 
-    </div>
+      <Button variant="contained" color="primary" onClick={() => {
+          window.location.href = '/';
+      }}>
+          Go Back to Dashboard
+      </Button>
+      
+  </div>
 
   )
 }

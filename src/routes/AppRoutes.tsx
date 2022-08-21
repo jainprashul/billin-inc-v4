@@ -8,6 +8,7 @@ import Purchases, { PurchaseCreate, PurchaseEdit } from '../pages/Purchases'
 import Login from '../pages/Login'
 import { StockDetail, Stocks } from '../pages/Stocks'
 import Ledger, { LedgerDetails } from '../pages/Ledger'
+import ErrorBoundary from '../components/shared/ErrorBoundary'
 
 type Props = {}
 
@@ -16,8 +17,9 @@ const AppRoutes = (props: Props) => {
 
 
   return (
-    <BrowserRouter >
-      {/* <ErrorBoundary> */}
+    <ErrorBoundary>
+      <BrowserRouter >
+        {/* <ErrorBoundary> */}
         {
           isAuthenticated ? (
             <Layout>
@@ -33,7 +35,7 @@ const AppRoutes = (props: Props) => {
                 <Route path={PURCHASE_CREATE} element={<PurchaseCreate />} />
                 <Route path={PURCHASE_EDIT} element={<PurchaseEdit />} />
                 <Route path={STOCKS} element={<Stocks />} />
-                <Route path={STOCK_DETAIL} element={<StockDetail/>} />
+                <Route path={STOCK_DETAIL} element={<StockDetail />} />
                 <Route path={LEDGER} element={<Ledger />} />
                 <Route path={LEDGER_DETAIL} element={<LedgerDetails />} />
                 <Route path={NOT_FOUND} element={<NotFound />} />
@@ -47,9 +49,10 @@ const AppRoutes = (props: Props) => {
             </Routes>
           )
         }
-      {/* </ErrorBoundary> */}
 
-    </BrowserRouter>
+      </BrowserRouter>
+    </ErrorBoundary>
+
   )
 }
 
