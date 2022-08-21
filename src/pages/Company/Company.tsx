@@ -33,7 +33,7 @@ const Company = (props: Props) => {
             <Grid item xs={4} key={company.id}>
               <Card key={company.id}>
                 <CardContent style={{
-                  minHeight: '14rem',
+                  minHeight: '16rem',
                 }}>
                   <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     Company
@@ -88,7 +88,7 @@ const Company = (props: Props) => {
         <Grid item xs={4}>
           <Card>
             <CardContent sx={{
-              minHeight: '16rem',
+              minHeight: '19rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -99,6 +99,7 @@ const Company = (props: Props) => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
+                padding : '1rem '
               }} onClick={() => {
                 navigate('/company/create');
               }}>
