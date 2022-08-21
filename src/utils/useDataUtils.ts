@@ -33,7 +33,7 @@ export const useDataUtils = () => {
 
 
     return {
-        company, setCompanyID,
+        company, companyID, setCompanyID,
         companyDB,
         navigate,
         location,

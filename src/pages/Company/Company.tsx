@@ -1,4 +1,4 @@
-import { AddBox, Delete } from '@mui/icons-material';
+import { AddBox, CheckCircle, Delete } from '@mui/icons-material';
 import Add from '@mui/icons-material/Add';
 import { Button, Card, CardActions, CardContent, Grid, IconButton, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -10,7 +10,7 @@ import { useDataUtils } from '../../utils/useDataUtils';
 type Props = {}
 
 const Company = (props: Props) => {
-  const { companyDB, navigate, toast } = useDataUtils();
+  const { navigate, toast, companyID, setCompanyID } = useDataUtils();
   const [open, setOpen] = useState(false)
 
   const [dialog, setDialog] = React.useState({
@@ -55,6 +55,7 @@ const Company = (props: Props) => {
                     {company.gst && <>GST: {company.gst}</>}
                   </Typography>
                 </CardContent>
+
                 <CardActions>
                   <Button size="small" onClick={() => {
                     navigate(`/company/${company.id}/edit`, {
@@ -79,7 +80,14 @@ const Company = (props: Props) => {
                   }}>
                     <Delete />
                   </IconButton>
+                  <IconButton onClick={()=> {
+                    setCompanyID(company.id as number)
+                  }}>
+                    <CheckCircle color={ company.id  === companyID ? 'success' : 'inherit' }/>
+                  </IconButton>
+                  
                 </CardActions>
+
               </Card>
             </Grid>
           )
@@ -99,7 +107,7 @@ const Company = (props: Props) => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding : '1rem '
+                padding: '1rem '
               }} onClick={() => {
                 navigate('/company/create');
               }}>
