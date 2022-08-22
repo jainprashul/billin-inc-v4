@@ -5,11 +5,13 @@ import invoicePattern from '../../components/PDF/InvoicePattern';
 import db from '../../services/database/db';
 import { Client, Company, Invoices, Ledger, Product, Stock, StockLog } from '../../services/database/model';
 import { Invoice } from '../../services/database/model/Invoices';
+import { useDataUtils } from '../../utils/useDataUtils';
 
 // Create client ID if it doesn't exist yet
 let cid = `c_${nanoid(12)}`
 
 const useInvoiceForm = (invoice: Invoices) => {
+  const { companyID } = useDataUtils();
   console.log(invoice)
   const [date, setDate] = useState<Date | null>(new Date())
   const [products, setProducts] = useState<Product[]>(invoice?.products || []);
@@ -53,7 +55,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     id: cid,
     name: customerName,
     address: { address: '', city: '', state: '', },
-    companyID: 1,
+    companyID,
     contacts: [{ name: customerName, email: '', phone: customerContact, mobile: '' }],
     details: '',
     gst: customerGST,

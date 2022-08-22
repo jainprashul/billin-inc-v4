@@ -38,7 +38,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   id,
   billingDate: new Date(),
   clientID: nanoid(),
-  companyID: 1,
+  companyID: parseInt(localStorage.getItem("companyID") ?? '1') ,
   discount: false,
   discountValue: 0,
   gstEnabled: JSON.parse(localStorage.getItem("gstEnabled") || "false"),
@@ -50,7 +50,6 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 }) }: Props) => {
   // console.log(invoice)
   const { enqueueSnackbar } = useSnackbar();
-  const { companyID } = useDataUtils()
 
   const gstEnable = useAppSelector(selectGstEnabled)
 
@@ -134,7 +133,6 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         discount: discount > 0,
         discountValue: discount,
         amountPaid: amountPaid,
-        companyID,
       });
 
       console.log('inv', invoice);
