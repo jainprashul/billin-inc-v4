@@ -15,7 +15,7 @@ const Company = (props: Props) => {
 
   const [dialog, setDialog] = React.useState({
     title: '',
-    message: '',
+    message: <></>,
     onCancel: () => { },
     onConfirm: () => { },
   });
@@ -67,7 +67,15 @@ const Company = (props: Props) => {
                     setOpen(true);
                     setDialog({
                       title: 'Delete Company',
-                      message: `Are you sure you want to delete ${company.name} ?`,
+                      message: <>
+                        <Typography variant="body1" color="black">
+                          Are you sure you want to delete {company.name} ?
+                        </Typography>
+                        <br />
+                        <Typography variant="caption" component="div">
+                          This action is irreversible and the company data will be deleted.
+                        </Typography>
+                      </>,
                       onConfirm: () => {
                         company.delete().then(() => {
                           toast.enqueueSnackbar(`Company : ${company.name} deleted.`, {
@@ -80,12 +88,12 @@ const Company = (props: Props) => {
                   }}>
                     <Delete />
                   </IconButton>
-                  <IconButton onClick={()=> {
+                  <IconButton onClick={() => {
                     setCompanyID(company.id as number)
                   }}>
-                    <CheckCircle color={ company.id  === companyID ? 'success' : 'inherit' }/>
+                    <CheckCircle color={company.id === companyID ? 'success' : 'inherit'} />
                   </IconButton>
-                  
+
                 </CardActions>
 
               </Card>
@@ -121,7 +129,7 @@ const Company = (props: Props) => {
         </Grid>
       </Grid>
 
-      <AlertDialog message={dialog.message} open={open} setOpen={setOpen} title={dialog.title} onConfirm={dialog.onConfirm} onCancel={dialog.onCancel} />
+      <AlertDialog message={dialog.message} open={open} setOpen={setOpen} confirmColor={'error'} confirmText='Delete' title={dialog.title} onConfirm={dialog.onConfirm} onCancel={dialog.onCancel} />
     </div>
   )
 }
