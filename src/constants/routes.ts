@@ -24,4 +24,8 @@ export const STOCK_CREATE = '/stocks/create';
 export const LEDGER = '/ledger';
 export const LEDGER_DETAIL = '/ledger/:id';
 
+export const COMPANY = '/company';
+export const COMPANY_CREATE = '/company/create';
+export const COMPANY_EDIT = '/company/:id/edit'
+
 export const NOT_FOUND = '*';

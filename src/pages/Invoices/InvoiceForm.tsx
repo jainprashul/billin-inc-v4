@@ -18,6 +18,7 @@ import moment from 'moment';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { useDataUtils } from '../../utils/useDataUtils';
 
 
 type Props = {
@@ -37,7 +38,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   id,
   billingDate: new Date(),
   clientID: nanoid(),
-  companyID: 1,
+  companyID: parseInt(localStorage.getItem("companyID") ?? '1') ,
   discount: false,
   discountValue: 0,
   gstEnabled: JSON.parse(localStorage.getItem("gstEnabled") || "false"),
@@ -48,7 +49,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   voucherType: 'NON_GST'
 }) }: Props) => {
   // console.log(invoice)
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const gstEnable = useAppSelector(selectGstEnabled)
 

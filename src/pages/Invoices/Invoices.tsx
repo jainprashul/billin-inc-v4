@@ -23,7 +23,7 @@ const Invoices = (props: Props) => {
   }, [companyDB], []) as Array<Invoice>;
 
   return (
-    <div>
+    <div id='invoice-page'>
       <InvoiceTable data={invoices as Invoice[]} />
       <Fab color="primary" style={{
           position: 'absolute',

@@ -10,7 +10,7 @@ type Props = {
     open: boolean;
     setOpen: (open: boolean) => void;
     title: string;
-    message: string;
+    message: string | JSX.Element;
     onCancel?: () => void;
     onConfirm?: () => void;
     confirmText?: string;
