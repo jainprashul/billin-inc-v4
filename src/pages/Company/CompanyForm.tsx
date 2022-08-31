@@ -63,7 +63,7 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
     const cityOptions = getStateCites(address.state) || [];
     const stateOptions = stateList || [];
     return (
-        <form  onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
             {Object.keys(formik.errors).length ? <Alert severity="error" >
                 {JSON.stringify(formik.errors)}
             </Alert> : <></>}
@@ -185,7 +185,7 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
                             autoComplete="gst"
                             value={gst}
                             inputProps={{
-                                pattern: gstPattern
+                                
                             }}
                             onChange={formik.handleChange}
                         />
