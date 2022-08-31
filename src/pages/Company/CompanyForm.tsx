@@ -63,7 +63,7 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
     const cityOptions = getStateCites(address.state) || [];
     const stateOptions = stateList || [];
     return (
-        <form onSubmit={formik.handleSubmit}>
+        <form  onSubmit={formik.handleSubmit}>
             {Object.keys(formik.errors).length ? <Alert severity="error" >
                 {JSON.stringify(formik.errors)}
             </Alert> : <></>}
@@ -197,7 +197,7 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
                 border: '1px solid #ddd',
                 borderRadius: 5,
                 padding: 10,
-                marginBottom : 10,
+                marginBottom: 10,
                 maxWidth: 800,
             }} >
                 <FormLabel component="legend" >&nbsp;Contact Details &nbsp;</FormLabel>
@@ -278,7 +278,7 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
                 </Grid>
             </FormControl>
             <br />
-            <div className="client-footer" >
+            <div className="company-footer" >
                 <Button style={{
                     marginRight: '10px'
                 }} type="reset" onClick={() => formik.resetForm()} variant="contained" color="primary">
