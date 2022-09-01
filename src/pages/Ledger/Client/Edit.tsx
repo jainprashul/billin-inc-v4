@@ -1,14 +1,12 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import ClientForm from './ClientForm';
 import { IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import ClientForm from '../../../features/Client/ClientForm';
 import { Client } from '../../../services/database/model';
+import { useDataUtils } from '../../../utils/useDataUtils';
 
 type Props = {
   open: boolean
@@ -18,10 +16,11 @@ type Props = {
   title?: string
   submitText?: string
   children?: React.ReactNode
-  client? : Client
+  client : Client
 }
-export default function ClientModel(props: Props) {
+export default function ClientEdit(props: Props) {
   const { open, setOpen, client } = props;
+  const { toast } = useDataUtils();
 
   const handleClose = () => {
     setOpen(false);
@@ -49,18 +48,11 @@ export default function ClientModel(props: Props) {
             console.log('Submit')
             client.save().then((id) => {
               handleClose()
+              toast.enqueueSnackbar(`Client ${client.name} Details Updated`, { variant: 'success' });
               console.log('Saved', id)
             })
           }} />
         </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Save
-          </Button>
-        </DialogActions> */}
       </Dialog>
     </div>
   );

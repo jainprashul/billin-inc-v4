@@ -1,12 +1,17 @@
+import { nanoid } from '@reduxjs/toolkit';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react'
 import invoicePattern from '../../components/PDF/InvoicePattern';
 import db from '../../services/database/db';
 import { Client, Company, Invoices, Ledger, Product, Stock, StockLog } from '../../services/database/model';
 import { Invoice } from '../../services/database/model/Invoices';
+import { useDataUtils } from '../../utils/useDataUtils';
 
+// Create client ID if it doesn't exist yet
+let cid = `c_${nanoid(12)}`
 
 const useInvoiceForm = (invoice: Invoices) => {
+  const { companyID } = useDataUtils();
   console.log(invoice)
   const [date, setDate] = useState<Date | null>(new Date())
   const [products, setProducts] = useState<Product[]>(invoice?.products || []);
@@ -47,9 +52,10 @@ const useInvoiceForm = (invoice: Invoices) => {
   }, [clientID, customerName]);
 
   const clientX = client ? client : new Client({
+    id: cid,
     name: customerName,
     address: { address: '', city: '', state: '', },
-    companyID: 1,
+    companyID,
     contacts: [{ name: customerName, email: '', phone: customerContact, mobile: '' }],
     details: '',
     gst: customerGST,
@@ -161,10 +167,10 @@ const useInvoiceForm = (invoice: Invoices) => {
       clientID: clientID as string,
       clientType: 'CUSTOMER',
       credit: amountPaid,
-      debit: total,
+      debit: total - discount,
       payable: 0,
       payableType: 'CASH',
-      receivable: total - amountPaid,
+      receivable: total - (discount + amountPaid),
       receivableType: 'CASH',
       cash: 0,
     })
@@ -188,9 +194,11 @@ const useInvoiceForm = (invoice: Invoices) => {
         const stockLog = new StockLog({
           companyID: invoice.companyID,
           clientID: clientID as string,
-          date: new Date(),
+          clientName : client?.name as string,
+
+          date: date as Date,
           logType: 'SALE',
-          quantity: product.quantity,
+          quantity: -1 * product.quantity,
           rate: product.price,
           amount: product.totalAmount,
           voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
@@ -205,23 +213,9 @@ const useInvoiceForm = (invoice: Invoices) => {
 
       } else {
         // create stock and its opening stock log
-        const openingStockLog = new StockLog({
-          companyID: invoice.companyID,
-          clientID: clientID as string,
-          date: new Date(),
-          logType: 'OPENING_STOCK',
-          quantity: product.quantity,
-          rate: product.price,
-          amount: product.totalAmount,
-          voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
-          stockID: '',
-        })
-
-        openingStockLog.save();
-
         const newStock = new Stock({
           name: product.name,
-          quantity: -product.quantity,
+          quantity: -1 * product.quantity,
           companyID: invoice.companyID,
           gstRate: product.gstRate,
           unit: product.unit,
@@ -231,6 +225,23 @@ const useInvoiceForm = (invoice: Invoices) => {
           stockValue: 0,
           logIDs: new Set([]),
         })
+
+        const openingStockLog = new StockLog({
+          companyID: invoice.companyID,
+          clientID: clientID as string,
+          clientName : client?.name as string,
+          date: date as Date,
+          logType: 'OPENING_STOCK',
+          quantity: -1 * product.quantity,
+          rate: product.price,
+          amount: product.totalAmount,
+          voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
+          stockID: newStock.id,
+        })
+
+        openingStockLog.save();
+
+        
 
         newStock.logIDs.add(openingStockLog.id);
         newStock.save();

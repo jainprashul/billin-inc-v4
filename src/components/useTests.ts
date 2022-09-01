@@ -210,6 +210,7 @@ export const useTests = () => {
             companyID: 1,
             amount: faker.random.number({ min: 1000, max: 10000 }),
             clientID: 'c_1',
+            clientName: faker.name.findName(),
             date: new Date(),
             logType: 'PURCHASE',
             quantity: faker.random.number({ min: 1, max: 100 }),

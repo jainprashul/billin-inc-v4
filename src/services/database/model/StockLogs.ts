@@ -2,6 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import CompanyDB from "../companydb";
 import db from "../db";
+import { Client } from "./Client";
 import { NotificationLog } from "./NotificationLog";
 
 export interface IStockLogs {
@@ -15,6 +16,8 @@ export interface IStockLogs {
     amount: number;
     companyID: number;
     clientID: string;
+    clientName: string;
+    client?: Client
 }
 
 type StockLogType = "SALE" | "PURCHASE" | "TRANSFER" | "OPENING_STOCK" | "CLOSING_STOCK" | "ADJUSTMENT";
@@ -30,6 +33,8 @@ export class StockLog implements IStockLogs {
     amount: number;
     companyID: number;
     clientID: string;
+    clientName : string
+    client : Client | undefined;
 
     constructor(stockLogs: IStockLogs) {
         this.id = stockLogs.id || `sl-${nanoid(8)}`;
@@ -41,7 +46,15 @@ export class StockLog implements IStockLogs {
         this.date = stockLogs.date;
         this.amount = stockLogs.amount;
         this.companyID = stockLogs.companyID;
-        this.clientID = stockLogs.clientID;
+        this.clientID = stockLogs.clientID;  
+        this.clientName = stockLogs.clientName; 
+        this.client = stockLogs.client ? new Client({...stockLogs.client}) : undefined;
+    }
+
+    async loadClient() {
+        const companyDB = db.getCompanyDB(this.companyID)
+        const client = await companyDB.clients.get(this.clientID) 
+        this.client = client;
     }
 
     private onCreate(id: string, stockLogs: StockLog, tx: Transaction) {

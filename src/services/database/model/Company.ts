@@ -41,11 +41,11 @@ export class Company implements ICompany {
         this.configID = company.configID;
         this.lastBackupID = company.lastBackupID;
         this.lastBackupName = company.lastBackupName;
-        this.lastGSTInvoiceNo = company.lastGSTInvoiceNo || 1;
-        this.lastInvoiceNo = company.lastInvoiceNo || 1;
+        this.lastGSTInvoiceNo = company.lastGSTInvoiceNo ?? 0;
+        this.lastInvoiceNo = company.lastInvoiceNo ?? 0;
         this.userIDs = company.userIDs;
         this.createdAt = new Date();
-        this.createdBy = company.createdBy || "APP DB";
+        this.createdBy = company.createdBy ?? "APP DB";
     }
 
     async save() {
