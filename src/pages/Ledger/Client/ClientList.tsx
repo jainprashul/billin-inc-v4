@@ -1,4 +1,5 @@
 import { People } from '@mui/icons-material'
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import { Dialog, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
 import React, { useEffect } from 'react'
@@ -51,7 +52,7 @@ const ClientList = (props: Props) => {
                                     navigate(`/ledger/${client.id}`)
                                 }}>
                                     <ListItemIcon>
-                                        <People />
+                                        {client.isCustomer ? <People /> : <StorefrontIcon />}
                                     </ListItemIcon>
                                     <ListItemText primary={client.name} />
                                 </ListItemButton>
