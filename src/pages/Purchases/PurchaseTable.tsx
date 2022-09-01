@@ -12,7 +12,7 @@ import { useDataUtils } from '../../utils/useDataUtils';
 import { Purchase } from '../../services/database/model';
 
 type Props = {
-    data: Array<Purchase>;
+    data: Array<Purchase>
 }
 
 
@@ -37,18 +37,18 @@ const PurchaseTable = ({ data }: Props) => {
     };
 
     const viewPurchase = async (purchase: Purchase) => {
-        // navigate(`/invoice/${invoice.id}`, {
+        // navigate(`/purchase/${invoice.id}`, {
         //     state: invoice
         // });
 
-        const w = window.open( '', `Purchase ${purchase.voucherNo}`, 'width=800,height=720');
+        const w = window.open('', `Purchase Bill ${purchase.voucherNo}`, 'width=800,height=720');
         if (w) {
-            const data : any = {
+            const data: any = {
                 ...purchase,
                 company,
             }
             w.document.write(invoicePattern(data));
-            w.document.close(); 
+            w.document.close();
         }
     }
 
@@ -58,13 +58,13 @@ const PurchaseTable = ({ data }: Props) => {
         });
     }
 
-    const printPurchase = (purchase: Purchase) => {
+    const printPurchaseBill = (purchase: Purchase) => {
         console.log('printBill', purchase)
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
 
-        const data : any = {
+        const data: any = {
             ...purchase,
             company,
         }
@@ -73,12 +73,12 @@ const PurchaseTable = ({ data }: Props) => {
         iframe.contentDocument?.write(invoicePattern(data));
         iframe.contentDocument?.close();
         iframe.contentWindow?.focus();
-        iframe.contentWindow?.print(); 
+        iframe.contentWindow?.print();
     }
 
     const columns: Array<Column<Purchase>> = [
         {
-            title: 'Purchase Number',
+            title: 'Invoice Number',
             field: 'voucherNo',
         },
         {
@@ -124,16 +124,16 @@ const PurchaseTable = ({ data }: Props) => {
     const actions: Array<Action<Purchase>> = [
         {
             icon: () => <Print />,
-            tooltip: 'Print Purchase',
+            tooltip: 'Print Purchase Entry',
             position: 'row',
             onClick: (event, rowData) => {
                 console.log(rowData)
-                printPurchase(rowData as Purchase);
+                printPurchaseBill(rowData as Purchase);
             },
         },
         {
             icon: () => <RemoveRedEye />,
-            tooltip: 'View Purchase',
+            tooltip: 'View Purchase Entry',
             position: 'row',
             onClick: (event, rowData) => {
                 console.log(rowData)
@@ -142,7 +142,7 @@ const PurchaseTable = ({ data }: Props) => {
         },
         {
             icon: () => <EditTwoToneIcon />,
-            tooltip: 'Edit Purchase',
+            tooltip: 'Edit Purchase Entry',
             position: 'row',
             onClick: (event, rowData) => {
                 console.log(rowData)
@@ -151,17 +151,17 @@ const PurchaseTable = ({ data }: Props) => {
         },
         {
             icon: () => <Delete />,
-            tooltip: 'Delete Purchase',
+            tooltip: 'Delete Purchase Entry',
             position: 'row',
             onClick: (event, rowData) => {
-                const pur = rowData as Purchase;
+                const prchs = rowData as Purchase;
                 setOpen(true);
                 setDialog({
-                    title: 'Delete Purchase',
-                    message: 'Are you sure you want to delete this purchase bill?',
+                    title: 'Delete Purchase Entry',
+                    message: `Are you sure you want to delete this entry ${prchs.voucherNo} ?`,
                     onConfirm: () => {
-                        deletePurchase(pur).then(() => {
-                            enqueueSnackbar(`Purchase Bill : ${pur.voucherNo} deleted.`, {
+                        deletePurchase(prchs).then(() => {
+                            enqueueSnackbar(`Invoice : ${prchs.voucherNo} deleted.`, {
                                 variant: 'error',
                             });
                         })
@@ -172,18 +172,18 @@ const PurchaseTable = ({ data }: Props) => {
         },
         {
             icon: () => <Delete />,
-            tooltip: 'Delete Purchases',
+            tooltip: 'Delete Purchase Entries',
             position: 'toolbarOnSelect',
             onClick: (event, rowData) => {
                 const purchases = rowData as Purchase[];
                 setOpen(true);
                 setDialog({
-                    title: 'Delete Selected Purchase',
-                    message: 'Are you sure you want to delete selected purchase bills?',
+                    title: 'Delete Selected Purchase Entries',
+                    message: 'Are you sure you want to delete selected entries ?',
                     onConfirm: () => {
-                        purchases.forEach(inv => {
-                            deletePurchase(inv).then(() => {
-                                enqueueSnackbar(`Purchase : ${inv.voucherNo} deleted.`, {
+                        purchases.forEach(prchs => {
+                            deletePurchase(prchs).then(() => {
+                                enqueueSnackbar(`Purchase : ${prchs.voucherNo} deleted.`, {
                                     variant: 'error',
                                 });
                             })
@@ -194,7 +194,7 @@ const PurchaseTable = ({ data }: Props) => {
             },
         },
         {
-            icon: () => filter ?  <FilterListOffIcon /> : <FilterListIcon />,
+            icon: () => filter ? <FilterListOffIcon /> : <FilterListIcon />,
             tooltip: (filter ? 'Hide Filters' : 'Show Filters'),
             position: 'toolbar',
             onClick: (event, rowData) => {
@@ -209,7 +209,7 @@ const PurchaseTable = ({ data }: Props) => {
             <MaterialTable
                 isLoading={loading}
                 columns={columns}
-                title="Invoices"
+                title="Purchases"
                 data={data}
                 actions={actions}
                 options={{
@@ -218,9 +218,9 @@ const PurchaseTable = ({ data }: Props) => {
                     pageSizeOptions: [5, 10, 20, 30, 50],
                     selection: true,
                     draggable: true,
-                    filtering : filter,
+                    filtering: filter,
                     headerStyle: {
-                        fontWeight: 'bold',    
+                        fontWeight: 'bold',
                     },
                 }}
             />

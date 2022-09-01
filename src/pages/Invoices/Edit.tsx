@@ -22,6 +22,9 @@ const Edit = (props: Props) => {
           enqueueSnackbar('Invoice Updated', { variant: 'success' });
           console.log('Saved')
           navigate(INVOICES);
+        }).catch((err)=>{
+          console.log("Create: Error",err)
+          enqueueSnackbar('Error Updating Invoice', { variant: 'error' });
         })
       }}/>
     </div>

@@ -1,8 +1,8 @@
 import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { InvoiceForm } from '../Invoices';
-
+import {  PURCHASE } from '../../constants/routes';
+import PurchaseForm from './PurchaseForm';
 
 type Props = {}
 
@@ -11,13 +11,16 @@ const Create = (props: Props) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   return (
     <div className="create-purchase">
-      <Typography variant="h6">Purchase Entry</Typography>
-      <InvoiceForm onSubmit={(invoice)=> {
+      <Typography variant="h6">Create Purchase</Typography>
+      <PurchaseForm onSubmit={(bill)=> {
         console.log('Submit')
-        invoice.save().then(()=>{
-          enqueueSnackbar('Purchase Created', { variant: 'success' });
+        bill.save().then(()=>{
+          enqueueSnackbar('Purchase Bill Created', { variant: 'success' });
           console.log('Saved')
-          navigate('/purchase');
+          navigate(PURCHASE);
+        }).catch((err)=>{
+          console.log("Create: Error",err)
+          enqueueSnackbar('Error Creating Purchase Bill Entry', { variant: 'error' });
         })
       }}/>
     </div>

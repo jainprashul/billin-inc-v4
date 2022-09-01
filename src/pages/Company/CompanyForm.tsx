@@ -29,6 +29,8 @@ const initCompany: Company = new Company({
     gst: '',
     lastGSTInvoiceNo: 0,
     lastInvoiceNo: 0,
+    lastGSTPurchaseNo: 0,
+    lastPurchaseNo: 0,
     userIDs: new Set([]),
 })
 

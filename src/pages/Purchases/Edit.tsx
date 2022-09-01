@@ -1,8 +1,9 @@
 import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IInvoice, Invoices, IPurchase, Purchase } from '../../services/database/model';
-import { InvoiceForm } from '../Invoices';
+import {  PURCHASE } from '../../constants/routes';
+import { IPurchase, Purchase } from '../../services/database/model';
+import PurchaseForm from './PurchaseForm';
 
 type Props = {}
 
@@ -13,14 +14,17 @@ const Edit = (props: Props) => {
   console.log(purchase);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   return (
-    <div className="edit-purchase">
+    <div className="edit-purchase-container">
       <Typography variant="h6">Edit Purchase Entry</Typography>
-      <InvoiceForm invoice={new Invoices(location.state as IInvoice)} onSubmit={(invoice)=> {
+      <PurchaseForm purchase={new Purchase(location.state as IPurchase)} onSubmit={(purchase)=> {
         console.log('Submit')
-        invoice.save().then(()=>{
-          enqueueSnackbar('Purchase Updated', { variant: 'success' });
+        purchase.save().then(()=>{
+          enqueueSnackbar('Purchase Bill Updated', { variant: 'success' });
           console.log('Saved')
-          navigate('/invoice');
+          navigate(PURCHASE);
+        }).catch((err)=>{
+          console.log("Create: Error",err)
+          enqueueSnackbar('Error Updating Purchase Bill', { variant: 'error' });
         })
       }}/>
     </div>
