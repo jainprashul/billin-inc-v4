@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL,SETTINGS } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
 import Purchases, { PurchaseCreate, PurchaseDetails, PurchaseEdit } from '../pages/Purchases'
@@ -10,6 +10,7 @@ import { StockDetail, Stocks } from '../pages/Stocks'
 import Ledger, { LedgerDetails } from '../pages/Ledger'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
+import Settings from '../pages/Settings'
 
 type Props = {}
 
@@ -43,6 +44,7 @@ const AppRoutes = (props: Props) => {
                 <Route path={COMPANY} element={<Company />} />
                 <Route path={COMPANY_CREATE} element={<CompanyCreate />} />
                 <Route path={COMPANY_EDIT} element={<CompanyEdit />} />
+                <Route path={SETTINGS} element={<Settings />} />
                 <Route path={NOT_FOUND} element={<NotFound />} />
               </Routes>
             </Layout>
