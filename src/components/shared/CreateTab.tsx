@@ -1,6 +1,6 @@
 import React from 'react'
 import Tab from '@mui/material/Tab';
-import { Box, Tabs, Typography } from '@mui/material'
+import { Box, Tabs } from '@mui/material'
 import { a11yProps, TabPanel } from '../../components/shared/TabPanel';
 
 

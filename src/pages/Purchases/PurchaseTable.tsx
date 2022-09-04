@@ -1,6 +1,5 @@
 import MaterialTable, { Action, Column } from '@material-table/core';
 import { Delete, Print, RemoveRedEye } from '@mui/icons-material';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import React from 'react'
 import { useSnackbar } from 'notistack';
 import AlertDialog from '../../components/shared/AlertDialog';
@@ -19,7 +18,7 @@ type Props = {
 
 const PurchaseTable = ({ data }: Props) => {
     const loading = !(data ? data.length !== 0 : false)
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState(false);
     const { company, navigate } = useDataUtils()
@@ -53,6 +52,7 @@ const PurchaseTable = ({ data }: Props) => {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const editPurchase = async (purchase: Purchase) => {
         navigate(`/purchase/${purchase.id}/edit`, {
             state: purchase

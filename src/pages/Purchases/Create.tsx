@@ -8,7 +8,7 @@ type Props = {}
 
 const Create = (props: Props) => {
   const navigate = useNavigate();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   return (
     <div className="create-purchase">
       <Typography variant="h6">Create Purchase</Typography>

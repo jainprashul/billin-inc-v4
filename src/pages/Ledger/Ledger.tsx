@@ -16,8 +16,6 @@ import moment from 'moment';
 import AddIcon from '@mui/icons-material/Add';
 import ClientCreate from './Client/Create';
 
-type Props = {}
-
 type Total = {
   debit: number,
   credit: number

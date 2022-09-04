@@ -2,7 +2,7 @@ import { Add } from '@mui/icons-material'
 import TextField from '@mui/material/TextField';
 import { Autocomplete, Button, Grid, InputAdornment, Typography } from '@mui/material'
 import NavigationIcon from '@mui/icons-material/Navigation';
-import { Invoices, Purchase } from '../../services/database/model';
+import {  Purchase } from '../../services/database/model';
 import ProductTable from '../Invoices/Products/ProductTable';
 import { nanoid } from '@reduxjs/toolkit';
 import usePurchaseForm from './usePurchaseForm';
@@ -10,7 +10,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import db from '../../services/database/db';
 import ClientModel from './Client';
-import { useSnackbar } from 'notistack';
 import { useAppSelector } from '../../app/hooks';
 import { selectGstEnabled } from '../../utils/utilsSlice';
 import { useEffect } from 'react';

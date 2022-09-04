@@ -1,4 +1,4 @@
-import india from './india.json';
+// import india from './india.json';
 import stateData from './stateData.json';
 export const states = {
     "AN": "Andaman and Nicobar Islands",

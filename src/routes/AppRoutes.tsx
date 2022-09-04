@@ -15,6 +15,7 @@ import Settings from '../pages/Settings'
 type Props = {}
 
 const AppRoutes = (props: Props) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAuthenticated, setIsAuthenticated] = React.useState(true);
 
 

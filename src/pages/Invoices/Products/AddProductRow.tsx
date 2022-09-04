@@ -60,7 +60,7 @@ const AddProductRow = ({
         validationSchema: productSchema,
     })
 
-    const { name, hsn, quantity, price, unit, gstRate } = formik.values;
+    const { name, quantity, price, unit, gstRate } = formik.values;
     const grossAmount = quantity * price;
     const gstAmount = grossAmount * gstRate / 100;
     const totalAmount = grossAmount + gstAmount;
@@ -70,7 +70,7 @@ const AddProductRow = ({
         companyDB?.stocks.orderBy('name').uniqueKeys().then(productList => {
             setProductList(productList as string[]);
         });
-    }, [name]);
+    }, [companyDB?.stocks, name]);
 
     const nameRef = React.useRef<HTMLInputElement>(null);
 

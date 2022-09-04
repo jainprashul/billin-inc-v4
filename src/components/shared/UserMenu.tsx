@@ -13,7 +13,7 @@ type Props = {}
 
 const UserMenu = (props: Props) => {
 
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+    // const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {

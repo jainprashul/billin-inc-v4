@@ -1,9 +1,8 @@
-import { Alert, Autocomplete, Button, FormControl, FormLabel, Grid, TextField, Typography } from '@mui/material'
+import { Alert, Autocomplete, Button, FormControl, FormLabel, Grid, TextField, } from '@mui/material'
 import { useFormik } from 'formik'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import React from 'react'
 import * as Yup from 'yup';
-import { gstPattern } from '../../constants';
 import { getStateCites, stateList } from '../../constants/states';
 import { Company } from '../../services/database/model'
 
