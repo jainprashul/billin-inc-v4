@@ -13,6 +13,7 @@ import { Autocomplete, TableFooter } from '@mui/material';
 import * as yup from 'yup';
 import { nanoid } from '@reduxjs/toolkit';
 import db from '../../../services/database/db';
+import { useDataUtils } from '../../../utils/useDataUtils';
 
 type Props = {
     sn?: number,
@@ -31,7 +32,7 @@ const productSchema = yup.object().shape({
 
 const AddProductRow = ({
     product = new Product({
-        companyID: 1,
+        companyID: parseInt(localStorage.getItem("companyID") ?? '1') ,
         gstRate: 0,
         name: '',
         price: 0,
@@ -42,6 +43,7 @@ const AddProductRow = ({
     }), onSubmit
 }: Props) => {
     const [productList, setProductList] = React.useState<string[]>([]);
+    const { companyDB } = useDataUtils()
 
 
     const formik = useFormik({
@@ -65,7 +67,7 @@ const AddProductRow = ({
 
 
     useEffect(() => {
-        db.getCompanyDB(1)?.stocks.orderBy('name').uniqueKeys().then(productList => {
+        companyDB?.stocks.orderBy('name').uniqueKeys().then(productList => {
             setProductList(productList as string[]);
         });
     }, [name]);

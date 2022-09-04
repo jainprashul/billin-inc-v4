@@ -18,7 +18,6 @@ import moment from 'moment';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { useDataUtils } from '../../utils/useDataUtils';
 
 
 type Props = {
@@ -37,7 +36,7 @@ const invoiceSchema = Yup.object().shape({
 const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', invoice = new Invoices({
   id,
   billingDate: new Date(),
-  clientID: nanoid(),
+  clientID: `c_${nanoid(12)}`,
   companyID: parseInt(localStorage.getItem("companyID") ?? '1') ,
   discount: false,
   discountValue: 0,
@@ -118,6 +117,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
       // save products to db
       products.forEach(product => {
         product.voucherID = values.id;
+        product.companyID = values.companyID;
         product.save();
         values.productIDs.add(product.id);
         formik.setFieldValue('productIDs', values.productIDs);
