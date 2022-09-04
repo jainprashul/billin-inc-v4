@@ -4,12 +4,11 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import React from 'react'
 import { useSnackbar } from 'notistack';
 import AlertDialog from '../../components/shared/AlertDialog';
-import { Invoice } from '../../services/database/model/Invoices';
-import invoicePattern from '../../components/PDF/InvoicePattern';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { Purchase } from '../../services/database/model';
+import purchasePattern from '../../components/PDF/PurchasePattern';
 
 type Props = {
     data: Array<Purchase>
@@ -47,7 +46,7 @@ const PurchaseTable = ({ data }: Props) => {
                 ...purchase,
                 company,
             }
-            w.document.write(invoicePattern(data));
+            w.document.write(purchasePattern(data));
             w.document.close();
         }
     }
@@ -70,7 +69,7 @@ const PurchaseTable = ({ data }: Props) => {
         }
 
 
-        iframe.contentDocument?.write(invoicePattern(data));
+        iframe.contentDocument?.write(purchasePattern(data));
         iframe.contentDocument?.close();
         iframe.contentWindow?.focus();
         iframe.contentWindow?.print();

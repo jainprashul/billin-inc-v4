@@ -1,7 +1,7 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react'
-import invoicePattern from '../../components/PDF/InvoicePattern';
+import purchasePattern from '../../components/PDF/PurchasePattern';
 import db from '../../services/database/db';
 import { Client, Company, Ledger, Product, Purchase, Stock, StockLog } from '../../services/database/model';
 import { useDataUtils } from '../../utils/useDataUtils';
@@ -131,7 +131,7 @@ const usePurchaseForm = (purchase: Purchase) => {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     document.body.appendChild(iframe);
-    iframe.contentDocument?.write(invoicePattern(bill));
+    iframe.contentDocument?.write(purchasePattern(bill));
     iframe.contentDocument?.close();
     iframe.contentWindow?.focus();
     iframe.contentWindow?.print();
