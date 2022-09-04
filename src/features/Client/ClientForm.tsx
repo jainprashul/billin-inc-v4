@@ -28,6 +28,7 @@ const ClientForm = ({
         }],
         details: '',
         gst: '',
+        isCustomer: true,
     }), onSubmit
 }: Props) => {
 
@@ -243,6 +244,8 @@ const ClientForm = ({
 
                     <FormControlLabel
                         label="Customer"
+                        name='isCustomer'
+                        id='isCustomer'
                         control={
                             <Checkbox
                                 checked={isCustomer}
