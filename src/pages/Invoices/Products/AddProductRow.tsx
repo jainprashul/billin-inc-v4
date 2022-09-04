@@ -89,7 +89,7 @@ const AddProductRow = ({
                             console.log(value, reason, detail);
                             if (reason === 'selectOption') {
                                 formik.setFieldValue('name', value);
-                                db.getCompanyDB(1).stocks.get({ name: value }).then((product) => {
+                                companyDB?.stocks.get({ name: value }).then((product) => {
                                     if (product) {
                                         formik.setFieldValue('unit', product.unit);
                                         formik.setFieldValue('price', product.salesPrice);

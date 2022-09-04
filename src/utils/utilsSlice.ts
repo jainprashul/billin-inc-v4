@@ -11,7 +11,7 @@ interface utils {
 const initialState: utils = {
     gst : {
         enabled : JSON.parse(localStorage.getItem("gstEnabled") || "false"),
-        inclusive : JSON.parse(localStorage.getItem("gstRateType") || "false"),
+        inclusive : JSON.parse(localStorage.getItem("gstRateInclusive") || "false"),
     }
 };
 

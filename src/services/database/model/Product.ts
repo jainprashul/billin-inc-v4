@@ -36,18 +36,19 @@ export class Product implements IProduct {
     voucherID: string;
 
     constructor(product: IProduct) {
+        let isInclusive = Boolean(JSON.parse(localStorage.getItem("gstRateInclusive") || "false"));
         this.id = product.id || `prod_${nanoid(8)}`;
         this.voucherID = product.voucherID;
         this.name = product.name;
         this.categoryID = product.categoryID;
         this.gstRate = product.gstRate;
         this.hsn = product.hsn;
-        this.price = product.price;
+        this.price = isInclusive ? parseFloat((product.price * 100 / (100 + product.gstRate)).toFixed(2)) : product.price;
         this.quantity = product.quantity;
         this.unit = product.unit;
         this.companyID = product.companyID;
-        this.grossAmount = product.price * product.quantity;
-        this.gstAmount = this.grossAmount * (product.gstRate / 100);
+        this.grossAmount = this.price * product.quantity;
+        this.gstAmount = parseFloat((this.grossAmount * (this.gstRate / 100)).toFixed(2));
         this.totalAmount = this.grossAmount + this.gstAmount;
     }
 
