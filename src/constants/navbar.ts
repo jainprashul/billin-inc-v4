@@ -85,3 +85,7 @@ export const DRAWER_MENU : DrawerMenu[] = [
         route: SETTINGS,
     }
 ]
+
+export const RoutesHasSettings = [
+    INVOICE_CREATE, PURCHASE_CREATE
+]
