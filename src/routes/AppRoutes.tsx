@@ -1,10 +1,10 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
-import Purchases, { PurchaseCreate, PurchaseEdit } from '../pages/Purchases'
+import Purchases, { PurchaseCreate, PurchaseDetails, PurchaseEdit } from '../pages/Purchases'
 import Login from '../pages/Login'
 import { StockDetail, Stocks } from '../pages/Stocks'
 import Ledger, { LedgerDetails } from '../pages/Ledger'
@@ -35,6 +35,7 @@ const AppRoutes = (props: Props) => {
                 <Route path={PURCHASE} element={<Purchases />} />
                 <Route path={PURCHASE_CREATE} element={<PurchaseCreate />} />
                 <Route path={PURCHASE_EDIT} element={<PurchaseEdit />} />
+                <Route path={PURCHASE_DETAIL} element={<PurchaseDetails />} />
                 <Route path={STOCKS} element={<Stocks />} />
                 <Route path={STOCK_DETAIL} element={<StockDetail />} />
                 <Route path={LEDGER} element={<Ledger />} />

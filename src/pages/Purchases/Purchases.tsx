@@ -1,46 +1,35 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import React, { useEffect } from 'react'
-import CompanyDB from '../../services/database/companydb';
-import db from '../../services/database/db';
+import PurchaseTable from './PurchaseTable';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import { useNavigate } from 'react-router-dom';
-import { INVOICE_CREATE, PURCHASE_CREATE } from '../../constants/routes';
+import { PURCHASE_CREATE } from '../../constants/routes';
+import { useDataUtils } from '../../utils/useDataUtils';
 import { Purchase } from '../../services/database/model';
-import PurchaseTable from './PurchaseTable';
 
 type Props = {}
 
 const Purchases = (props: Props) => {
-  const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
-  const navigate = useNavigate();
+  const { companyDB, navigate } = useDataUtils();
 
-  useEffect(() => {
-    db.on('ready', () => {
-      setTimeout(() => {
-        setCompanyDB(db.getCompanyDB(1));
-      }, 200);
-    });
-  }, []);
   const purchases = useLiveQuery(async () => {
     if (companyDB) {
-      const purchases = await Promise.all((await companyDB?.purchases.toArray())?.map(async purchase => {
-        await purchase.loadProducts();
-        await purchase.loadClient();
-        return purchase;
+      const purchases = await Promise.all((await companyDB?.purchases.orderBy('billingDate').reverse().toArray())?.map(async purchs => {
+        await purchs.loadProducts();
+        await purchs.loadClient();
+        return purchs;
       }))
       return purchases
     }
   }, [companyDB], []) as Array<Purchase>;
 
   return (
-    <div>
-      <PurchaseTable data={purchases as Purchase[]} />
+    <div id='purchase-page'>
+      <PurchaseTable data={purchases} />
       <Fab color="primary" style={{
-          position: 'absolute',
-          bottom: 16,
-          right: 16,
-      }} onClick={()=> {
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+      }} onClick={() => {
         navigate(PURCHASE_CREATE);
       }} aria-label="add">
         <AddIcon />

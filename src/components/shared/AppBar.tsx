@@ -6,8 +6,10 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { DRAWER_WIDTH as drawerWidth, APP_NAME } from '../../constants';
 import UserMenu from './UserMenu';
-import { Tooltip } from '@mui/material';
 import SharedSettting from './SharedSettting';
+import { useAppSelector } from '../../app/hooks';
+import { selectCurrentRoute } from '../../routes/routeSlice';
+import { RoutesHasSettings } from '../../constants/navbar';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -37,6 +39,8 @@ type Props = {
 }
 
 const AppBar = ({ open, handleDrawerOpen }: Props) => {
+  const currentRoute = useAppSelector(selectCurrentRoute);
+  
   return (
     <Bar data-testid="app-bar-container" position="fixed" open={open}>
       <Toolbar>
@@ -59,7 +63,9 @@ const AppBar = ({ open, handleDrawerOpen }: Props) => {
             {APP_NAME}
           </Typography>
         </div>
-        <SharedSettting/>
+        {
+          RoutesHasSettings.includes(currentRoute) &&  <SharedSettting/>
+        }
         <UserMenu />
       </Toolbar>
     </Bar>

@@ -9,6 +9,8 @@ import invoicePattern from '../../components/PDF/InvoicePattern';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import { useDataUtils } from '../../utils/useDataUtils';
+import { Link } from 'react-router-dom';
+import { theme } from '../../styles/theme';
 
 type Props = {
     data: Array<Invoice>
@@ -88,6 +90,15 @@ const InvoiceTable = ({ data }: Props) => {
         {
             title: 'Customer',
             field: 'client.name',
+            render: (data) => {
+                let link = `/ledger/${data.client?.id}`;
+                return <Link style={{
+                    textDecoration: 'none',
+                    color: theme.palette.primary.main,
+                }} to={link}>
+                    {data.client?.name}
+                </Link>
+            }
 
         },
         {
@@ -139,15 +150,15 @@ const InvoiceTable = ({ data }: Props) => {
                 viewInvoice(rowData as Invoice);
             },
         },
-        {
-            icon: () => <EditTwoToneIcon />,
-            tooltip: 'Edit Invoice',
-            position: 'row',
-            onClick: (event, rowData) => {
-                console.log(rowData)
-                editInvoice(rowData as Invoice);
-            },
-        },
+        // {
+        //     icon: () => <EditTwoToneIcon />,
+        //     tooltip: 'Edit Invoice',
+        //     position: 'row',
+        //     onClick: (event, rowData) => {
+        //         console.log(rowData)
+        //         editInvoice(rowData as Invoice);
+        //     },
+        // },
         {
             icon: () => <Delete />,
             tooltip: 'Delete Invoice',

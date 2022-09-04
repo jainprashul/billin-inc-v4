@@ -57,7 +57,7 @@ const DataTesting = (props: Props) => {
             <ul>
                 {data?.purchases?.map(purchase => (
                     <li key={purchase.id}>
-                        {moment(purchase.billingDate).format('l')} - {purchase.voucherNo} - {purchase.discountValue} - {purchase.grossTotal} - {purchase.totalAmount} - {purchase.products.length}
+                        {moment(purchase.billingDate).format('l')} - {purchase.voucherNo} - #{purchase.companyID} {purchase.discountValue} - {purchase.grossTotal} - {purchase.totalAmount} - {purchase.products.length}
                         <button onClick={() => purchase.delete()}>Delete</button>
                     </li>
                 ))}

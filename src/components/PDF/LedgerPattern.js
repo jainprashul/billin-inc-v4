@@ -243,7 +243,7 @@ thead.itembox{
 
 	<div id="page-wrap">
 
-		<h5 id="header">INVOICE</h5>
+		<h5 id="header">LEDGER</h5>
 		
 		<div id="identity">
             <div id="company">
@@ -257,7 +257,7 @@ thead.itembox{
         
 			
 		<div id="customer">
-            <p>Bill To :</p>
+            <p>Details of:</p>
             <p id="customer-title">${client.name}</p>
             
             <p>${Object.values(client.address).join(', ')}</p>

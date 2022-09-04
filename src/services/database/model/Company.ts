@@ -12,6 +12,8 @@ export interface ICompany {
     lastBackupName?: string;
     lastGSTInvoiceNo: number;
     lastInvoiceNo: number;
+    lastPurchaseNo : number;
+    lastGSTPurchaseNo : number;
     userIDs: Set<number>;
     createdBy?: string;
 }
@@ -28,6 +30,8 @@ export class Company implements ICompany {
     lastBackupName?: string;
     lastGSTInvoiceNo: number;
     lastInvoiceNo: number;
+    lastPurchaseNo : number;
+    lastGSTPurchaseNo : number;
     userIDs: Set<number>;
     createdAt: Date;
     createdBy?: string;
@@ -43,6 +47,8 @@ export class Company implements ICompany {
         this.lastBackupName = company.lastBackupName;
         this.lastGSTInvoiceNo = company.lastGSTInvoiceNo ?? 0;
         this.lastInvoiceNo = company.lastInvoiceNo ?? 0;
+        this.lastPurchaseNo = company.lastPurchaseNo ?? 0;
+        this.lastGSTPurchaseNo = company.lastGSTPurchaseNo ?? 0;
         this.userIDs = company.userIDs;
         this.createdAt = new Date();
         this.createdBy = company.createdBy ?? "APP DB";
@@ -115,7 +121,9 @@ export const defaultCompany = new Company({
     configID: 1,
     lastBackupID: "",
     lastBackupName: "",
-    lastGSTInvoiceNo: 1,
-    lastInvoiceNo: 1,
+    lastGSTInvoiceNo: 0,
+    lastInvoiceNo: 0,
+    lastPurchaseNo: 0,
+    lastGSTPurchaseNo: 0,
     userIDs: new Set([1]),
 })

@@ -66,6 +66,8 @@ export const useTests = () => {
             gst: 'DGSH',
             lastGSTInvoiceNo: 0,
             lastInvoiceNo: 0,
+            lastGSTPurchaseNo: 0,
+            lastPurchaseNo : 0,
             userIDs: new Set([]),
         })
         return company.save();

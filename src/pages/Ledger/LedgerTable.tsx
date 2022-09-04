@@ -25,7 +25,7 @@ const LedgerTable = ({ data }: Props) => {
             title: 'Voucher',
             field: 'voucherNo',
             render: (data) => {
-                let link = `/invoice/${data.voucherNo}`;
+                let link = data.voucherType === 'PURCHASE' ? `/purchase/${data.voucherNo}` : `/invoice/${data.voucherNo}`;
 
                 return <Link style={{
                     textDecoration: 'none',
