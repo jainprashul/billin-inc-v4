@@ -9,6 +9,8 @@ import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { Purchase } from '../../services/database/model';
 import purchasePattern from '../../components/PDF/PurchasePattern';
+import { Link } from 'react-router-dom';
+import { theme } from '../../styles/theme';
 
 type Props = {
     data: Array<Purchase>
@@ -88,6 +90,15 @@ const PurchaseTable = ({ data }: Props) => {
         {
             title: 'Vendor',
             field: 'client.name',
+            render: (data) => {
+                let link = `/ledger/${data.client?.id}`;
+                return <Link style={{
+                    textDecoration: 'none',
+                    color: theme.palette.primary.main,
+                }} to={link}>
+                    {data.client?.name}
+                </Link>
+            }
 
         },
         {
@@ -139,15 +150,15 @@ const PurchaseTable = ({ data }: Props) => {
                 viewPurchase(rowData as Purchase);
             },
         },
-        {
-            icon: () => <EditTwoToneIcon />,
-            tooltip: 'Edit Purchase Entry',
-            position: 'row',
-            onClick: (event, rowData) => {
-                console.log(rowData)
-                editPurchase(rowData as Purchase);
-            },
-        },
+        // {
+        //     icon: () => <EditTwoToneIcon />,
+        //     tooltip: 'Edit Purchase Entry',
+        //     position: 'row',
+        //     onClick: (event, rowData) => {
+        //         console.log(rowData)
+        //         editPurchase(rowData as Purchase);
+        //     },
+        // },
         {
             icon: () => <Delete />,
             tooltip: 'Delete Purchase Entry',
