@@ -31,7 +31,7 @@ const productSchema = yup.object().shape({
 
 const AddGSTProductRow = ({
     product = new Product({
-        companyID: 1,
+        companyID:  parseInt(localStorage.getItem("companyID") ?? '1') ,
         gstRate: 0,
         name: '',
         price: 0,

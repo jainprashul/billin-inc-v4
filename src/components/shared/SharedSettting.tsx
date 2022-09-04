@@ -13,7 +13,7 @@ type Props = {}
 const SharedSettting = (props: Props) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [title, setTitle] = React.useState<string>('Settings');
-    const [open, setOpen] = React.useState<boolean>(false);
+    const open = Boolean(anchorEl);
     const currentRoute = useAppSelector(selectCurrentRoute);
 
     useEffect(() => {
@@ -37,14 +37,10 @@ const SharedSettting = (props: Props) => {
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
-        if(RoutesHasSettings.includes(currentRoute)) {
-            setOpen(true);
-        }
     };
 
     const handleClose = () => {
         setAnchorEl(null);
-        setOpen(false)
     };
 
     const SelectedMenu = () => {

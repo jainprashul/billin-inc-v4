@@ -118,6 +118,7 @@ const PurchaseForm = ({ onSubmit:  handleSubmit, submitText = 'Create Purchase E
       // save products to db
       products.forEach(product => {
         product.voucherID = values.id;
+        product.companyID = values.companyID;
         product.save();
         values.productIDs.add(product.id);
         formik.setFieldValue('productIDs', values.productIDs);
