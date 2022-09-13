@@ -15,9 +15,8 @@ import { useAppSelector } from '../../app/hooks';
 import { selectGstEnabled } from '../../utils/utilsSlice';
 import { useEffect } from 'react';
 import moment from 'moment';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import DateProvider from '../../components/shared/DateProvider';
 
 
 type Props = {
@@ -37,7 +36,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   id,
   billingDate: new Date(),
   clientID: `c_${nanoid(12)}`,
-  companyID: parseInt(localStorage.getItem("companyID") ?? '1') ,
+  companyID: parseInt(localStorage.getItem("companyID") ?? '1'),
   discount: false,
   discountValue: 0,
   gstEnabled: JSON.parse(localStorage.getItem("gstEnabled") || "false"),
@@ -164,7 +163,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 
   Object.entries(formik.errors).length > 0 && console.log(formik.errors)
 
-  const { gstEnabled, voucherNo : billNo } = formik.values
+  const { gstEnabled, voucherNo: billNo } = formik.values
   return (
     <div className="invoice-form">
       <Grid className='form-header' container direction='row' justifyContent='space-between' component="main" >
@@ -282,7 +281,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             /> */}
 
 
-            <LocalizationProvider dateAdapter={AdapterMoment}>
+            <DateProvider>
               <DatePicker
                 label="Billing Date"
                 value={date}
@@ -292,7 +291,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                 }}
                 renderInput={(params) => <TextField variant='standard' {...params} />}
               />
-            </LocalizationProvider>
+            </DateProvider>
 
           </div>
 

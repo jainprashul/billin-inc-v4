@@ -2,7 +2,7 @@ import { Add } from '@mui/icons-material'
 import TextField from '@mui/material/TextField';
 import { Autocomplete, Button, Grid, InputAdornment, Typography } from '@mui/material'
 import NavigationIcon from '@mui/icons-material/Navigation';
-import {  Purchase } from '../../services/database/model';
+import { Purchase } from '../../services/database/model';
 import ProductTable from '../Invoices/Products/ProductTable';
 import { nanoid } from '@reduxjs/toolkit';
 import usePurchaseForm from './usePurchaseForm';
@@ -14,10 +14,9 @@ import { useAppSelector } from '../../app/hooks';
 import { selectGstEnabled } from '../../utils/utilsSlice';
 import { useEffect } from 'react';
 import moment from 'moment';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers';
 import { useDataUtils } from '../../utils/useDataUtils';
+import DateProvider from '../../components/shared/DateProvider';
 
 
 type Props = {
@@ -33,11 +32,11 @@ const purchaseSchema = Yup.object().shape({
   // productIDs: Yup.array().of(Yup.string()).min(1, 'At least one product is required').required(),
 })
 
-const PurchaseForm = ({ onSubmit:  handleSubmit, submitText = 'Create Purchase Entry', purchase = new Purchase({
+const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase Entry', purchase = new Purchase({
   id,
   billingDate: new Date(),
   clientID: nanoid(),
-  companyID: parseInt(localStorage.getItem("companyID") ?? '1') ,
+  companyID: parseInt(localStorage.getItem("companyID") ?? '1'),
   discount: false,
   discountValue: 0,
   gstEnabled: JSON.parse(localStorage.getItem("gstEnabled") || "false"),
@@ -164,7 +163,7 @@ const PurchaseForm = ({ onSubmit:  handleSubmit, submitText = 'Create Purchase E
 
   Object.entries(formik.errors).length > 0 && console.log(formik.errors)
 
-  const { gstEnabled, voucherNo : billNo } = formik.values
+  const { gstEnabled, voucherNo: billNo } = formik.values
   return (
     <div className="purchase-form">
       <Grid className='form-header' container direction='row' justifyContent='space-between' component="main" >
@@ -282,7 +281,7 @@ const PurchaseForm = ({ onSubmit:  handleSubmit, submitText = 'Create Purchase E
             /> */}
 
 
-            <LocalizationProvider dateAdapter={AdapterMoment}>
+            <DateProvider>
               <DatePicker
                 label="Billing Date"
                 value={date}
@@ -292,7 +291,8 @@ const PurchaseForm = ({ onSubmit:  handleSubmit, submitText = 'Create Purchase E
                 }}
                 renderInput={(params) => <TextField variant='standard' {...params} />}
               />
-            </LocalizationProvider>
+            </DateProvider>
+
 
           </div>
 

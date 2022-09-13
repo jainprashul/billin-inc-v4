@@ -12,7 +12,6 @@ import { useFormik } from 'formik';
 import { Autocomplete, TableFooter } from '@mui/material';
 import * as yup from 'yup';
 import { nanoid } from '@reduxjs/toolkit';
-import db from '../../../services/database/db';
 import { useDataUtils } from '../../../utils/useDataUtils';
 
 type Props = {
