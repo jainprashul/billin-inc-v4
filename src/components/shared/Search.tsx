@@ -18,6 +18,7 @@ const Search = ({ query, onClear, onSearch }: Props) => {
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         onSearch(e.target.value.trim());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedRes = useMemo(() => debounce(handleSearch, 300), []);
     return (
         <div className="search">

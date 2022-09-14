@@ -12,7 +12,7 @@ const Edit = (props: Props) => {
   const location = useLocation()
   const invoice = new Invoices(location.state as IInvoice)
   console.log(invoice);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, } = useSnackbar();
   return (
     <div className="edit-invoice">
       <Typography variant="h6">Edit Invoice</Typography>

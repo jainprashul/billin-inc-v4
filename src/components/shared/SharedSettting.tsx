@@ -6,7 +6,6 @@ import { selectCurrentRoute } from '../../routes/routeSlice';
 import { useAppSelector } from '../../app/hooks';
 import InvoiceMenu from '../menu/InvoiceMenu';
 import { INVOICE_CREATE, PURCHASE_CREATE } from '../../constants/routes';
-import { RoutesHasSettings } from '../../constants/navbar';
 
 type Props = {}
 

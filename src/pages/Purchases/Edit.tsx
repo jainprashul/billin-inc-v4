@@ -12,7 +12,7 @@ const Edit = (props: Props) => {
   const location = useLocation()
   const purchase = new Purchase(location.state as IPurchase)
   console.log(purchase);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   return (
     <div className="edit-purchase-container">
       <Typography variant="h6">Edit Purchase Entry</Typography>

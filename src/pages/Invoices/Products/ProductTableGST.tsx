@@ -9,11 +9,6 @@ import { Product } from '../../../services/database/model';
 import AddGSTProductRow from './AddGSTProductRow';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddProductRow from './AddProductRow';
-
-
-
-
 
 type Props = {
   products: Product[],

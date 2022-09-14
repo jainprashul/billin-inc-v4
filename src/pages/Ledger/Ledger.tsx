@@ -1,11 +1,9 @@
 import { AccountBalance, NorthEast, SearchTwoTone, SouthWest, TrendingDownOutlined, TrendingUpOutlined } from '@mui/icons-material'
 import { Avatar, Box, Button, Card, CardContent, Divider, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import { green, red, amber } from '@mui/material/colors';
-import { LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect } from 'react'
 import ClientList from './Client/ClientList';
 import DailyLedgerTable from './DailyTable';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -15,8 +13,7 @@ import { filterDataByDate } from '../../utils';
 import moment from 'moment';
 import AddIcon from '@mui/icons-material/Add';
 import ClientCreate from './Client/Create';
-
-type Props = {}
+import DateProvider from '../../components/shared/DateProvider';
 
 type Total = {
   debit: number,
@@ -199,7 +196,7 @@ const Ledgers = () => {
 
       <Box display="flex" justifyContent='space-between' py={1}>
         <Typography variant="h6"> Ledger - &nbsp;
-          <LocalizationProvider dateAdapter={AdapterMoment}>
+          <DateProvider>
             <DatePicker
               value={date}
               onChange={(newValue) => {
@@ -207,7 +204,7 @@ const Ledgers = () => {
               }}
               renderInput={(params) => <TextField disabled variant='standard' {...params} />}
             />
-          </LocalizationProvider>
+            </DateProvider>
         </Typography>
 
         <Tooltip title="Press Ctrl + K to search">

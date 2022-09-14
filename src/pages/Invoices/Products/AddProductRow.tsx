@@ -12,7 +12,6 @@ import { useFormik } from 'formik';
 import { Autocomplete, TableFooter } from '@mui/material';
 import * as yup from 'yup';
 import { nanoid } from '@reduxjs/toolkit';
-import db from '../../../services/database/db';
 import { useDataUtils } from '../../../utils/useDataUtils';
 
 type Props = {
@@ -60,7 +59,7 @@ const AddProductRow = ({
         validationSchema: productSchema,
     })
 
-    const { name, hsn, quantity, price, unit, gstRate } = formik.values;
+    const { name, quantity, price, unit, gstRate } = formik.values;
     const grossAmount = quantity * price;
     const gstAmount = grossAmount * gstRate / 100;
     const totalAmount = grossAmount + gstAmount;
@@ -70,7 +69,7 @@ const AddProductRow = ({
         companyDB?.stocks.orderBy('name').uniqueKeys().then(productList => {
             setProductList(productList as string[]);
         });
-    }, [name]);
+    }, [companyDB?.stocks, name]);
 
     const nameRef = React.useRef<HTMLInputElement>(null);
 
@@ -89,7 +88,7 @@ const AddProductRow = ({
                             console.log(value, reason, detail);
                             if (reason === 'selectOption') {
                                 formik.setFieldValue('name', value);
-                                db.getCompanyDB(1).stocks.get({ name: value }).then((product) => {
+                                companyDB?.stocks.get({ name: value }).then((product) => {
                                     if (product) {
                                         formik.setFieldValue('unit', product.unit);
                                         formik.setFieldValue('price', product.salesPrice);

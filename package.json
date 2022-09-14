@@ -21,7 +21,9 @@
     "dexie": "^3.2.2",
     "dexie-export-import": "^1.0.3",
     "dexie-react-hooks": "^1.1.1",
+    "file-saver": "^2.0.5",
     "formik": "^2.2.9",
+    "jszip": "^3.10.1",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.3",
     "notistack": "^2.0.5",
@@ -60,6 +62,7 @@
     ]
   },
   "devDependencies": {
-    "@faker-js/faker": "^6.3.1"
+    "@faker-js/faker": "^6.3.1",
+    "@types/file-saver": "^2.0.5"
   }
 }

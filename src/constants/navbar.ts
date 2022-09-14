@@ -1,4 +1,4 @@
-import { COMPANY, HOME, INVOICES, INVOICE_CREATE, LEDGER, PROFILE , PURCHASE, PURCHASE_CREATE, SETTINGS, STOCKS ,  } from "./routes";
+import { COMPANY, HOME, INVOICES, INVOICE_CREATE, LEDGER , PURCHASE, PURCHASE_CREATE, SETTINGS, STOCKS ,  } from "./routes";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import TaskIcon from '@mui/icons-material/Task';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -14,12 +14,12 @@ type DrawerMenu = {
     subMenu?: DrawerMenu[]
 }
 
-type UserMenu = {
-    name: string
-    icon?: any
-    route?: string
-    subMenu?: UserMenu[]
-}
+// type UserMenu = {
+//     name: string
+//     icon?: any
+//     route?: string
+//     subMenu?: UserMenu[]
+// }
 
 export const NAV_WIDTH = 240;
 export const USER_MENU = ['Profile', 'Account', 'Dashboard', 'Logout'];

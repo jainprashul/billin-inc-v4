@@ -1,8 +1,8 @@
 import { People } from '@mui/icons-material'
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import { Dialog, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
-import React, { useEffect } from 'react'
+import React from 'react'
 import Search from '../../../components/shared/Search'
 import { useDataUtils } from '../../../utils/useDataUtils'
 

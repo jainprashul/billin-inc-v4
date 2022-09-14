@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import invoicePattern from '../../components/PDF/InvoicePattern'
 import AlertDialog from '../../components/shared/AlertDialog'
 import { Invoice } from '../../services/database/model/Invoices'

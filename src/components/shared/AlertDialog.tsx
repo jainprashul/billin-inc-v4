@@ -12,14 +12,16 @@ type Props = {
     title: string;
     message: string | JSX.Element;
     onCancel?: () => void;
+    showCancel?: boolean;
     onConfirm?: () => void;
     confirmText?: string;
     cancelText?: string;
     confirmColor?: 'error' | 'success' | 'warning' | 'info' | 'primary' | 'secondary';
+    backdropClose?: boolean;
 }
 
 export default function AlertDialog(props: Props) {
-    let { open, setOpen, title, message, onCancel, onConfirm, confirmText = "OK", cancelText = "Cancel", confirmColor='primary' } = props;
+    let { open, setOpen, title, message, onCancel, showCancel = true, onConfirm, confirmText = "OK", cancelText = "Cancel", confirmColor = 'primary', backdropClose=true } = props;
 
     /* const handleClickOpen = () => {
         setOpen(true);
@@ -34,7 +36,9 @@ export default function AlertDialog(props: Props) {
             <Dialog
                 data-testid="alert-dialog-container"
                 open={open}
-                onClose={handleClose}
+                onClose={()=> {
+                    if(backdropClose) handleClose();
+                }}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -47,10 +51,12 @@ export default function AlertDialog(props: Props) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button data-testid="alert-dialog-cancel-btn" onClick={() => {
-                        handleClose();
-                        if (onCancel) onCancel();
-                    }}>{cancelText}</Button>
+                    {
+                        showCancel && <Button data-testid="alert-dialog-cancel-btn" onClick={() => {
+                            handleClose();
+                            if (onCancel) onCancel();
+                        }}>{cancelText}</Button>
+                    }
                     <Button data-testid="alert-dialog-confirm-btn" color={confirmColor} onClick={() => {
                         handleClose();
                         if (onConfirm) onConfirm();

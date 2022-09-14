@@ -12,7 +12,9 @@ import { useFormik } from 'formik';
 import { Autocomplete, TableFooter } from '@mui/material';
 import * as yup from 'yup';
 import { nanoid } from '@reduxjs/toolkit';
-import db from '../../../services/database/db';
+import { selectGstRateType } from '../../../utils/utilsSlice';
+import { useAppSelector } from '../../../app/hooks';
+import { useDataUtils } from '../../../utils/useDataUtils';
 
 type Props = {
     sn?: number,
@@ -42,13 +44,17 @@ const AddGSTProductRow = ({
     }), onSubmit
 }: Props) => {
     const [productList, setProductList] = React.useState<string[]>([]);
-
+    const {companyDB} = useDataUtils();
+    const isInclusive = useAppSelector(selectGstRateType)
 
     const formik = useFormik({
         initialValues: product,
         onSubmit: (values) => {
+            // let price = isInclusive ? (values.price * 100 / (100 + values.gstRate) ): values.price;
 
-            let product = new Product({ ...values, id: `prod_${nanoid(8)}` });
+            let product = new Product({ 
+                ...values, 
+                id: `prod_${nanoid(8)}` });
             onSubmit(product);
             formik.resetForm();
             // console.log(nameRef.current);
@@ -57,18 +63,19 @@ const AddGSTProductRow = ({
         },
         validationSchema: productSchema,
     })
-
+            // parseFloat(Price * 100 / (100 + gstr))
     const { name, hsn, quantity, price, unit, gstRate } = formik.values;
-    const grossAmount = quantity * price;
-    const gstAmount = grossAmount * gstRate / 100;
+    const _price = isInclusive ? parseFloat((price * 100 / (100 + gstRate)).toFixed(2)) : price;
+    const grossAmount = quantity * _price;
+    const gstAmount = parseFloat((grossAmount * gstRate / 100).toFixed(2));
     const totalAmount = grossAmount + gstAmount;
 
 
     useEffect(() => {
-        db.getCompanyDB(1)?.stocks.orderBy('name').uniqueKeys().then(productList => {
+        companyDB?.stocks.orderBy('name').uniqueKeys().then(productList => {
             setProductList(productList as string[]);
         });
-    }, [name]);
+    }, [companyDB?.stocks, name]);
 
     const nameRef = React.useRef<HTMLInputElement>(null);
 
@@ -87,7 +94,7 @@ const AddGSTProductRow = ({
                             console.log(value, reason, detail);
                             if (reason === 'selectOption') {
                                 formik.setFieldValue('name', value);
-                                db.getCompanyDB(1).stocks.get({ name: value }).then((product) => {
+                                companyDB?.stocks.get({ name: value }).then((product) => {
                                     if (product) {
                                         formik.setFieldValue('hsn', product.hsn);
                                         formik.setFieldValue('unit', product.unit);
