@@ -41,7 +41,7 @@ const Company = (props: Props) => {
                     {company.name}
                   </Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {company.contacts[0]?.name}
+                    {company.contacts[0]?.name} &nbsp;
                     {company.contacts[0]?.phone}
                   </Typography>
                   <Typography variant="body2">

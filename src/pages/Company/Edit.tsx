@@ -13,7 +13,7 @@ const Edit = (props: Props) => {
     const company = new Company(location.state as ICompany)
 
     return (
-        <div id='create-company'>
+        <div id='edit-company'>
             <Typography variant='h5'>Edit Company</Typography>
             <CompanyForm company={company} onSubmit={(company) => {
                 console.log(company)
