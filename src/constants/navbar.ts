@@ -1,4 +1,4 @@
-import { COMPANY, HOME, INVOICES, INVOICE_CREATE, LEDGER , PURCHASE, PURCHASE_CREATE, SETTINGS, STOCKS ,  } from "./routes";
+import { COMPANY, HOME, INVOICES, INVOICE_CREATE, LEDGER, PURCHASE, PURCHASE_CREATE, SETTINGS, STOCKS, } from "./routes";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import TaskIcon from '@mui/icons-material/Task';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -6,6 +6,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import BusinessIcon from '@mui/icons-material/Business';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import authService from "../services/authentication/auth.service";
 
 type DrawerMenu = {
     name: string
@@ -22,7 +23,21 @@ type DrawerMenu = {
 // }
 
 export const NAV_WIDTH = 240;
-export const USER_MENU = ['Profile', 'Account', 'Dashboard', 'Logout'];
+export const USER_MENU = [{
+    name: 'Profile',
+    action: () => { }
+}, {
+    name: 'Account',
+    action: () => { }
+}, {
+    name: 'Dashboard',
+    action: () => { }
+}, {
+    name: 'Logout',
+    action: () => {
+        authService.logout();
+    }
+}];
 // export const USER_MENU : UserMenu[] = [
 //     {
 //         name: 'Profile',
@@ -38,7 +53,7 @@ export const USER_MENU = ['Profile', 'Account', 'Dashboard', 'Logout'];
 //     },
 // ]
 
-export const DRAWER_MENU : DrawerMenu[] = [
+export const DRAWER_MENU: DrawerMenu[] = [
     {
         name: 'Dashboard',
         icon: DashboardIcon,
