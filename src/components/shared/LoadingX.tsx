@@ -9,7 +9,7 @@ export default function LoadingX() {
     return (
         <div>
             <Backdrop
-                sx={{ color: '#fff', zIndex: Infinity }}
+                sx={{ color: '#fff', zIndex: 99999 }}
                 open={loading}
             >
                 <CircularProgress color='inherit' />
@@ -31,7 +31,6 @@ export const LoadingProvider = ({ children }: any) => {
 
 export const useLoading = () => {
     const { loading, setLoading } = React.useContext(LoadingContext)
-
     return { loading, setLoading }
 }
 
