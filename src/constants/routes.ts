@@ -1,23 +1,31 @@
-export const APPLINKS = {
-    dashboard: '/dashboard',
-    docs: '/docs',
-    login: '/login',
-    signup: '/signup',
-    settings: '/settings',
-    invoice: '/invoice',
-    invoiceShow: '/invoice/:id',
-    editBill: '/editbill/:id',
-    edit: '/editbill',
-    createInvoice: '/createInvoice',
-    purchaseEntry: '/purchase',
-    purchaseList: '/purchaseList',
-    ledger: '/ledger',
-    ledgerList: '/ledger/:id',
-    customerDetails: '/ledger/:name',
-    company: '/company',
-    expenses: '/expenses',
-    stocks: '/stocks',
-    stockItem: '/stocks/:id',
-    reports: '/reports',
-    dev: '/dev/_tools',
-}
+export const HOME = '/';
+export const LOGIN = '/login';
+export const SIGNUP = '/signup';
+export const SETTINGS = '/settings';
+export const PROFILE = '/profile';
+
+export const INVOICES = '/invoice';
+export const INVOICE_DETAIL = '/invoice/:id';
+export const INVOICE_EDIT = '/invoice/:id/edit';
+export const INVOICE_CREATE = '/invoice/create';
+export const INVOICE_PAY = '/invoice/:id/pay';
+
+export const PURCHASE = '/purchase';
+export const PURCHASE_DETAIL = '/purchase/:id';
+export const PURCHASE_EDIT = '/purchase/:id/edit';
+export const PURCHASE_CREATE = '/purchase/create';
+export const PURCHASE_PAY = '/purchase/:id/pay';
+
+export const STOCKS = '/stocks';
+export const STOCK_DETAIL = '/stocks/:id';
+export const STOCK_EDIT = '/stocks/:id/edit';
+export const STOCK_CREATE = '/stocks/create';
+
+export const LEDGER = '/ledger';
+export const LEDGER_DETAIL = '/ledger/:id';
+
+export const COMPANY = '/company';
+export const COMPANY_CREATE = '/company/create';
+export const COMPANY_EDIT = '/company/:id/edit'
+
+export const NOT_FOUND = '*';
