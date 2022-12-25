@@ -25,6 +25,10 @@ export const useDataUtils = () => {
         return db.companies.get(companyID);
     }) as Company;
 
+    const backups = useLiveQuery( async ()=> {
+        return db.backups.toArray();
+    })!;
+
     const navigate = useNavigate();
     const location  = useLocation();
     const params = useParams();
@@ -39,5 +43,6 @@ export const useDataUtils = () => {
         location,
         params,
         toast,
+        backups
     }
 }

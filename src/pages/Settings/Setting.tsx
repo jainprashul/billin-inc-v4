@@ -2,6 +2,7 @@
 import GSTSettings from './GSTSettings';
 import BackupSettings from './BackupSettings';
 import CreateTab from '../../components/shared/CreateTab';
+import Auth from './Auth';
 
 type Props = {}
 
@@ -16,6 +17,12 @@ const panels = [
         name: "Backup & Restore",
         content: () => (
             <BackupSettings />
+        )
+    },
+    {
+        name: "Authentication",
+        content: () => (
+            <Auth />
         )
     }
 ]

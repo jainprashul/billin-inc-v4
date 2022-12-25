@@ -1,6 +1,7 @@
 import Dexie from 'dexie';
 import CompanyDB from './companydb';
-import { Company, ICategory, IRole, User } from './model';
+import { Company, IBackup, ICategory, IRole, User } from './model';
+
 class AppDB extends Dexie {
 
     companyDB: { [key: string]: CompanyDB }
@@ -8,15 +9,17 @@ class AppDB extends Dexie {
     roles!: Dexie.Table<IRole, number>;
     companies!: Dexie.Table<Company, number>;
     categories!: Dexie.Table<ICategory, number>;
+    backups!: Dexie.Table<IBackup, number>;
 
     constructor() {
         super('BILLIN_DB');
         // Declare tables
-        this.version(1).stores({
+        this.version(1.1).stores({
             roles: '++id, name, permissionIDs',
             companies: '++id, name, email',
             users: '++id, name, &username, &email, roleID, companyID',
             categories: '++id, companyID, name',
+            backups : '++id, backupID, date'
         });
         this.companyDB = {};
         this.loadCompanyDBs();
