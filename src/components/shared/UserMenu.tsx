@@ -54,8 +54,11 @@ const UserMenu = (props: Props) => {
                 onClose={handleCloseUserMenu}
             >
                 {settings.map((setting) => (
-                    <MenuItem data-testid="user-menu-item" key={setting} onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">{setting}</Typography>
+                    <MenuItem data-testid="user-menu-item" key={setting.name} onClick={() => {
+                        setting.action();
+                        handleCloseUserMenu()
+                    }}>
+                        <Typography textAlign="center">{setting.name}</Typography>
                     </MenuItem>
                 ))}
             </Menu>

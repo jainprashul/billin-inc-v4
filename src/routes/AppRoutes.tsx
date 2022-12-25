@@ -11,13 +11,19 @@ import Ledger, { LedgerDetails } from '../pages/Ledger'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
 import Settings from '../pages/Settings'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { checkLogin, selectIsLoggedIn } from '../utils/utilsSlice'
 
 type Props = {}
 
 const AppRoutes = (props: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isAuthenticated, setIsAuthenticated] = React.useState(true);
 
+  const dispatch = useAppDispatch()
+  const isAuthenticated = useAppSelector(selectIsLoggedIn)
+
+  React.useEffect(() => {
+    dispatch(checkLogin())
+  }, [dispatch])
 
   return (
     <ErrorBoundary>
@@ -52,7 +58,7 @@ const AppRoutes = (props: Props) => {
           ) : (
             <Routes>
               <Route path={LOGIN} element={<Login />} />
-              <Route path={SIGNUP} element={<h1>Signup</h1>} />
+              {/* <Route path={SIGNUP} element={<h1>Signup</h1>} /> */}
               <Route path={NOT_FOUND} element={<Navigation path={LOGIN} />} />
             </Routes>
           )
