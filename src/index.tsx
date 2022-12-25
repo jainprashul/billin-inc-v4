@@ -5,9 +5,12 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.css';
+import { configBackEnd } from './services/authentication/auth.backend';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+
+configBackEnd()
 
 root.render(
   <React.StrictMode>

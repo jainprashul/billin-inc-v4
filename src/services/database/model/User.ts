@@ -56,7 +56,7 @@ export class User implements IUser {
         return role;
     };
 
-    addUserToCompany() {
+    private addUserToCompany() {
         db.companies.where('id').anyOf([...this.companyIDs]).modify((company) => {
             company.userIDs.add(this.id as number);
         });
@@ -120,8 +120,8 @@ export class User implements IUser {
                 console.log(usernameExists);
 
                 if (usernameExists) {
-                    // throw new Error("Username already exists");
                     tx.abort();
+                    throw new Error("Username already exists");
                 }
                 const _id = await db.users.put(user);
                 this.id = _id;
