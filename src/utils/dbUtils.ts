@@ -15,27 +15,32 @@ export async function exportDatabase(db: Dexie) {
     return blob;
 }
 
+export const generateBackupFile = async () => {
+
+    const DBBLob = await exportDatabase(db);
+    const companyDbs = Object.values(db.companyDB);
+
+    let blobs = [];
+    for (let i = 0; i < companyDbs.length; i++) {
+        const companyDB = companyDbs[i];
+        const companyDBBlob = await exportDatabase(companyDB);
+        blobs.push(companyDBBlob);
+    }
+
+    const zip = new JSZip();
+    zip.file("db.json", DBBLob);
+    for (let i = 0; i < companyDbs.length; i++) {
+        const companyDB = companyDbs[i];
+        zip.file(`${companyDB.name}.json`, blobs[i]);
+    }
+    const zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
+    return zipBlob;
+}
+
 /** Export and Saves A DB Backup File */
 export const exportData = async () => {
     try {
-        const DBBLob = await exportDatabase(db);
-        const companyDbs = Object.values(db.companyDB);
-
-        let blobs = [];
-        for (let i = 0; i < companyDbs.length; i++) {
-            const companyDB = companyDbs[i];
-            const companyDBBlob = await exportDatabase(companyDB);
-            blobs.push(companyDBBlob);
-        }
-
-        const zip = new JSZip();
-        zip.file("db.json", DBBLob);
-        for (let i = 0; i < companyDbs.length; i++) {
-            const companyDB = companyDbs[i];
-            zip.file(`${companyDB.name}.json`, blobs[i]);
-        }
-
-        const zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
+        const zipBlob = await generateBackupFile();
 
         let time = new Date().toISOString().split('T')[0];
         saveAs(zipBlob, `db-backup-${time}.dbx`)
@@ -46,14 +51,16 @@ export const exportData = async () => {
 }
 
 /** Import and Saves A DB Backup File */
-export const importData = async (file: File) => {
+export const importData = async (file: File, online=false) => {
     console.log('Importing Data', file);
-    await importDatabase(file);
+    await importDatabase(file, online);
 }
 
-async function importDatabase(file: File) {
+async function importDatabase(file: File, online: boolean) {
     try {
-        const zip = await JSZip.loadAsync(file);
+        const zip = await JSZip.loadAsync(file, {
+            base64: online,
+        });
         await deleteDatabase();
 
         // loop through all files and import

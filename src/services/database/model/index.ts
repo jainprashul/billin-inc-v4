@@ -10,6 +10,7 @@ import { INotificationLog, NotificationLog } from "./NotificationLog"
 import { IExpense, Expense } from "./Expenses"
 import { IConfig } from "./Config"
 import { IProduct, Product } from "./Product"
+import { IBackup, Backup } from "./Backup"
 
 export type {
     IClient,
@@ -28,8 +29,9 @@ export type {
     IExpense,
     IConfig,
     IProduct,
+    IBackup
 }
 
 export {
-    Company, User, Purchase, Invoice as Invoices, Client, Expense, Ledger, NotificationLog, Product, StockLog, Stock
+    Company, User, Purchase, Invoice as Invoices, Client, Expense, Ledger, NotificationLog, Product, StockLog, Stock, Backup,
 }

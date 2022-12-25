@@ -9,6 +9,10 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import AlertDialog from '../../components/shared/AlertDialog';
+import { useGDrive } from '../../utils/useGDrive';
+import { Folder } from '@mui/icons-material';
+import SplitButton from '../../components/shared/SplitButton';
+import BackupList from './BackupList';
 
 type Props = {}
 
@@ -22,7 +26,11 @@ const BackupSettings = (props: Props) => {
     onConfirm: () => { }
 
   });
-
+  const { uploadBackUpFile, restoreBackUpFile, fileListfromDrive, isSignedIn } = useGDrive()
+  const [backup, setBackup] = React.useState({
+    open: false,
+    data: []
+  });
 
   const importFile = (e: any) => {
     const file = e.target.files[0]
@@ -46,12 +54,37 @@ const BackupSettings = (props: Props) => {
     }
   }
 
-  const exportDataHandler = () => {
-    exportData().then(() => {
-      toast.enqueueSnackbar("Data exported successfully", { variant: "success" });
-    }).catch((err) => {
+  const handleOnlineRestore = async (id?: string) => {
+    try {
+      await restoreBackUpFile(id)
+      toast.enqueueSnackbar("Online Restore successful.", { variant: "success" });
+      // prompt user to reload the app
+      setDialog({
+        open: true,
+        title: "Reload",
+        message: "Data imported successfully. Reload the app to see the changes",
+        onConfirm: () => {
+          window.location.reload();
+        }
+      })
+    } catch (error) {
+      toast.enqueueSnackbar("Error while restoring data", { variant: "error" });
+    }
+  }
+
+  const exportDataHandler = async (local = true) => {
+    try {
+      if (local) {
+        await exportData();
+        toast.enqueueSnackbar("Data exported successfully", { variant: "success" });
+      } else {
+        await uploadBackUpFile()
+        toast.enqueueSnackbar("Data uploaded successfully", { variant: "success" });
+      }
+    } catch (error) {
       toast.enqueueSnackbar("Error while exporting data", { variant: "error" });
-    })
+
+    }
   }
 
   const deleteDataHandler = () => {
@@ -102,7 +135,7 @@ const BackupSettings = (props: Props) => {
 
   return (
     <div>
-      <Button startIcon={<DownloadForOfflineIcon />} onClick={exportDataHandler}>Backup Data</Button>
+      <Button startIcon={<DownloadForOfflineIcon />} onClick={() => exportDataHandler()}>Backup Data</Button>
       {/* <Button>Backup via Excel</Button> */}
       <br />
 
@@ -116,17 +149,48 @@ const BackupSettings = (props: Props) => {
       {/* <Button>Restore via Excel</Button> */}
       <br />
 
-      <Button startIcon={<DeleteForeverIcon />} onClick={deleteDataHandler}>Delete  Data</Button>
+      <Button startIcon={<DeleteForeverIcon />} onClick={deleteDataHandler}>Delete Data</Button>
       <br />
 
-      {/* TODO : Online BackUp */}
-      <Button startIcon={<CloudUploadIcon />}>Online Backup</Button>
-      <br />
-      <Button startIcon={<CloudDownloadIcon />}>Online Restore</Button>
-      <br />
+      {
+        isSignedIn && (<>
+          <Button onClick={() => exportDataHandler(false)} startIcon={<CloudUploadIcon />}>Online Backup</Button>
+          <br />
+
+          {/* <SplitButton variant='text'
+            buttonLabel={<><CloudDownloadIcon /> &nbsp; Online Restore</>}
+            handleClick={() => handleOnlineRestore()}
+            MenuItems={[
+              {
+                name: "BackUp File List",
+                icon: <Folder />,
+                action: async () => {
+                  const data = await fileListfromDrive()
+                  console.log(data);
+                  setBackup({
+                    open: true,
+                    data: data.files,
+                  })
+                }
+              }
+            ]}
+          /> */}
+          <Button onClick={()=> restoreBackUpFile()} startIcon={<CloudDownloadIcon />}>Online Restore</Button>
+          <br />
+          <Button onClick={async () => {
+            const data = await fileListfromDrive()
+            console.log(data);
+            setBackup({
+              open: true,
+              data: data.files,
+            })
+          }} startIcon={<Folder />}>BackUp File List</Button>
+          <br />
+        </>
+        )
+      }
 
       <Button onClick={clearAllAppData} startIcon={<ClearAllIcon />}> Clear Application Cache</Button>
-
       {/* Dialogs  */}
       <AlertDialog
         open={dialog.open}
@@ -137,6 +201,15 @@ const BackupSettings = (props: Props) => {
         showCancel={dialog.title !== "Reload"}
         backdropClose={dialog.title !== "Reload"}
       />
+
+      {backup.open && <BackupList open={backup.open} setOpen={(open) => {
+        setBackup({
+          open: open,
+          data: []
+        })
+      }} data={backup.data}
+        handleRestore={handleOnlineRestore}
+      />}
 
     </div>
   )
