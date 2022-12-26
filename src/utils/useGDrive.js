@@ -52,7 +52,7 @@ export const useGDrive = () => {
             if(backupFileId){
                 fileId = backupFileId;
             }else{
-                return;
+                throw new Error("No backup file ID found");
             }
         }
         console.log("restoring file", fileId);

@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { USER_MENU as settings } from '../../constants';
 import { useAppSelector } from '../../app/hooks';
 import { selectUser } from '../../utils/utilsSlice';
-
+import { CardHeader } from '@mui/material';
 
 type Props = {}
 
@@ -36,7 +36,7 @@ const UserMenu = (props: Props) => {
         <Box data-testid="user-menu-container" sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
                 <IconButton disableRipple data-testid="user-menu-icon-button" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="User" src={''} /> <Typography sx={{ ml: 1, color:'Menu' }}>{user?.name}</Typography>
+                    <Avatar alt="User" src={''} /> <Typography sx={{ ml: 1, color: 'Menu' }}>{user?.name}</Typography>
                 </IconButton>
             </Tooltip>
             <Menu
@@ -57,6 +57,24 @@ const UserMenu = (props: Props) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
             >
+                <div style={{ padding: '0.5rem' }}>
+                    <CardHeader
+                        avatar={
+                            <Avatar alt="User" src={''} />
+                        }
+                        title={user?.name}
+                        subheader={user?.email}
+                    />
+
+                    <div style={{
+                        marginLeft: '1rem',
+                    }}>
+                    <Typography variant="body2" color="text.secondary">
+                        Role : {user?.roleID === 1 ? 'Admin' : 'User'}
+                    </Typography>
+                    </div>
+
+                </div>
                 {settings.map((setting) => (
                     <MenuItem data-testid="user-menu-item" key={setting.name} onClick={() => {
                         setting.action();
@@ -65,6 +83,7 @@ const UserMenu = (props: Props) => {
                         <Typography textAlign="center">{setting.name}</Typography>
                     </MenuItem>
                 ))}
+
             </Menu>
         </Box>
     )
