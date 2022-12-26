@@ -17,7 +17,7 @@ export interface IStockLogs {
     companyID: number;
     clientID: string;
     clientName: string;
-    client?: Client
+    client?: Client;
 }
 
 type StockLogType = "SALE" | "PURCHASE" | "TRANSFER" | "OPENING_STOCK" | "CLOSING_STOCK" | "ADJUSTMENT";
@@ -35,6 +35,7 @@ export class StockLog implements IStockLogs {
     clientID: string;
     clientName : string
     client : Client | undefined;
+    createdAt: Date;
 
     constructor(stockLogs: IStockLogs) {
         this.id = stockLogs.id || `sl-${nanoid(8)}`;
@@ -49,6 +50,7 @@ export class StockLog implements IStockLogs {
         this.clientID = stockLogs.clientID;  
         this.clientName = stockLogs.clientName; 
         this.client = stockLogs.client ? new Client({...stockLogs.client}) : undefined;
+        this.createdAt = new Date();
     }
 
     async loadClient() {

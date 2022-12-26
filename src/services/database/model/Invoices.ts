@@ -25,6 +25,7 @@ export interface IInvoice {
     discountValue?: number;
     // totalAmount: number;
     amountPaid? : number;
+    createdAt?: Date;
 }
 
 export class Invoice implements IInvoice {
@@ -46,6 +47,8 @@ export class Invoice implements IInvoice {
     discountValue?: number;
     totalAmount: number;
     amountPaid : number;
+    createdAt: Date;
+    updatedAt: Date;
 
     constructor(invoice: IInvoice) {
         this.id = invoice.id || `inv_${nanoid(8)}`;
@@ -66,6 +69,8 @@ export class Invoice implements IInvoice {
         this.discountValue = invoice.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
         this.amountPaid = invoice.amountPaid || 0;
+        this.createdAt = invoice.createdAt || new Date();
+        this.updatedAt = new Date();
         // this.loadProducts();
         Object.defineProperty(this, 'products', {
             enumerable: false,
@@ -122,6 +127,7 @@ export class Invoice implements IInvoice {
 
         return companyDB.transaction('rw', companyDB.invoices, companyDB.notificationlogs, (tx) => {
             try {
+                this.updatedAt = new Date();
                 const _save = companyDB.invoices.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log('Invoice saved', _id);

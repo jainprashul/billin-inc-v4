@@ -10,6 +10,7 @@ export interface IExpense {
     description: string;
     expenseType: ExpenseType;
     amount: number;
+    createdAt?: Date;
 }
 
 type ExpenseType = "HOUSE_HOLD" | "VEHICLE" | "ELECTRICITY" | "WATER" | "FOOD" | "INTERNET" | "MOBILE" | "TAXES" | "SERVICES" | "OTHER";
@@ -21,6 +22,8 @@ export class Expense implements IExpense {
     description: string;
     expenseType: ExpenseType;
     amount: number;
+    createdAt: Date;
+    updatedAt: Date;
 
     constructor(expense: IExpense) {
         this.id = expense.id || `exp_${nanoid(8)}`;
@@ -29,6 +32,8 @@ export class Expense implements IExpense {
         this.description = expense.description;
         this.expenseType = expense.expenseType;
         this.amount = expense.amount;
+        this.createdAt = expense.createdAt || new Date();
+        this.updatedAt = new Date();
     }
 
     private onCreate(id: string, expense: Expense, tx: Transaction) {
@@ -65,6 +70,7 @@ export class Expense implements IExpense {
 
         return companyDB.transaction("rw", companyDB.expenses, companyDB.notificationlogs, (tx) => {
             try {
+                this.updatedAt = new Date();
                 const _save = companyDB.expenses.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Expense saved", _id);

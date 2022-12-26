@@ -13,6 +13,7 @@ type DrawerMenu = {
     icon?: any
     route: string
     subMenu?: DrawerMenu[]
+    admin?: boolean
 }
 
 // type UserMenu = {
@@ -23,35 +24,13 @@ type DrawerMenu = {
 // }
 
 export const NAV_WIDTH = 240;
-export const USER_MENU = [{
-    name: 'Profile',
-    action: () => { }
-}, {
-    name: 'Account',
-    action: () => { }
-}, {
-    name: 'Dashboard',
-    action: () => { }
-}, {
+export const USER_MENU = [ {
     name: 'Logout',
     action: () => {
         authService.logout();
     }
 }];
-// export const USER_MENU : UserMenu[] = [
-//     {
-//         name: 'Profile',
-//         route: '/profile',
-//     },
-//     {
-//         name: 'Account',
-//         route: '/account',
-//     },
-//     {
-//         name: 'Dashboard',
-//         route: '/dashboard',
-//     },
-// ]
+
 
 export const DRAWER_MENU: DrawerMenu[] = [
     {
@@ -62,7 +41,9 @@ export const DRAWER_MENU: DrawerMenu[] = [
     {
         name: "Invoices",
         icon: TaskIcon,
-        route: INVOICES
+        route: INVOICES,
+        admin: true
+
     },
     {
         name: "Create Invoice",
@@ -72,7 +53,8 @@ export const DRAWER_MENU: DrawerMenu[] = [
     {
         name: "Purchase Orders",
         icon: TaskIcon,
-        route: PURCHASE
+        route: PURCHASE,
+        admin: true
     },
     {
         name: "Purchase Entry",
@@ -83,6 +65,7 @@ export const DRAWER_MENU: DrawerMenu[] = [
         name: "Ledger",
         icon: AutoStoriesIcon,
         route: LEDGER,
+        admin: true
     },
     {
         name: "Stocks & Inventory",

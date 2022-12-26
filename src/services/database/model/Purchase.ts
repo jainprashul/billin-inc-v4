@@ -24,6 +24,7 @@ export interface IPurchase {
     discountValue?: number;
     // totalAmount: number;
     amountPaid? : number;
+    createdAt?: Date;
 }
 
 export class Purchase implements IPurchase {
@@ -45,6 +46,8 @@ export class Purchase implements IPurchase {
     discountValue?: number;
     totalAmount: number;
     amountPaid : number;
+    createdAt: Date;
+    updatedAt: Date;
 
     constructor(purchase: IPurchase) {
         this.id = purchase.id || `pur_${nanoid(8)}`;
@@ -65,6 +68,9 @@ export class Purchase implements IPurchase {
         this.discountValue = purchase.discountValue || 0;
         this.totalAmount = this.grossTotal - this.discountValue;
         this.amountPaid = purchase.amountPaid || 0;
+
+        this.createdAt = purchase.createdAt || new Date();
+        this.updatedAt = new Date();
         // this.loadProducts();
         Object.defineProperty(this, 'products', {
             enumerable: false,
@@ -122,6 +128,7 @@ export class Purchase implements IPurchase {
 
         return companyDB.transaction('rw', companyDB.purchases, companyDB.notificationlogs, (tx) => {
             try {
+                this.updatedAt = new Date();
                 const _save = companyDB.purchases.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Purchase saved", _id);

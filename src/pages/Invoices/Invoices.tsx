@@ -5,6 +5,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { INVOICE_CREATE } from '../../constants/routes';
 import { useDataUtils } from '../../utils/useDataUtils';
+import AdminWrapper from '../../routes/AdminWrapper';
 
 type Props = {}
 
@@ -23,6 +24,7 @@ const Invoices = (props: Props) => {
   }, [companyDB], []) as Array<Invoice>;
 
   return (
+    <AdminWrapper>
     <div id='invoice-page'>
       <InvoiceTable data={invoices as Invoice[]} />
       <Fab color="primary" style={{
@@ -35,6 +37,7 @@ const Invoices = (props: Props) => {
         <AddIcon />
       </Fab>
     </div>
+    </AdminWrapper>
   )
 }
 

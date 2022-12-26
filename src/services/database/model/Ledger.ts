@@ -18,6 +18,7 @@ export interface ILedger {
     clientID: string;
     date: Date;
     clientType: ClientType;
+    createdAt?: Date;
 }
 
 type ClientType = "CUSTOMER" | "VENDOR" | "EMPLOYEE" | "SUPPLIER";
@@ -39,6 +40,8 @@ export class Ledger implements ILedger {
     clientID: string;
     date: Date;
     clientType: ClientType;
+    createdAt: Date;
+    updatedAt: Date;
 
     constructor(ledger: ILedger) {
         if (ledger.id) this.id = ledger.id;
@@ -55,6 +58,8 @@ export class Ledger implements ILedger {
         this.clientID = ledger.clientID;
         this.date = ledger.date;
         this.clientType = ledger.clientType;
+        this.createdAt = ledger.createdAt || new Date();
+        this.updatedAt = new Date();
     }
 
     private onCreate(id: string, ledgerItem: Ledger, tx: Transaction) {
@@ -93,6 +98,7 @@ export class Ledger implements ILedger {
         return companyDB.transaction("rw", companyDB.ledger, companyDB.notificationlogs, async (tx) => {
             try {
                 // console.log(companyDB);
+                this.updatedAt = new Date();
                 const _save = companyDB.ledger.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Ledger saved", this.id);

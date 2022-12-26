@@ -23,6 +23,7 @@ const Auth = (props: Props) => {
           <Button onClick={signIn} startIcon={<Login />}>Sign In</Button>
         )
       }
+
     </div>
   )
 }

@@ -71,6 +71,7 @@ const BackupSettings = (props: Props) => {
         }
       })
     } catch (error) {
+      setLoading(false)
       toast.enqueueSnackbar("Error while restoring data", { variant: "error" });
     }
   }
@@ -87,6 +88,7 @@ const BackupSettings = (props: Props) => {
       }
       setLoading(false)
     } catch (error) {
+      setLoading(false)
       toast.enqueueSnackbar("Error while exporting data", { variant: "error" });
 
     }
