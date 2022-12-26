@@ -12,6 +12,7 @@ export interface IUser {
     roleID?: number;
     password: string;
     companyIDs?: number[];
+    createdAt?: Date;
 }
 
 export interface Usr {
@@ -45,6 +46,9 @@ export class User implements IUser {
     role: IRole | undefined;
     password: string;
     companyIDs: number[];
+    createdAt: Date;
+    updatedAt: Date;
+
     constructor(user: IUser) {
         if (user.id) this.id = user.id || nanoid(8);
         this.name = user.name;
@@ -53,6 +57,8 @@ export class User implements IUser {
         this.roleID = user.roleID || 1; // default role is 1 i.e. admin
         this.password = user.password;
         this.companyIDs = user.companyIDs || [1]; // default company
+        this.createdAt = user.createdAt || new Date();
+        this.updatedAt = new Date();
         this.loadRole();
 
         Object.defineProperty(this, 'role', {
@@ -174,6 +180,7 @@ export class User implements IUser {
     async update() {
         db.users.hook.updating.subscribe(this.onUpdate);
         return db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
+            this.updatedAt = new Date();
             const _id = await db.users.update(this.id as number, this);
             this.id = _id;
             this.addUserToCompany();

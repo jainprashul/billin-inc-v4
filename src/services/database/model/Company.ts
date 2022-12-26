@@ -16,6 +16,7 @@ export interface ICompany {
     lastGSTPurchaseNo : number;
     userIDs: Set<number>;
     createdBy?: string;
+    createdAt?: Date;
 }
 
 export class Company implements ICompany {
@@ -35,6 +36,7 @@ export class Company implements ICompany {
     userIDs: Set<number>;
     createdAt: Date;
     createdBy?: string;
+    updatedAt: Date;
     constructor(company: ICompany) {
         if (company.id) this.id = company.id;
         this.name = company.name;
@@ -50,13 +52,15 @@ export class Company implements ICompany {
         this.lastPurchaseNo = company.lastPurchaseNo ?? 0;
         this.lastGSTPurchaseNo = company.lastGSTPurchaseNo ?? 0;
         this.userIDs = company.userIDs;
-        this.createdAt = new Date();
+        this.createdAt = company.createdAt || new Date();
         this.createdBy = company.createdBy ?? "APP DB";
+        this.updatedAt = new Date();
     }
 
     async save() {
         let company = new Company({ ...this })
         return db.transaction('rw', db.companies, db.users, db.roles, async () => {
+            company.updatedAt = new Date();
             const _save = db.companies.put(company).then(_id => {
                 this.id = _id;
                 console.log('Company Saved', this.id);

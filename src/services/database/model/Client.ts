@@ -14,6 +14,7 @@ export interface IClient {
     contacts: IContact[];
     companyID: number;
     isCustomer? : boolean;
+    createdAt?: Date;
 }
 
 export class Client implements IClient {
@@ -25,6 +26,8 @@ export class Client implements IClient {
     contacts: IContact[];
     companyID: number;
     isCustomer : boolean;
+    createdAt: Date;
+    updatedAt: Date;
 
     constructor(client: IClient) {
         this.id = client.id || `c_${nanoid(8)}`;
@@ -35,6 +38,8 @@ export class Client implements IClient {
         this.contacts = client.contacts;
         this.companyID = client.companyID;
         this.isCustomer = client.isCustomer ?? true;
+        this.createdAt = client.createdAt || new Date();
+        this.updatedAt = new Date();
     }
 
     static validationSchema = Yup.object().shape({
@@ -86,6 +91,7 @@ export class Client implements IClient {
         companyDB.clients.hook.creating.subscribe(this.onCreate);
         return companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async (tx) => {
             try {
+                this.updatedAt = new Date();
                 const _save = companyDB.clients.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Client saved", _id);

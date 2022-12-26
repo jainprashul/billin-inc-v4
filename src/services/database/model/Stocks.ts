@@ -18,6 +18,7 @@ export interface IStocks {
     hsn : string;
     unit : string;
     stockLogs? : StockLog[];
+    createdAt?: Date;
 }
 
 // Ref : Stocks.logID > StockLogs.id
@@ -39,6 +40,9 @@ export class Stock implements IStocks {
     hsn : string;
     unit : string;
 
+    createdAt: Date;
+    updatedAt: Date;
+
     constructor(stock: IStocks) {
         this.id = stock.id || `stk_${nanoid(8)}`
         this.name = stock.name;
@@ -54,6 +58,8 @@ export class Stock implements IStocks {
         this.unit = stock.unit;
         this.stockLogs = stock.stockLogs ? stock.stockLogs.map(log => new StockLog(log)) : [];
         // this.loadStockLogs();
+        this.createdAt = stock.createdAt || new Date();
+        this.updatedAt = new Date();
 
         Object.defineProperty(this, 'stockLogs', {
             enumerable: false,
@@ -100,6 +106,7 @@ export class Stock implements IStocks {
         companyDB.stocks.hook.creating.subscribe(this.onCreate);
         return companyDB.transaction('rw', companyDB.stocks, companyDB.stocklogs, companyDB.notificationlogs, (tx) => {
             try {
+                this.updatedAt = new Date();
                 const _save = companyDB.stocks.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log('Stock saved successfully.', _id);
