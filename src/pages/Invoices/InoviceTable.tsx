@@ -1,7 +1,6 @@
 import MaterialTable, { Action, Column } from '@material-table/core';
 import { Delete, Print, RemoveRedEye } from '@mui/icons-material';
 import React from 'react'
-import { useSnackbar } from 'notistack';
 import AlertDialog from '../../components/shared/AlertDialog';
 import { Invoice } from '../../services/database/model/Invoices';
 import invoicePattern from '../../components/PDF/InvoicePattern';
@@ -18,12 +17,9 @@ type Props = {
 
 const InvoiceTable = ({ data }: Props) => {
     const loading = !(data ? data.length !== 0 : false)
-    const { enqueueSnackbar, } = useSnackbar();
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState(false);
-    const { company, navigate } = useDataUtils()
-
-
+    const { company, navigate , toast } = useDataUtils()
 
     const [dialog, setDialog] = React.useState({
         title: '',
@@ -171,7 +167,7 @@ const InvoiceTable = ({ data }: Props) => {
                     message: 'Are you sure you want to delete this invoice?',
                     onConfirm: () => {
                         deleteInvoice(inv).then(() => {
-                            enqueueSnackbar(`Invoice : ${inv.voucherNo} deleted.`, {
+                            toast.enqueueSnackbar(`Invoice : ${inv.voucherNo} deleted.`, {
                                 variant: 'error',
                             });
                         })
@@ -193,7 +189,7 @@ const InvoiceTable = ({ data }: Props) => {
                     onConfirm: () => {
                         invoices.forEach(inv => {
                             deleteInvoice(inv).then(() => {
-                                enqueueSnackbar(`Invoice : ${inv.voucherNo} deleted.`, {
+                                toast.enqueueSnackbar(`Invoice : ${inv.voucherNo} deleted.`, {
                                     variant: 'error',
                                 });
                             })

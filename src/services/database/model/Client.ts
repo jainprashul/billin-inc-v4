@@ -3,6 +3,7 @@ import { Transaction } from "dexie";
 import db from "../db";
 import { IAddress, IContact } from "./Company";
 import { NotificationLog } from "./NotificationLog";
+import * as Yup from 'yup';
 
 export interface IClient {
     id?: string;
@@ -35,6 +36,22 @@ export class Client implements IClient {
         this.companyID = client.companyID;
         this.isCustomer = client.isCustomer ?? true;
     }
+
+    static validationSchema = Yup.object().shape({
+        name: Yup.string().required('Name is required'),
+        address: Yup.object().shape({
+            address: Yup.string().required('Address is required'),
+            city: Yup.string().required('City is required'),
+            state: Yup.string().required('State is required'),
+        }),
+        contacts: Yup.array().of(Yup.object().shape({
+            name: Yup.string().required('Name is required'),
+            email: Yup.string().email('Invalid email'),
+            phone: Yup.string().required('Phone is required'),
+            mobile: Yup.string(),
+        })).min(1, 'At least one contact is required'),
+    });
+
 
     private onCreate(id: string, client: Client, tx: Transaction) {
         const notify = new NotificationLog({
