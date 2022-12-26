@@ -6,12 +6,13 @@ import { useDataUtils } from '../../utils/useDataUtils';
 import { selectIsAdmin } from '../../utils/utilsSlice';
 type Props = {
   company: Company;
+  companyID: number;
   handleDelete: (company: Company) => void;
   handleSwitch: (company: Company) => void;
 }
 
-const CompanyCard = ({ company, handleDelete, handleSwitch }: Props) => {
-  const { navigate, companyID } = useDataUtils()
+const CompanyCard = ({ company, companyID, handleDelete, handleSwitch }: Props) => {
+  const { navigate, } = useDataUtils()
   return (
     <Grid item xs={4} key={company.id}>
       <Card key={company.id}>
@@ -50,7 +51,7 @@ const CompanyCard = ({ company, handleDelete, handleSwitch }: Props) => {
             <Delete />
           </IconButton>
           <IconButton onClick={() => { handleSwitch(company) }}>
-            <CheckCircle color={company.id === companyID ? 'success' : 'inherit'} />
+            <CheckCircle color={company.id! === companyID ? 'success' : 'inherit'} />
           </IconButton>
 
         </CardActions>

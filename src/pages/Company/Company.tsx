@@ -76,7 +76,7 @@ const Company = (props: Props) => {
       <Grid container spacing={3}>
         {company?.map(company => {
           return (
-            <CompanyCard key={company.id} company={company} handleDelete={handleDelete} handleSwitch={handleSwitch} />
+            <CompanyCard key={company.id} companyID={companyID} company={company} handleDelete={handleDelete} handleSwitch={handleSwitch} />
           )
         }
         )}
