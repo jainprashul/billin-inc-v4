@@ -1,4 +1,3 @@
-import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { Alert, Button, Grid, MenuItem, Select, TextField } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useFormik } from 'formik'
@@ -21,7 +20,6 @@ const UserForm = ({ onSubmit, user = new User({
   const companys = useLiveQuery(() => db.companies.toArray()) ?? []
 
   const submitHandler = (user: User) => {
-    console.log(user)
     onSubmit(user)
   }
 
@@ -29,6 +27,7 @@ const UserForm = ({ onSubmit, user = new User({
     initialValues: user,
     onSubmit: (values, helper) => {submitHandler(values); console.log(helper)},
     validationSchema: User.validationSchema,
+    validateOnChange: false,
   })
 
 
@@ -165,7 +164,7 @@ const UserForm = ({ onSubmit, user = new User({
                 }} type="reset" onClick={() => formik.resetForm()} variant="contained" color="primary">
                     Clear
                 </Button>
-                <Button type="submit" variant="contained" color="primary" startIcon={<AddCircleIcon />}>
+                <Button type="submit" variant="contained" color="primary" >
                     Save
                 </Button>
             </div>

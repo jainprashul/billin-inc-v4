@@ -2,6 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
+import * as Yup from 'yup';
 
 export interface IUser {
     id?: number | string;
@@ -12,6 +13,16 @@ export interface IUser {
     password: string;
     companyIDs?: number[];
 }
+
+export interface Usr {
+    id: number,
+    name: string,
+    username: string,
+    email: string,
+    roleID: number,
+    token: string,
+    companyIDs: number[]
+} 
 
 interface IPermission {
     id?: number;
@@ -49,6 +60,13 @@ export class User implements IUser {
             // configurable: false, 
         });
     }
+
+    static validationSchema = Yup.object().shape({
+        name: Yup.string().required('Name is required'),
+        username: Yup.string().required('Username is required'),
+        email: Yup.string().email('Invalid email').required('Email is required'),
+        password: Yup.string().required('Password is required'),
+    });
 
     async loadRole() {
         const role = await db.roles.get(this.roleID);
@@ -98,6 +116,23 @@ export class User implements IUser {
             }
         });
     }
+    private onUpdate(_: any , id: string, user: User, tx: Transaction) {
+        user.companyIDs.forEach((companyID) => {
+            try {
+                const notify = new NotificationLog({
+                    companyID,
+                    clientID: `usr_${user.username}`,
+                    date: new Date(),
+                    message: `User ${user.username} updated`,
+                    notificationID: `ntf-${nanoid(8)}`,
+                    status: "NEW",
+                });
+                notify.save();
+            } catch (error) {
+                console.log('DB Does not exist \n', error);
+            }
+        });
+    }
 
     async save() {
         let user = new User({
@@ -136,11 +171,25 @@ export class User implements IUser {
         });
     }
 
+    async update() {
+        db.users.hook.updating.subscribe(this.onUpdate);
+        return db.transaction('rw', db.users, db.roles, db.companies, async (tx) => {
+            const _id = await db.users.update(this.id as number, this);
+            this.id = _id;
+            this.addUserToCompany();
+            console.log(`User ${this.name} updated successfully`);
+            return this.id;
+        });
+    }
+
+
     delete() {
         db.users.hook.deleting.subscribe(this.onDelete);
-        db.transaction('rw', db.users, db.companies, async (tx) => {
+        return db.transaction('rw', db.users, db.companies, async (tx) => {
             db.users.delete(this.id as number);
+            return this.id;
         });
+        
     }
 }
 
@@ -193,9 +242,9 @@ export const defaultUser = new User({
     id: 1,
     name: 'Admin',
     username: 'admin',
-    email: 'admin@default',
+    email: 'admin@billing.inc',
     roleID: 1,
-    password: 'admin',
+    password: 'admin123',
     companyIDs: [1],
 })
 

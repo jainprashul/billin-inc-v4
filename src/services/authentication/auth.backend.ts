@@ -21,10 +21,15 @@ export const configBackEnd = () => {
 
                     // find if any user matches login credentials
                     let filteredUsers = await db.users.filter(user => {
-                        return user.username === params.username && user.password === params.password;
+                        return user.username === params.username
                     }).first();
 
                     if (filteredUsers) {
+                        // check password
+                        if(filteredUsers.password !== params.password) {
+                            return ok({ message: 'Password is incorrect' }, 400);
+                        }
+
                         // if login details are valid return user details and fake jwt token
                         let responseJson: Partial<User> = {
                             ...filteredUsers,

@@ -7,11 +7,15 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { USER_MENU as settings } from '../../constants';
+import { useAppSelector } from '../../app/hooks';
+import { selectUser } from '../../utils/utilsSlice';
 
 
 type Props = {}
 
 const UserMenu = (props: Props) => {
+
+    const user = useAppSelector(selectUser)
 
     // const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -31,8 +35,8 @@ const UserMenu = (props: Props) => {
     return (
         <Box data-testid="user-menu-container" sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-                <IconButton data-testid="user-menu-icon-button" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="User" src={''} />
+                <IconButton disableRipple data-testid="user-menu-icon-button" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="User" src={''} /> <Typography sx={{ ml: 1, color:'Menu' }}>{user?.name}</Typography>
                 </IconButton>
             </Tooltip>
             <Menu

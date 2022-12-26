@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import authService from '../../services/authentication/auth.service';
+import { Alert } from '@mui/material';
 
 function Copyright(props: any) {
     return (
@@ -28,6 +29,7 @@ function Copyright(props: any) {
 
 
 export default function Login() {
+    const [error, setError] = React.useState<string | null>(null);
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -37,7 +39,11 @@ export default function Login() {
             remember : !!data.get('remember')
         }
         console.log(creds);
-        authService.login(creds.email!, creds.password, creds.remember)
+        authService.login(creds.email!, creds.password, creds.remember).then((res) => {
+            window.location.href = "/";
+        }).catch((err) => {
+            setError(err.message);
+        })
     };
 
     return (
@@ -96,6 +102,10 @@ export default function Login() {
                             control={<Checkbox name='remember' color="primary" />}
                             label="Remember me"
                         />
+
+                        {
+                            error && <Alert severity="error">{error}</Alert>
+                        }
                         <Button
                             type="submit"
                             fullWidth

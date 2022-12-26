@@ -2,7 +2,6 @@ import { Login, Logout } from '@mui/icons-material'
 import { Avatar, Button } from '@mui/material'
 import React from 'react'
 import { useGoogle } from '../../utils/useGoogle'
-import User from './User'
 
 type Props = {}
 
@@ -25,7 +24,6 @@ const Auth = (props: Props) => {
         )
       }
 
-      <User />
     </div>
   )
 }
