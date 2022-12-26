@@ -2,7 +2,6 @@ import { Alert, Autocomplete, Button, Checkbox, FormControlLabel, Grid, TextFiel
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Client } from '../../services/database/model';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { getStateCites, stateList } from '../../constants/states';
 
 type Props = {
@@ -33,26 +32,11 @@ const ClientForm = ({
 
     const submitHandler = (values: Client) => {
         onSubmit(values);
-        // onSubmit(values)
     }
     const formik = useFormik({
         initialValues: client,
         onSubmit: submitHandler,
-        validationSchema: Yup.object().shape({
-            name: Yup.string().required('Name is required'),
-            address: Yup.object().shape({
-                address: Yup.string().required('Address is required'),
-                city: Yup.string().required('City is required'),
-                state: Yup.string().required('State is required'),
-            }),
-            contacts: Yup.array().of(Yup.object().shape({
-                name: Yup.string().required('Name is required'),
-                email: Yup.string().email('Invalid email'),
-                phone: Yup.string().required('Phone is required'),
-                mobile: Yup.string(),
-            })).min(1, 'At least one contact is required'),
-
-        }),
+        validationSchema: Client.validationSchema,
         validateOnChange: false,
     })
 
@@ -254,7 +238,7 @@ const ClientForm = ({
                     />
                 </Grid>
             </Grid>
-            <div className="client-footer" >
+            <div className="client-footer">
                 <Button style={{
                     marginRight: '10px'
                 }} type="reset" onClick={() => formik.resetForm()} variant="contained" color="primary">

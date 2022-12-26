@@ -24,6 +24,7 @@ export class NotificationLog implements INotificationLog {
     link?: string;
     status: NotificationStatus;
     isVisible: boolean;
+    createdAt: Date;
 
     constructor(notificationLog: INotificationLog) {
         if (notificationLog.id) this.id = notificationLog.id;
@@ -35,6 +36,7 @@ export class NotificationLog implements INotificationLog {
         this.link = notificationLog.link;
         this.status = notificationLog.status;
         this.isVisible = notificationLog.isVisible || false;
+        this.createdAt = new Date();
     }
 
     save() {

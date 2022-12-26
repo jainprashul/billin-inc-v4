@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import Tab from '@mui/material/Tab';
 import { Box, Tabs } from '@mui/material'
 import { a11yProps, TabPanel } from '../../components/shared/TabPanel';
@@ -8,10 +8,12 @@ type Props = {
     panels: {
         name: string
         content: () => JSX.Element
+        hidden?: boolean
     }[]
 }
 
 const CreateTab = ({ panels }: Props) => {
+    const Panels = useMemo(() => panels.sort((a, b) => a.hidden ? 1 : -1), [panels])
     const [currentTab, setCurrentTab] = React.useState(0);
 
     const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -22,17 +24,17 @@ const CreateTab = ({ panels }: Props) => {
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={currentTab} onChange={handleChangeTab} aria-label="settings tab">
                     {
-                        panels.map((panel, index) => (
-                            <Tab key={index} label={panel.name} {...a11yProps(index)} />
+                        Panels.map((panel, index) => (
+                            !panel.hidden && <Tab key={index} label={panel.name} {...a11yProps(index)} />
                         ))
                     }
                 </Tabs>
             </Box>
 
             {
-                panels.map((panel, index) => {
+                Panels.map((panel, index) => {
                     const Context = panel.content;
-                    return (
+                    return !panel.hidden && (
                         <TabPanel key={index} value={currentTab} tabIndex={index}>
                             <Context />
                         </TabPanel>

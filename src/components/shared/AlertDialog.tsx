@@ -57,9 +57,9 @@ export default function AlertDialog(props: Props) {
                             if (onCancel) onCancel();
                         }}>{cancelText}</Button>
                     }
-                    <Button data-testid="alert-dialog-confirm-btn" color={confirmColor} onClick={() => {
+                    <Button data-testid="alert-dialog-confirm-btn" color={confirmColor} onClick={async() => {
                         handleClose();
-                        if (onConfirm) onConfirm();
+                        if (onConfirm) await onConfirm();
                     }} autoFocus>{confirmText}</Button>
                 </DialogActions>
             </Dialog>

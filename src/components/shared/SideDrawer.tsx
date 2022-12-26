@@ -11,6 +11,9 @@ import ListItemText from '@mui/material/ListItemText';
 import {DRAWER_WIDTH as drawerWidth , DRAWER_MENU } from '../../constants';
 import { useNavigate } from 'react-router-dom';
 import { Tooltip } from '@mui/material';
+import { useAppSelector } from '../../app/hooks';
+import { selectIsAdmin } from '../../utils/utilsSlice';
+import React, {useMemo} from 'react'
 
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -70,6 +73,9 @@ type Props = {
 
 const SideDrawer = ({open , handleDrawerClose, theme}: Props) => {
   const navigate = useNavigate()
+  const isAdmin = useAppSelector(selectIsAdmin);
+  const menuItems = useMemo(() => DRAWER_MENU.filter((item) => !item.admin || isAdmin), [isAdmin]);
+  
   return (
     <Drawer variant="permanent" open={open}>
         <DrawerHeader>
@@ -79,7 +85,7 @@ const SideDrawer = ({open , handleDrawerClose, theme}: Props) => {
         </DrawerHeader>
         <Divider />
         <List>
-          {DRAWER_MENU.map(({name : text, route, icon : Icon}, index) => (
+          {menuItems.map(({name : text, route, icon : Icon}, index) => (
             <ListItemButton
               key={text}
               sx={{

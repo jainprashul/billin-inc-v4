@@ -1,4 +1,4 @@
-import { IUser } from "../database/model";
+import { IUser, Usr } from "../database/model";
 class AuthService {
     async login(username: string, password: string, remember = false) {
         const resp = await window.fetch('/api/login', {
@@ -15,11 +15,10 @@ class AuthService {
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('user', JSON.stringify(data));
             }
+            return data;
+        } else {
+            throw new Error(data.message);
         }
-        console.log("Login Success");
-
-        window.location.href = "/";
-        return data;
     }
 
     async register(user: IUser) {
@@ -43,10 +42,11 @@ class AuthService {
         sessionStorage.removeItem('user');
         window.location.href = "/";
     }
-
+    
     getUser() {
-        const user = localStorage.getItem('user') || sessionStorage.getItem('user');
-        return user ? JSON.parse(user) : null;
+        const res = localStorage.getItem('user') || sessionStorage.getItem('user');
+        const user : Usr | null = res ? JSON.parse(res) : null;
+        return user;
     }
 
     getToken() {

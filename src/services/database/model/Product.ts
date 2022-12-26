@@ -14,6 +14,7 @@ export interface IProduct {
     unit: ProductUnit;
     companyID: number;
     voucherID: string;
+    createdAt?: Date;
 }
 
 type ProductUnit = "KG" | "L" | "PCS" | "BOX" | "BAG" | "BOTTLE" | "CARTON";
@@ -34,6 +35,8 @@ export class Product implements IProduct {
     totalAmount: number;
     grossAmount: number;
     voucherID: string;
+    createdAt: Date;
+    updatedAt: Date;
 
     constructor(product: IProduct) {
         let isInclusive = Boolean(JSON.parse(localStorage.getItem("gstRateInclusive") || "false"));
@@ -50,6 +53,8 @@ export class Product implements IProduct {
         this.grossAmount = this.price * product.quantity;
         this.gstAmount = parseFloat((this.grossAmount * (this.gstRate / 100)).toFixed(2));
         this.totalAmount = this.grossAmount + this.gstAmount;
+        this.createdAt = product.createdAt || new Date();
+        this.updatedAt = new Date();
     }
 
     private addtoVoucher() {
@@ -124,6 +129,7 @@ export class Product implements IProduct {
 
         return companyDB.transaction("rw", companyDB.products, companyDB.invoices, companyDB.purchases, companyDB.notificationlogs, (tx) => {
             try {
+                this.updatedAt = new Date();
                 const _save = companyDB.products.put({ ...this }).then(_id => {
                     this.id = _id;
                     console.log("Product saved", _id);

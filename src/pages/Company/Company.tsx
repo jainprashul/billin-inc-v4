@@ -1,17 +1,16 @@
-import { AddBox } from '@mui/icons-material';
-import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import React, { useState } from 'react'
 import AlertDialog from '../../components/shared/AlertDialog';
 import db from '../../services/database/db';
 import { Company as ICompany } from '../../services/database/model';
 import { useDataUtils } from '../../utils/useDataUtils';
-import CompanyCard from './CompanyCard';
+import CompanyCard, { CompanyCardAdd } from './CompanyCard';
 
 type Props = {}
 
 const Company = (props: Props) => {
-  const { navigate, toast, companyID, setCompanyID } = useDataUtils();
+  const { toast, companyID, setCompanyID } = useDataUtils();
   const [open, setOpen] = useState(false)
 
   const [dialog, setDialog] = React.useState({
@@ -77,36 +76,11 @@ const Company = (props: Props) => {
       <Grid container spacing={3}>
         {company?.map(company => {
           return (
-            <CompanyCard key={company.id} company={company} handleDelete={handleDelete} handleSwitch={handleSwitch} />
+            <CompanyCard key={company.id} companyID={companyID} company={company} handleDelete={handleDelete} handleSwitch={handleSwitch} />
           )
         }
         )}
-        <Grid item xs={4}>
-          <Card>
-            <CardContent sx={{
-              minHeight: '19rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-              <Button variant="outlined" color="primary" style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '1rem '
-              }} onClick={() => {
-                navigate('/company/create');
-              }}>
-                <AddBox color='primary' fontSize='large' />
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  Add Company
-                </Typography>
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
+        <CompanyCardAdd />
       </Grid>
 
       <AlertDialog message={dialog.message} open={open} setOpen={setOpen} confirmColor={dialog.confirmText === "Delete" ? 'error' : 'primary'} confirmText={dialog.confirmText} title={dialog.title} onConfirm={dialog.onConfirm} onCancel={dialog.onCancel} />
