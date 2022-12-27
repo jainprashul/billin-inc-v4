@@ -17,7 +17,7 @@ const ClientForm = ({
             city: '',
             state: '',
         },
-        companyID: 1,
+        companyID: parseInt(localStorage.getItem("companyID") ?? '1'),
         contacts: [{
             name: '',
             email: '',

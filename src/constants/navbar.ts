@@ -1,4 +1,4 @@
-import { COMPANY, HOME, INVOICES, INVOICE_CREATE, LEDGER, PURCHASE, PURCHASE_CREATE, SETTINGS, STOCKS, } from "./routes";
+import { COMPANY, EXPENSES, HOME, INVOICES, INVOICE_CREATE, LEDGER, PURCHASE, PURCHASE_CREATE, SETTINGS, STOCKS, } from "./routes";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import TaskIcon from '@mui/icons-material/Task';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -7,6 +7,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import BusinessIcon from '@mui/icons-material/Business';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import authService from "../services/authentication/auth.service";
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 
 type DrawerMenu = {
     name: string
@@ -71,6 +72,12 @@ export const DRAWER_MENU: DrawerMenu[] = [
         name: "Stocks & Inventory",
         icon: InventoryIcon,
         route: STOCKS,
+    },
+    {
+        name: "Expenses",
+        icon: RequestQuoteIcon,
+        route: EXPENSES,
+        admin: true
     },
     {
         name: "Companies",
