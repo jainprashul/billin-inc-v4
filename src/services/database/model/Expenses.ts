@@ -2,6 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
+import * as yup from "yup";
 
 export interface IExpense {
     id?: string;
@@ -9,18 +10,20 @@ export interface IExpense {
     date: Date;
     description: string;
     expenseType: ExpenseType;
+    expenseMode: ExpenseMode;
     amount: number;
     createdAt?: Date;
 }
 
-type ExpenseType = "HOUSE_HOLD" | "VEHICLE" | "ELECTRICITY" | "WATER" | "FOOD" | "INTERNET" | "MOBILE" | "TAXES" | "SERVICES" | "OTHER";
-
+type ExpenseType = "HOUSE_HOLD" | "VEHICLE" | "ELECTRICITY" | "FOOD" | "INTERNET" | "MOBILE" | "TAXES" | "SERVICES" | "BANKING" | "RENTAL" | "OTHER";
+type ExpenseMode = "CASH" | "CARD" | "UPI" | "CHEQUE" | "NETBANKING" | "OTHER";
 export class Expense implements IExpense {
     id?: string;
     companyID: number;
     date: Date;
     description: string;
     expenseType: ExpenseType;
+    expenseMode: ExpenseMode;
     amount: number;
     createdAt: Date;
     updatedAt: Date;
@@ -31,10 +34,20 @@ export class Expense implements IExpense {
         this.date = expense.date;
         this.description = expense.description;
         this.expenseType = expense.expenseType;
+        this.expenseMode = expense.expenseMode;
         this.amount = expense.amount;
         this.createdAt = expense.createdAt || new Date();
         this.updatedAt = new Date();
     }
+
+    static validationSchema = yup.object().shape({
+        companyID: yup.number().required(),
+        date: yup.date().required(),
+        description: yup.string().min(6, "Too Short!").max(50, "Too Long!").required('Description is required'),
+        expenseType: yup.string().required(),
+        expenseMode: yup.string().required(),
+        amount: yup.number().min(0, 'Amount cannot be negative').required('Amount is required'),
+    });
 
     private onCreate(id: string, expense: Expense, tx: Transaction) {
         const notify = new NotificationLog({

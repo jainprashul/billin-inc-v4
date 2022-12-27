@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL,SETTINGS } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL,SETTINGS, EXPENSES } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
 import Purchases, { PurchaseCreate, PurchaseDetails, PurchaseEdit } from '../pages/Purchases'
@@ -13,6 +13,7 @@ import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
 import Settings from '../pages/Settings'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { checkLogin, selectIsLoggedIn } from '../utils/utilsSlice'
+import Expenses from '../pages/Expenses'
 
 type Props = {}
 
@@ -48,6 +49,8 @@ const AppRoutes = (props: Props) => {
                 <Route path={STOCK_DETAIL} element={<StockDetail />} />
                 <Route path={LEDGER} element={<Ledger />} />
                 <Route path={LEDGER_DETAIL} element={<LedgerDetails />} />
+                <Route path={EXPENSES} element={<Expenses/>} />
+
                 <Route path={COMPANY} element={<Company />} />
                 <Route path={COMPANY_CREATE} element={<CompanyCreate />} />
                 <Route path={COMPANY_EDIT} element={<CompanyEdit />} />
