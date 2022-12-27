@@ -102,7 +102,7 @@ export class Invoice implements IInvoice {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             type : "INVOICE",
-            link: `/invoice/${invoice.id}`,
+            link: `/invoice/${invoice.voucherNo}`,
             isVisible: true
         })
         notify.save();
@@ -117,7 +117,7 @@ export class Invoice implements IInvoice {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             type : "INVOICE",
-            link: `/invoice/${invoice.id}`,
+            link: `/invoice`,
             isVisible: true
         });
         notify.save();

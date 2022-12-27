@@ -8,6 +8,7 @@ export interface INotificationLog {
     date: Date;
     message: string;
     link?: string;
+    changes?: any;
     type: string;
     status: NotificationStatus;
     isVisible?: boolean;
@@ -23,6 +24,7 @@ export class NotificationLog implements INotificationLog {
     date: Date;
     message: string;
     link?: string;
+    changes?: any;
     type: string;
     status: NotificationStatus;
     isVisible: boolean;
@@ -36,6 +38,7 @@ export class NotificationLog implements INotificationLog {
         this.date = notificationLog.date;
         this.message = notificationLog.message;
         this.link = notificationLog.link;
+        this.changes = notificationLog.changes;
         this.type = notificationLog.type;
         this.status = notificationLog.status;
         this.isVisible = notificationLog.isVisible || false;

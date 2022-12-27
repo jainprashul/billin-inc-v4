@@ -1,5 +1,6 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
+import { objDiff } from "../../../utils";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
 import { StockLog } from "./StockLogs";
@@ -103,7 +104,9 @@ export class Stock implements IStocks {
         notify.save();
     }
 
-    private onModify(id: number, stock: Stock, tx: Transaction) {
+    private onModify(change: Partial<Stock>, id: number, stock: Stock, tx: Transaction) {
+        const diff = objDiff(change, stock);
+        console.log('Stock modified', diff);
         const notify = new NotificationLog({
             companyID: stock.companyID,
             clientID: `${stock.name}_${stock.id}`,
@@ -112,6 +115,7 @@ export class Stock implements IStocks {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             type: "STOCK",
+            changes: diff,
             link: `/stocks/${stock.id}`,
             isVisible: true
         });

@@ -49,12 +49,12 @@ const Notifications = (props: Props) => {
                   }}>
                   <ListItemAvatar><NotificationsActive /></ListItemAvatar>
                   <ListItemText primary={x.message} secondary={`${x.type} - ${moment(x.date).fromNow()}`} />
+                  </ListItemButton>
                   <ListItemSecondaryAction>
                     <IconButton edge="end" aria-label="delete" onClick={() => x.clear()}>
                       <Clear />
                     </IconButton>
                   </ListItemSecondaryAction>
-                  </ListItemButton>
                 </ListItem>
                 </Grow>
               )

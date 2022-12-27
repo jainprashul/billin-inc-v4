@@ -4,7 +4,7 @@ import db from "../db";
 import { IAddress, IContact } from "./Company";
 import { NotificationLog } from "./NotificationLog";
 import * as Yup from 'yup';
-
+import { objDiff} from '../../../utils'
 export interface IClient {
     id?: string;
     name: string;
@@ -73,6 +73,24 @@ export class Client implements IClient {
         notify.save();
     }
 
+    private onUpdate(changes : Partial<Client>, id: string, client: Client, tx: Transaction) {
+        const diff = objDiff(changes, client);
+        console.log('Client updated: ', diff);
+        const notify = new NotificationLog({
+            companyID: client.companyID,
+            clientID: client.id,
+            date: new Date(),
+            message: `Client ${client.name} updated`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            type: "CLIENT",
+            changes: diff,
+            link: `/ledger/${client.id}`,
+            isVisible: true
+        });
+        notify.save();
+    }
+
     private onDelete(id: string, client: Client, tx: Transaction) {
         const notify = new NotificationLog({
             companyID: client.companyID,
@@ -91,6 +109,7 @@ export class Client implements IClient {
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.clients.hook.creating.subscribe(this.onCreate);
+        companyDB.clients.hook.updating.subscribe(this.onUpdate);
         return companyDB.transaction('rw', companyDB.clients, companyDB.notificationlogs, async (tx) => {
             try {
                 this.updatedAt = new Date();

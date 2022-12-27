@@ -3,6 +3,7 @@ import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
 import * as yup from "yup";
+import { objDiff } from "../../../utils";
 
 export interface IExpense {
     id?: string;
@@ -58,11 +59,30 @@ export class Expense implements IExpense {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             type: "EXPENSE",
-            link: `/expense`,
+            link: `/expenses?id=${expense.id}}`,
             isVisible: true
         });
         notify.save();
     }
+
+    private onUpdate(changes : Partial<Expense> ,id: string, expense: Expense, tx: Transaction) {
+        const diff = objDiff(changes, expense);
+        console.log('Expense updated: ', diff);
+        const notify = new NotificationLog({
+            companyID: expense.companyID,
+            clientID: `${expense.expenseType}_${expense.id}`,
+            date: new Date(),
+            message: `Expense ${expense.description} updated`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            changes: diff,
+            type: "EXPENSE",
+            link: `/expenses?id=${expense.id}}`,
+            isVisible: true
+        });
+        notify.save();
+    }
+
 
     private onDelete(id: string, expense: Expense, tx: Transaction) {
         const notify = new NotificationLog({
@@ -73,7 +93,7 @@ export class Expense implements IExpense {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             type: "EXPENSE",
-            link: `/expense`,
+            link: `/expenses`,
             isVisible: true
         });
         notify.save();
@@ -82,6 +102,7 @@ export class Expense implements IExpense {
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.expenses.hook.creating.subscribe(this.onCreate);
+        companyDB.expenses.hook.updating.subscribe(this.onUpdate);
 
         return companyDB.transaction("rw", companyDB.expenses, companyDB.notificationlogs, (tx) => {
             try {
