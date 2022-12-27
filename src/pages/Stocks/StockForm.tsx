@@ -45,7 +45,8 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, edit=false
     formik.resetForm();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e : any) => {
+    e.preventDefault();
     onSubmit(formik.values);
     handleClose();
   }
@@ -57,7 +58,7 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, edit=false
       <DialogTitle>{
         edit ? `Edit Stock - ${name}` : 'Create Stock'  
         }</DialogTitle>
-      <form>
+      <form onSubmit={handleSubmit}>
 
         <DialogContent>
           <TextField
@@ -184,7 +185,7 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, edit=false
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" onClick={handleSubmit}>{ edit ? "Update" : "Save"}</Button>
+          <Button type="submit">{ edit ? "Update" : "Save"}</Button>
         </DialogActions>
       </form>
 

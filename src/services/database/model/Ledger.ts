@@ -71,7 +71,8 @@ export class Ledger implements ILedger {
             message: `Ledger Entry for ${ledgerItem.voucherNo} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/expense/${ledgerItem.id}`
+            type: "LEDGER",
+            link: `/ledger`
         });
         notify.save();
     }
@@ -85,7 +86,8 @@ export class Ledger implements ILedger {
             message: `Ledger Entry for ${ledgerItem.voucherNo} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/expense/${ledgerItem.id}`
+            type: "LEDGER",
+            link: `/ledger`
         });
         notify.save();
     }

@@ -159,6 +159,7 @@ export const useTests = () => {
             date: new Date(),
             notificationID: 'ntf_' + faker.random.number(),
             status: 'NEW',
+            type : 'TEST',
             link: '/test',
         });
 
