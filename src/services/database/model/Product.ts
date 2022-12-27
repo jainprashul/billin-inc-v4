@@ -104,8 +104,8 @@ export class Product implements IProduct {
             message: `Product ${product.id} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
+            type: "PRODUCT",
             link: `/stock/${product.id}`,
-            isVisible: true
         });
         notify.save();
     }
@@ -118,7 +118,7 @@ export class Product implements IProduct {
             message: `Product ${product.id} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            isVisible: true
+            type: "PRODUCT",
         });
         notify.save();
     }

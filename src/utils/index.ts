@@ -4,22 +4,22 @@ import { useState } from "react";
 
 // need to support IE11, you can use Array.prototype.sort() directly
 export function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
 
-export function URLParamstoObject (params: string) {
+export function URLParamstoObject(params: string) {
   const urlParams = new URLSearchParams(params);
   return Object.fromEntries(urlParams.entries());
 }
-    
+
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
   // State to store our value
@@ -86,3 +86,23 @@ export function getRandomColor() {
   }
   return color;
 }
+
+// difference between two nested objects
+export const objDiff = (updatedObj: any, baseObj: any): any => {
+  const keysA = Object.keys(updatedObj);
+  const keysB = Object.keys(baseObj);
+  const keys = keysA.concat(keysB).filter((key, index, arr) => arr.indexOf(key) === index);
+  return keys.reduce((acc: any, key) => {
+    if (updatedObj[key] === baseObj[key]) {
+      return acc;
+    }
+    if (typeof updatedObj[key] === 'object' && typeof baseObj[key] === 'object') {
+      return [
+        ...acc,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ...objDiff(updatedObj[key], baseObj[key]).map((item : any, i: any) => `pkey : ${key}, ${item}`)
+      ]
+    }
+    return [...acc, `key : ${key}, updated : ${updatedObj[key]}, orignal : ${baseObj[key]}`];
+  }, []);
+};

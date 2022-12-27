@@ -12,7 +12,7 @@ let cid = `c_${nanoid(12)}`
 
 const useInvoiceForm = (invoice: Invoices) => {
   const { companyID } = useDataUtils();
-  console.log(invoice)
+  // console.log(invoice)
   const [date, setDate] = useState<Date | null>(new Date())
   const [products, setProducts] = useState<Product[]>(invoice?.products || []);
   const [total, setTotal] = useState<number>(invoice?.totalAmount);

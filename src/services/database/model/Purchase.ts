@@ -102,7 +102,8 @@ export class Purchase implements IPurchase {
             message: `Purchase ${purchase.voucherNo} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/purchase/${purchase.id}`,
+            link: `/purchase/${purchase.voucherNo}`,
+            type: "PURCHASE",
             isVisible: true
         });
         notify.save();
@@ -116,7 +117,8 @@ export class Purchase implements IPurchase {
             message: `Purchase ${purchase.voucherNo} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/purchase/${purchase.id}`,
+            link: `/purchase`,
+            type: "PURCHASE",
             isVisible: true
         });
         notify.save();
