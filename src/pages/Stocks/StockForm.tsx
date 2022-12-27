@@ -20,7 +20,7 @@ type Prop = {
 export default function StockForm({ open, setOpen, onClose, onSubmit, edit=false, stock = new Stock({
   name: '',
   quantity: 0,
-  companyID: 1,
+  companyID: parseInt(localStorage.getItem("companyID") ?? '1'),
   gstRate: 0,
   unit: 'KG',
   purchasePrice: 0,

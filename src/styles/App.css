@@ -53,6 +53,12 @@
   float: right;
 }
 
+.rightContent {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
 .hide {
   display: none;
 }

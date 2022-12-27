@@ -172,6 +172,7 @@ export const useTests = () => {
             date: new Date(),
             description: faker.lorem.paragraph(),
             expenseType: 'ELECTRICITY',
+            expenseMode: 'CASH',
         })
         return expense.save();
     }
