@@ -57,7 +57,8 @@ export class Expense implements IExpense {
             message: `Expense ${expense.description} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/expense/${expense.id}`,
+            type: "EXPENSE",
+            link: `/expense`,
             isVisible: true
         });
         notify.save();
@@ -71,7 +72,8 @@ export class Expense implements IExpense {
             message: `Expense ${expense.description} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/expense/${expense.id}`,
+            type: "EXPENSE",
+            link: `/expense`,
             isVisible: true
         });
         notify.save();

@@ -66,6 +66,7 @@ export class Client implements IClient {
             message: `Client ${client.name} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
+            type: "CLIENT",
             link: `/ledger/${client.id}`,
             isVisible: true
         });
@@ -80,6 +81,7 @@ export class Client implements IClient {
             message: `Client ${client.name} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
+            type: "CLIENT",
             link: `/ledger/${client.id}`,
             isVisible: true
         });

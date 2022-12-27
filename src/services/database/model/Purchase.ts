@@ -103,6 +103,7 @@ export class Purchase implements IPurchase {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             link: `/purchase/${purchase.id}`,
+            type: "PURCHASE",
             isVisible: true
         });
         notify.save();
@@ -117,6 +118,7 @@ export class Purchase implements IPurchase {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             link: `/purchase/${purchase.id}`,
+            type: "PURCHASE",
             isVisible: true
         });
         notify.save();

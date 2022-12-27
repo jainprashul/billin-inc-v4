@@ -59,6 +59,10 @@
   margin-bottom: 8px;
 }
 
+.minHeight-300 {
+  min-height: 300px;
+}
+
 .hide {
   display: none;
 }
@@ -71,4 +75,17 @@
 .rotate-icon:hover {
   transition: 0.2s;
   transform: rotate(90deg);
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #eee;
+  /* border-radius: 10px; */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
 }

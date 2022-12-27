@@ -81,7 +81,8 @@ export class Stock implements IStocks {
             message: `${stock.name} has been added`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/stock/${stock.id}`,
+            type: "STOCK",
+            link: `/stocks/${stock.id}`,
             isVisible: true
         });
         notify.save();
@@ -95,7 +96,23 @@ export class Stock implements IStocks {
             message: `${stock.name} has been removed`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            link: `/stock/${stock.id}`,
+            type: "STOCK",
+            link: `/stocks/${stock.id}`,
+            isVisible: true
+        });
+        notify.save();
+    }
+
+    private onModify(id: number, stock: Stock, tx: Transaction) {
+        const notify = new NotificationLog({
+            companyID: stock.companyID,
+            clientID: `${stock.name}_${stock.id}`,
+            date: new Date(),
+            message: `${stock.name} has been modified`,
+            notificationID: `ntf-${nanoid(8)}`,
+            status: "NEW",
+            type: "STOCK",
+            link: `/stocks/${stock.id}`,
             isVisible: true
         });
         notify.save();
@@ -104,6 +121,7 @@ export class Stock implements IStocks {
     save() {
         const companyDB = db.getCompanyDB(this.companyID)
         companyDB.stocks.hook.creating.subscribe(this.onCreate);
+        companyDB.stocks.hook.updating.subscribe(this.onModify);
         return companyDB.transaction('rw', companyDB.stocks, companyDB.stocklogs, companyDB.notificationlogs, (tx) => {
             try {
                 this.updatedAt = new Date();

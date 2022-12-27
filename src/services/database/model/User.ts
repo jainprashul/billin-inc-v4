@@ -97,6 +97,9 @@ export class User implements IUser {
                     message: `User ${user.username} created`,
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
+                    type: "USER",
+                    isVisible: true,
+                    link: `/settings?tab=users`
                 });
                 notify.save();
             } catch (error) {
@@ -115,6 +118,8 @@ export class User implements IUser {
                     message: `User ${user.username} deleted`,
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
+                    type: "USER",
+                    isVisible: true
                 });
                 notify.save();
             } catch (error) {
@@ -132,6 +137,9 @@ export class User implements IUser {
                     message: `User ${user.username} updated`,
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
+                    type: "USER",
+                    isVisible: true,
+                    link: `/settings?tab=users`
                 });
                 notify.save();
             } catch (error) {

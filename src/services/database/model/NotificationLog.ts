@@ -8,6 +8,7 @@ export interface INotificationLog {
     date: Date;
     message: string;
     link?: string;
+    type: string;
     status: NotificationStatus;
     isVisible?: boolean;
 }
@@ -22,6 +23,7 @@ export class NotificationLog implements INotificationLog {
     date: Date;
     message: string;
     link?: string;
+    type: string;
     status: NotificationStatus;
     isVisible: boolean;
     createdAt: Date;
@@ -34,6 +36,7 @@ export class NotificationLog implements INotificationLog {
         this.date = notificationLog.date;
         this.message = notificationLog.message;
         this.link = notificationLog.link;
+        this.type = notificationLog.type;
         this.status = notificationLog.status;
         this.isVisible = notificationLog.isVisible || false;
         this.createdAt = new Date();
@@ -50,6 +53,43 @@ export class NotificationLog implements INotificationLog {
                     return this.id;
                 });
                 return _save;
+            } catch (error) {
+                console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
+            }
+        })
+    }
+
+    clear() {
+        const companyDB = db.getCompanyDB(this.companyID)
+
+        companyDB.transaction('rw', companyDB.notificationlogs, (tx) => {
+            try {
+                // clear means visible = false
+                const _clear = companyDB.notificationlogs.update(this.id!, { isVisible: false, status : 'SEEN' }).then(_id => {
+                    console.log('Notification Cleared', this.id);
+                    return this.id;
+                });
+                return _clear;
+            } catch (error) {
+                console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
+            }
+        })
+    }
+
+    clearAll() {
+        const companyDB = db.getCompanyDB(this.companyID)
+
+        companyDB.transaction('rw', companyDB.notificationlogs, (tx) => {
+            try {
+                // clear means visible = false  
+                companyDB.notificationlogs.toArray().then((notifications) => {
+                    notifications.forEach((notification) => {
+                        companyDB.notificationlogs.update(notification.id!, { isVisible: false, status : 'SEEN' })
+                    })
+                })
+                console.log('All Notification Cleared');
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
                 tx.abort();
