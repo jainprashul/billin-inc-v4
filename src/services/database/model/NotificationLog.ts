@@ -14,7 +14,7 @@ export interface INotificationLog {
     isVisible?: boolean;
 }
 
-type NotificationStatus = "NEW" | "READ";
+type NotificationStatus = "NEW" | "SEEN" | "READ";
 
 export class NotificationLog implements INotificationLog {
     id?: number;
@@ -69,11 +69,28 @@ export class NotificationLog implements INotificationLog {
         companyDB.transaction('rw', companyDB.notificationlogs, (tx) => {
             try {
                 // clear means visible = false
-                const _clear = companyDB.notificationlogs.update(this.id!, { isVisible: false, status : 'SEEN' }).then(_id => {
+                const _clear = companyDB.notificationlogs.update(this.id!, { isVisible: false }).then(_id => {
                     console.log('Notification Cleared', this.id);
                     return this.id;
                 });
                 return _clear;
+            } catch (error) {
+                console.log('CompanyDB does not exists. \n', error);
+                tx.abort();
+            }
+        })
+    }
+
+    markAsRead() {
+        const companyDB = db.getCompanyDB(this.companyID)
+
+        companyDB.transaction('rw', companyDB.notificationlogs, (tx) => {
+            try {
+                const _markAsRead = companyDB.notificationlogs.update(this.id!, { status: 'SEEN' }).then(_id => {
+                    console.log('Notification Marked as Read', this.id);
+                    return this.id;
+                });
+                return _markAsRead;
             } catch (error) {
                 console.log('CompanyDB does not exists. \n', error);
                 tx.abort();

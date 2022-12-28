@@ -1,6 +1,5 @@
 import { Card, CardContent, Grid, Typography } from '@mui/material'
 import { DataTesting } from '../../components'
-import Notifications from './Notifications'
 
 type Props = {}
 
@@ -19,7 +18,7 @@ const Dashboard = (props: Props) => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-              <Notifications />
+              {/* <NotificationSide /> */}
         </Grid>
         </Grid>
 

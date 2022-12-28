@@ -1,19 +1,26 @@
-import { ClearAll, NotificationImportant, NotificationsActive } from '@mui/icons-material'
+import ClearAll from '@mui/icons-material/ClearAll'
+import Notifications from '@mui/icons-material/Notifications'
+import NotificationImportant  from '@mui/icons-material/NotificationImportant'
 import Clear from '@mui/icons-material/Clear'
-import { Card, CardContent, CardHeader, Divider, Grow, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemSecondaryAction, ListItemText, ListSubheader } from '@mui/material'
+import { Badge, Card, CardContent, CardHeader, Divider, Grow, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemSecondaryAction, ListItemText, ListSubheader } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
 import moment from 'moment'
 import React from 'react'
+import { NotificationLog } from '../../services/database/model'
 import { useDataUtils } from '../../utils/useDataUtils'
 
-type Props = {}
+type Props = {
+  getNotificationCount?: (notifications : NotificationLog[]) => number
+}
 
-const Notifications = (props: Props) => {
+const NotificationSide = (props: Props) => {
   const { companyDB, navigate } = useDataUtils()
 
   const notifications = useLiveQuery(async () => {
     if (companyDB) {
-      return (await companyDB?.notificationlogs.orderBy("date").filter((x) => x.isVisible).reverse().toArray())
+      const notifications = await companyDB?.notificationlogs.orderBy("date").filter((x) => x.isVisible).reverse().toArray()
+      props.getNotificationCount?.(notifications)
+      return notifications
     }
   }, [companyDB], []) ?? [];
 
@@ -22,32 +29,36 @@ const Notifications = (props: Props) => {
     <div className='notifications'>
       <Card className='minHeight-300' style={{
         height: '100%',
-        maxHeight: '460px',
+        maxHeight: '36rem',
         overflow: 'auto'
       }} >
         <ListSubheader>
-        <CardHeader avatar={<NotificationImportant />} title="Notifications" subheader={`${notifications.length} unread notifications`} action={
+        <CardHeader avatar={<NotificationImportant/>} title={`Notifications (${notifications.length})`} subheader={`${notifications.filter(n => n.status === 'NEW').length} unread notifications`} action={
           <IconButton edge="end" aria-label="delete" onClick={() => {
             notifications.forEach((x) => x.clear())
           }}>
             <ClearAll />
           </IconButton>
         }/>
-        </ListSubheader>
         <Divider />
+        </ListSubheader>
 
         <CardContent>
           <List dense>
             {notifications.map((x) => {
               return (
                 <Grow in={!!x.id} key={x.id} >
-                <ListItem >
+                <ListItem onMouseEnter={() => {
+                    if (x.status === 'NEW'){
+                      x.markAsRead()
+                    }
+                  }}>
                   <ListItemButton onClick={()=> {
                     if (x.link) {
                       navigate(x.link)
                     }
                   }}>
-                  <ListItemAvatar><NotificationsActive /></ListItemAvatar>
+                  <ListItemAvatar><Badge variant={x.status === 'NEW' ? 'dot' : 'standard'} color="info"  ><Notifications /> </Badge></ListItemAvatar>
                   <ListItemText primary={x.message} secondary={`${x.type} - ${moment(x.date).fromNow()}`} />
                   </ListItemButton>
                   <ListItemSecondaryAction>
@@ -69,4 +80,4 @@ const Notifications = (props: Props) => {
   )
 }
 
-export default Notifications
+export default NotificationSide
