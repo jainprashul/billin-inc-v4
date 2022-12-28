@@ -8,6 +8,7 @@ import moment from 'moment'
 import React from 'react'
 import { NotificationLog } from '../../services/database/model'
 import { useDataUtils } from '../../utils/useDataUtils'
+import { NOTIFICATIONS } from '../../constants/routes'
 
 type Props = {
   getNotificationCount?: (notifications : NotificationLog[]) => number
@@ -33,7 +34,15 @@ const NotificationSide = (props: Props) => {
         overflow: 'auto'
       }} >
         <ListSubheader>
-        <CardHeader avatar={<NotificationImportant/>} title={`Notifications (${notifications.length})`} subheader={`${notifications.filter(n => n.status === 'NEW').length} unread notifications`} action={
+        <CardHeader avatar={<NotificationImportant/>} 
+        title={<span style={{
+          fontWeight: 'bold',
+          fontStyle: 'italic',
+          cursor: 'pointer'
+        }} onClick={()=> { navigate(NOTIFICATIONS) }}>
+          Notifications ({notifications.length})
+        </span>} 
+        subheader={`${notifications.filter(n => n.status === 'NEW').length} unread notifications`} action={
           <IconButton edge="end" aria-label="delete" onClick={() => {
             notifications.forEach((x) => x.clear())
           }}>
