@@ -10,6 +10,8 @@ type Props = {}
 
 const Notifications = (props : Props) => {
 
+    // TODO : Add Filter by date , by status , by type , by user, 
+
     const { companyDB, navigate } = useDataUtils();
     const notifications = useLiveQuery(async () => {
         if (companyDB) {
@@ -36,7 +38,11 @@ const Notifications = (props : Props) => {
                                     }
                                 }}>
                                     <ListItemAvatar><Badge variant={x.status === 'NEW' ? 'dot' : 'standard'} color="info"  ><NotificationsIcon /> </Badge></ListItemAvatar>
-                                    <ListItemText primary={x.message} secondary={`${x.type} - ${moment(x.date).fromNow()}`} />
+                                    <ListItemText primary={x.message} 
+                                    secondary={<>
+                                        <span style={{fontWeight: 'bold'}}>{x.type}</span> - {moment(x.date).fromNow()}
+                                        {x.createdBy && <span> by {x.createdBy}</span>}
+                                    </>} />
                                 </ListItemButton>
                                 {/* <ListItemSecondaryAction>
                                     <IconButton edge="end" aria-label="delete" onClick={() => x.clear()}>

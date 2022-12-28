@@ -5,6 +5,7 @@ import { IAddress, IContact } from "./Company";
 import { NotificationLog } from "./NotificationLog";
 import * as Yup from 'yup';
 import { objDiff} from '../../../utils'
+import authService from "../../authentication/auth.service";
 export interface IClient {
     id?: string;
     name: string;
@@ -68,7 +69,8 @@ export class Client implements IClient {
             status: "NEW",
             type: "CLIENT",
             link: `/ledger/${client.id}`,
-            isVisible: true
+            isVisible: true,
+            createdBy : authService.getUser()?.name || 'System',
         });
         notify.save();
     }
@@ -86,7 +88,8 @@ export class Client implements IClient {
             type: "CLIENT",
             changes: diff,
             link: `/ledger/${client.id}`,
-            isVisible: true
+            isVisible: true,
+            createdBy : authService.getUser()?.name || 'System',
         });
         notify.save();
     }
@@ -101,7 +104,8 @@ export class Client implements IClient {
             status: "NEW",
             type: "CLIENT",
             link: `/ledger/${client.id}`,
-            isVisible: true
+            isVisible: true,
+            createdBy : authService.getUser()?.name || 'System',
         });
         notify.save();
     }

@@ -161,6 +161,7 @@ export const useTests = () => {
             status: 'NEW',
             type : 'TEST',
             link: '/test',
+            createdBy: 'u_1',
         });
 
         return notification.save();

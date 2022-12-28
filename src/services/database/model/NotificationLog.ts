@@ -12,6 +12,7 @@ export interface INotificationLog {
     type: string;
     status: NotificationStatus;
     isVisible?: boolean;
+    createdBy: string;
 }
 
 type NotificationStatus = "NEW" | "SEEN" | "READ";
@@ -29,6 +30,7 @@ export class NotificationLog implements INotificationLog {
     status: NotificationStatus;
     isVisible: boolean;
     createdAt: Date;
+    createdBy: string;
 
     constructor(notificationLog: INotificationLog) {
         if (notificationLog.id) this.id = notificationLog.id;
@@ -43,6 +45,7 @@ export class NotificationLog implements INotificationLog {
         this.status = notificationLog.status;
         this.isVisible = notificationLog.isVisible || false;
         this.createdAt = new Date();
+        this.createdBy = notificationLog.createdBy;
     }
 
     save() {
