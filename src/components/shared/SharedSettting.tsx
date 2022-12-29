@@ -54,9 +54,7 @@ const SharedSettting = (props: Props) => {
 
 
     return (
-        <div style={{
-            marginRight: '1rem'
-        }}>
+        <div>
             <Tooltip title={title}>
                 <IconButton color='inherit' size='large' id="basic-button"
                     aria-controls={open ? 'setting-menu' : undefined}

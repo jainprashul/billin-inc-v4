@@ -4,6 +4,7 @@ import db from "../db";
 import { NotificationLog } from "./NotificationLog";
 import * as yup from "yup";
 import { objDiff } from "../../../utils";
+import authService from "../../authentication/auth.service";
 
 export interface IExpense {
     id?: string;
@@ -60,7 +61,9 @@ export class Expense implements IExpense {
             status: "NEW",
             type: "EXPENSE",
             link: `/expenses?id=${expense.id}}`,
-            isVisible: true
+            isVisible: true,
+            createdBy : authService.getUser()?.name || 'System',
+
         });
         notify.save();
     }
@@ -78,7 +81,9 @@ export class Expense implements IExpense {
             changes: diff,
             type: "EXPENSE",
             link: `/expenses?id=${expense.id}}`,
-            isVisible: true
+            isVisible: true,
+            createdBy : authService.getUser()?.name || 'System',
+
         });
         notify.save();
     }
@@ -94,7 +99,9 @@ export class Expense implements IExpense {
             status: "NEW",
             type: "EXPENSE",
             link: `/expenses`,
-            isVisible: true
+            isVisible: true,
+            createdBy : authService.getUser()?.name || 'System',
+
         });
         notify.save();
     }

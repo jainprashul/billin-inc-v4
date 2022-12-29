@@ -1,5 +1,6 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
+import authService from "../../authentication/auth.service";
 import CompanyDB from "../companydb";
 import db from "../db";
 import { Client } from "./Client";
@@ -33,8 +34,8 @@ export class StockLog implements IStockLogs {
     amount: number;
     companyID: number;
     clientID: string;
-    clientName : string
-    client : Client | undefined;
+    clientName: string
+    client: Client | undefined;
     createdAt: Date;
 
     constructor(stockLogs: IStockLogs) {
@@ -47,15 +48,15 @@ export class StockLog implements IStockLogs {
         this.date = stockLogs.date;
         this.amount = stockLogs.amount;
         this.companyID = stockLogs.companyID;
-        this.clientID = stockLogs.clientID;  
-        this.clientName = stockLogs.clientName; 
-        this.client = stockLogs.client ? new Client({...stockLogs.client}) : undefined;
+        this.clientID = stockLogs.clientID;
+        this.clientName = stockLogs.clientName;
+        this.client = stockLogs.client ? new Client({ ...stockLogs.client }) : undefined;
         this.createdAt = new Date();
     }
 
     async loadClient() {
         const companyDB = db.getCompanyDB(this.companyID)
-        const client = await companyDB.clients.get(this.clientID) 
+        const client = await companyDB.clients.get(this.clientID)
         this.client = client;
     }
 
@@ -66,7 +67,7 @@ export class StockLog implements IStockLogs {
             date: new Date(),
             message: `${stockLogs.voucherNo} has been ${stockLogs.logType}`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW",
+            status: "NEW", createdBy: authService.getUser()?.name || 'System',
             type: "STOCK_LOG",
             link: `/stocks/${stockLogs.stockID}`
         });
@@ -80,7 +81,8 @@ export class StockLog implements IStockLogs {
             date: new Date(),
             message: `${stockLogs.voucherNo} has been ${stockLogs.logType}`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW",
+            status: "NEW", 
+            createdBy: authService.getUser()?.name || 'System',
             type: "STOCK_LOG",
             // link: `/stock/${stockLogs.stockID}`
         });

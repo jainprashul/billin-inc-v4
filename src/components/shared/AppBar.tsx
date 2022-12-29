@@ -10,6 +10,7 @@ import SharedSettting from './SharedSettting';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentRoute } from '../../routes/routeSlice';
 import { RoutesHasSettings } from '../../constants/navbar';
+import NotificationBar from './NotificationBar';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -40,7 +41,7 @@ type Props = {
 
 const AppBar = ({ open, handleDrawerOpen }: Props) => {
   const currentRoute = useAppSelector(selectCurrentRoute);
-  
+
   return (
     <Bar data-testid="app-bar-container" position="fixed" open={open}>
       <Toolbar>
@@ -63,10 +64,13 @@ const AppBar = ({ open, handleDrawerOpen }: Props) => {
             {APP_NAME}
           </Typography>
         </div>
-        {
-          RoutesHasSettings.includes(currentRoute) &&  <SharedSettting/>
-        }
-        <UserMenu />
+        <div style={{ display: 'flex', gap: 10, alignItems:'center' }} >
+          {
+            RoutesHasSettings.includes(currentRoute) && <SharedSettting />
+          }
+          <NotificationBar/>
+          <UserMenu />
+        </div>
       </Toolbar>
     </Bar>
   )
