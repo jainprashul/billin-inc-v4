@@ -41,7 +41,6 @@ const ClientForm = ({
     })
 
     const { name, address, contacts, details, gst, isCustomer } = formik.values;
-    console.log(address);
 
     const cityOptions = getStateCites(address.state) || [];
     const stateOptions = stateList || [];

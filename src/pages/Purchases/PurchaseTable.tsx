@@ -77,7 +77,7 @@ const PurchaseTable = ({ data }: Props) => {
         iframe.contentWindow?.print();
     }
 
-    const columns: Array<Column<Purchase>> = [
+    const columns: Array<Column<Purchase>> = React.useMemo(() => [
         {
             title: 'Invoice Number',
             field: 'voucherNo',
@@ -129,9 +129,9 @@ const PurchaseTable = ({ data }: Props) => {
                 currencyCode: 'INR',
             }
         },
-    ];
+    ], []);
 
-    const actions: Array<Action<Purchase>> = [
+    const actions: Array<Action<Purchase>> = React.useMemo(() => [
         {
             icon: () => <Print />,
             tooltip: 'Print Purchase Entry',
@@ -212,7 +212,8 @@ const PurchaseTable = ({ data }: Props) => {
             },
 
         }
-    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ], [ filter]);
 
     return (
         <>

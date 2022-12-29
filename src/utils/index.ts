@@ -133,3 +133,14 @@ export const changeURL = (url: string, routeParams : {key : string , value : str
     window.history.pushState({}, "", url);
   }
 }
+
+// get Dates between two dates
+export const getDatesBetween = (startDate: Date, endDate: Date) => {
+  const dates = [];
+  const theDate = new Date(startDate);
+  while (theDate < endDate) {
+    dates.push(new Date(theDate));
+    theDate.setDate(theDate.getDate() + 1);
+  }
+  return dates;
+}

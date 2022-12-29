@@ -1,15 +1,17 @@
 import { Card } from '@mui/material'
 import React from 'react'
-import { PieChart, Pie, Sector, ResponsiveContainer, Tooltip, Legend, Cell } from 'recharts'
+import { PieChart, Pie, Sector, ResponsiveContainer, Legend, Cell } from 'recharts'
 import { ExpenseModes } from '../../constants'
 import { Expense } from '../../services/database/model'
 import { getRandomColor } from '../../utils'
 
 type Props = {
     data: Expense[]
+    width?: number | string
+    height?: number | string
 }
 
-const ExpensePieChart = ({ data }: Props) => {
+const ExpensePieChart = ({ data, width='100%', height='100%'  }: Props) => {
     const [activeIndex, setActiveIndex] = React.useState(0);
 
     const onPieEnter = (data: any, index: number) => {
@@ -64,8 +66,9 @@ const ExpensePieChart = ({ data }: Props) => {
     return (
         <Card style={{
             minHeight: 300,
-            height: '100%',
+            height: height,
             maxHeight: 500,
+            width: width,
         }}>
             
             <ResponsiveContainer width={'100%'}>
@@ -86,7 +89,7 @@ const ExpensePieChart = ({ data }: Props) => {
                             <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                     </Pie>
-                    <Tooltip />
+                    {/* <Tooltip /> */}
                     <Legend align='center' allowReorder={'yes'} />
                 </PieChart>
             </ResponsiveContainer>
@@ -104,7 +107,6 @@ function convertDataByExpenseMode(data: Expense[]) {
     }[] = []
     data.forEach((expense) => {
         let modeExists = res.some((item) => item.expenseMode === expense.expenseMode)
-        console.log(modeExists, expense.expenseMode)
         if (modeExists) {
             let index = res.findIndex((item) => item.expenseMode === expense.expenseMode)
             res[index].amount += expense.amount
@@ -116,7 +118,6 @@ function convertDataByExpenseMode(data: Expense[]) {
             })
         }
     })
-    console.log(res)
     return res
 }
 

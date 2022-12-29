@@ -25,7 +25,7 @@ const Filters = ({ filters, getFilters }: Props) => {
         filters.forEach((x) => {
             state[x.name] = x.value
         })
-        console.log("filter, ", state)
+
 
         setFilterState(state)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,7 +91,6 @@ const SelectFilter = ({ filters, setFilters, filterName, options = [] }: SelectF
 
 // CREATE the checkbox component with the filters
 const CheckboxFilter = ({ filters, setFilters, filterName, options = [] }: SelectFilterProps) => {
-    console.log("check filter, ", filters, filterName, filters[filterName], options)
     return (
         <FormControl>
             <InputLabel id="demo-multiple-checkbox-label" style={{
@@ -139,7 +138,6 @@ const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
     }, [customDate])
 
     const handleTimeChange = (val: string) => {
-        console.log("val, ", val)
         switch (val) {
             case 'today':
                 return {
