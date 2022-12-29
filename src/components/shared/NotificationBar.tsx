@@ -49,7 +49,7 @@ const NotificationBar = (props: Props) => {
                     horizontal: 'center',
                 }}
             >
-                <NotificationSide getNotificationCount={getNotificationCount} />
+                <NotificationSide getNotificationCount={getNotificationCount} handleClose={handleCloseNotifications} />
             </Popover>
         </>
     )

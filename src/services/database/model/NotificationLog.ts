@@ -17,6 +17,19 @@ export interface INotificationLog {
 
 type NotificationStatus = "NEW" | "SEEN" | "READ";
 
+export const NotificationType = {
+    CLIENT : "CLIENT",
+    EXPENSE : 'EXPENSE',
+    INVOICE : "INVOICE",
+    LEDGER : "LEDGER",
+    PRODUCT : "PRODUCT",
+    PURCHASE : "PURCHASE",
+    STOCK_LOG : "STOCK_LOG",
+    STOCK : "STOCK",
+    USER : "USER"
+    
+}
+
 export class NotificationLog implements INotificationLog {
     id?: number;
     notificationID: string;

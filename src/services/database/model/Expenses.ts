@@ -1,7 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 import * as yup from "yup";
 import { objDiff } from "../../../utils";
 import authService from "../../authentication/auth.service";
@@ -59,7 +59,7 @@ export class Expense implements IExpense {
             message: `Expense ${expense.description} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            type: "EXPENSE",
+            type: NotificationType.EXPENSE,
             link: `/expenses?id=${expense.id}}`,
             isVisible: true,
             createdBy : authService.getUser()?.name || 'System',
@@ -79,7 +79,7 @@ export class Expense implements IExpense {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             changes: diff,
-            type: "EXPENSE",
+            type: NotificationType.EXPENSE,
             link: `/expenses?id=${expense.id}}`,
             isVisible: true,
             createdBy : authService.getUser()?.name || 'System',
@@ -97,7 +97,7 @@ export class Expense implements IExpense {
             message: `Expense ${expense.description} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            type: "EXPENSE",
+            type: NotificationType.EXPENSE,
             link: `/expenses`,
             isVisible: true,
             createdBy : authService.getUser()?.name || 'System',
