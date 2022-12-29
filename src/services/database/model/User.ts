@@ -3,6 +3,7 @@ import { Transaction } from "dexie";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
 import * as Yup from 'yup';
+import authService from "../../authentication/auth.service";
 
 export interface IUser {
     id?: number | string;
@@ -23,7 +24,7 @@ export interface Usr {
     roleID: number,
     token: string,
     companyIDs: number[]
-} 
+}
 
 interface IPermission {
     id?: number;
@@ -99,7 +100,8 @@ export class User implements IUser {
                     status: "NEW",
                     type: "USER",
                     isVisible: true,
-                    link: `/settings?tab=users`
+                    link: `/settings?tab=users`,
+                    createdBy: authService.getUser()?.name || 'System',
                 });
                 notify.save();
             } catch (error) {
@@ -119,7 +121,8 @@ export class User implements IUser {
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
                     type: "USER",
-                    isVisible: true
+                    isVisible: true,
+                    createdBy: authService.getUser()?.name || 'System',
                 });
                 notify.save();
             } catch (error) {
@@ -127,7 +130,7 @@ export class User implements IUser {
             }
         });
     }
-    private onUpdate(_: any , id: string, user: User, tx: Transaction) {
+    private onUpdate(_: any, id: string, user: User, tx: Transaction) {
         user.companyIDs.forEach((companyID) => {
             try {
                 const notify = new NotificationLog({
@@ -139,7 +142,8 @@ export class User implements IUser {
                     status: "NEW",
                     type: "USER",
                     isVisible: true,
-                    link: `/settings?tab=users`
+                    link: `/settings?tab=users`,
+                    createdBy: authService.getUser()?.name || 'System',
                 });
                 notify.save();
             } catch (error) {
@@ -204,7 +208,7 @@ export class User implements IUser {
             db.users.delete(this.id as number);
             return this.id;
         });
-        
+
     }
 }
 

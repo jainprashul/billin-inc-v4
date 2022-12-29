@@ -1,5 +1,6 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
+import authService from "../../authentication/auth.service";
 import db from "../db";
 import { Client } from "./Client";
 import { NotificationLog } from "./NotificationLog";
@@ -12,8 +13,8 @@ export interface IInvoice {
     voucherNo: string;
     voucherType: InvoiceVoucherType;
     clientID: string;
-    client? : Client;
-    products? : Product[];
+    client?: Client;
+    products?: Product[];
     productIDs: Set<string>;
     billingDate: Date;
     categoryID?: number;
@@ -24,7 +25,7 @@ export interface IInvoice {
     discount: boolean
     discountValue?: number;
     // totalAmount: number;
-    amountPaid? : number;
+    amountPaid?: number;
     createdAt?: Date;
 }
 
@@ -46,7 +47,7 @@ export class Invoice implements IInvoice {
     discount: boolean
     discountValue?: number;
     totalAmount: number;
-    amountPaid : number;
+    amountPaid: number;
     createdAt: Date;
     updatedAt: Date;
 
@@ -58,7 +59,7 @@ export class Invoice implements IInvoice {
         this.clientID = invoice.clientID;
         this.productIDs = invoice.productIDs;
         this.products = invoice.products ? invoice.products.map(p => new Product(p)) : [];
-        this.client = invoice.client ? new Client({...invoice.client}) : undefined;
+        this.client = invoice.client ? new Client({ ...invoice.client }) : undefined;
         this.billingDate = invoice.billingDate;
         this.categoryID = invoice.categoryID;
         this.gstEnabled = invoice.gstEnabled;
@@ -88,7 +89,7 @@ export class Invoice implements IInvoice {
 
     async loadClient() {
         const companyDB = db.getCompanyDB(this.companyID)
-        const client = await companyDB.clients.get(this.clientID) 
+        const client = await companyDB.clients.get(this.clientID)
         this.client = client;
     }
 
@@ -100,8 +101,9 @@ export class Invoice implements IInvoice {
             date: new Date(),
             message: `Invoice ${invoice.voucherNo} created`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW",
-            type : "INVOICE",
+            status: "NEW", 
+            createdBy: authService.getUser()?.name || 'System',
+            type: "INVOICE",
             link: `/invoice/${invoice.voucherNo}`,
             isVisible: true
         })
@@ -116,7 +118,8 @@ export class Invoice implements IInvoice {
             message: `Invoice ${invoice.voucherNo} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            type : "INVOICE",
+            createdBy: authService.getUser()?.name || 'System',
+            type: "INVOICE",
             link: `/invoice`,
             isVisible: true
         });

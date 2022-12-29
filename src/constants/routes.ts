@@ -33,4 +33,6 @@ export const EXPENSES_CREATE = '/expenses/create';
 export const EXPENSES_EDIT = '/expenses/:id/edit';
 export const EXPENSES_DETAIL = '/expenses/:id';
 
+export const NOTIFICATIONS = '/notifications';
+
 export const NOT_FOUND = '*';

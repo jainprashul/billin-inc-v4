@@ -106,3 +106,16 @@ export const objDiff = (updatedObj: any, baseObj: any): any => {
     return [...acc, `key : ${key}, updated : ${updatedObj[key]}, orignal : ${baseObj[key]}`];
   }, []);
 };
+
+// Pagination
+export const arrayToPages = <T>(array: Array<T>, pageSize: number) => {
+  const pages = [];
+  for (let i = 0; i < array.length; i += pageSize) {
+    pages.push(array.slice(i, i + pageSize));
+  }
+  return {
+    pages,
+    totalPages: pages.length,
+    totalItems: array.length,
+  }
+};

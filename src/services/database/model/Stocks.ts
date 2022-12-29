@@ -1,6 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import { objDiff } from "../../../utils";
+import authService from "../../authentication/auth.service";
 import db from "../db";
 import { NotificationLog } from "./NotificationLog";
 import { StockLog } from "./StockLogs";
@@ -81,7 +82,7 @@ export class Stock implements IStocks {
             date: new Date(),
             message: `${stock.name} has been added`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW",
+              status: "NEW",  createdBy : authService.getUser()?.name || 'System',
             type: "STOCK",
             link: `/stocks/${stock.id}`,
             isVisible: true
@@ -96,7 +97,7 @@ export class Stock implements IStocks {
             date: new Date(),
             message: `${stock.name} has been removed`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW",
+              status: "NEW",  createdBy : authService.getUser()?.name || 'System',
             type: "STOCK",
             link: `/stocks/${stock.id}`,
             isVisible: true
@@ -113,7 +114,7 @@ export class Stock implements IStocks {
             date: new Date(),
             message: `${stock.name} has been modified`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW",
+              status: "NEW",  createdBy : authService.getUser()?.name || 'System',
             type: "STOCK",
             changes: diff,
             link: `/stocks/${stock.id}`,

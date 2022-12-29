@@ -1,5 +1,6 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
+import authService from "../../authentication/auth.service";
 import db from "../db";
 import { Client } from "./Client";
 import { NotificationLog } from "./NotificationLog";
@@ -11,8 +12,8 @@ export interface IPurchase {
     voucherNo: string;
     voucherType: PurchaseVoucherType;
     clientID: string;
-    client? : Client;
-    products? : Product[];
+    client?: Client;
+    products?: Product[];
     productIDs: Set<string>;
     billingDate: Date;
     categoryID?: number;
@@ -23,7 +24,7 @@ export interface IPurchase {
     discount: boolean
     discountValue?: number;
     // totalAmount: number;
-    amountPaid? : number;
+    amountPaid?: number;
     createdAt?: Date;
 }
 
@@ -45,7 +46,7 @@ export class Purchase implements IPurchase {
     discount: boolean
     discountValue?: number;
     totalAmount: number;
-    amountPaid : number;
+    amountPaid: number;
     createdAt: Date;
     updatedAt: Date;
 
@@ -57,7 +58,7 @@ export class Purchase implements IPurchase {
         this.clientID = purchase.clientID;
         this.productIDs = purchase.productIDs;
         this.products = purchase.products ? purchase.products.map(p => new Product(p)) : [];
-        this.client = purchase.client ? new Client({...purchase.client}) : undefined;
+        this.client = purchase.client ? new Client({ ...purchase.client }) : undefined;
         this.billingDate = purchase.billingDate;
         this.categoryID = purchase.categoryID;
         this.gstEnabled = purchase.gstEnabled;
@@ -89,7 +90,7 @@ export class Purchase implements IPurchase {
 
     async loadClient() {
         const companyDB = db.getCompanyDB(this.companyID)
-        const client = await companyDB.clients.get(this.clientID) 
+        const client = await companyDB.clients.get(this.clientID)
         this.client = client;
     }
 
@@ -101,7 +102,7 @@ export class Purchase implements IPurchase {
             date: new Date(),
             message: `Purchase ${purchase.voucherNo} created`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW",
+            status: "NEW", createdBy: authService.getUser()?.name || 'System',
             link: `/purchase/${purchase.voucherNo}`,
             type: "PURCHASE",
             isVisible: true
@@ -117,6 +118,7 @@ export class Purchase implements IPurchase {
             message: `Purchase ${purchase.voucherNo} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
+            createdBy: authService.getUser()?.name || 'System',
             link: `/purchase`,
             type: "PURCHASE",
             isVisible: true
