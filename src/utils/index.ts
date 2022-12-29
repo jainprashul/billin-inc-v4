@@ -119,3 +119,17 @@ export const arrayToPages = <T>(array: Array<T>, pageSize: number) => {
     totalItems: array.length,
   }
 };
+
+
+export const changeURL = (url: string, routeParams : {key : string , value : string}[]) => {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  routeParams.forEach((param) => {
+    urlParams.set(param.key, param.value);
+  });
+  url = `${url}?${urlParams.toString()}`;
+  
+  if (typeof window !== "undefined") {
+    window.history.pushState({}, "", url);
+  }
+}

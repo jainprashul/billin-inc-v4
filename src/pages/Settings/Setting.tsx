@@ -38,9 +38,11 @@ const panels = [
 
 const Setting = (props: Props) => {
 
+    const params = new URLSearchParams(window.location.search)
+    const tabIndex = panels.indexOf(panels.find(panel => panel.name.toLowerCase() === params.get("tab")) ?? panels[0])
     return (
         <div id="setting" className="setting">
-            <CreateTab panels={panels}/>
+            <CreateTab panels={panels} tabIndex={tabIndex}/>
         </div>
     )
 }
