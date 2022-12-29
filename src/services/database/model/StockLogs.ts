@@ -4,7 +4,7 @@ import authService from "../../authentication/auth.service";
 import CompanyDB from "../companydb";
 import db from "../db";
 import { Client } from "./Client";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 
 export interface IStockLogs {
     id?: string;
@@ -68,7 +68,7 @@ export class StockLog implements IStockLogs {
             message: `${stockLogs.voucherNo} has been ${stockLogs.logType}`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", createdBy: authService.getUser()?.name || 'System',
-            type: "STOCK_LOG",
+            type: NotificationType.STOCK_LOG,
             link: `/stocks/${stockLogs.stockID}`
         });
         notify.save();
@@ -83,7 +83,7 @@ export class StockLog implements IStockLogs {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", 
             createdBy: authService.getUser()?.name || 'System',
-            type: "STOCK_LOG",
+            type: NotificationType.STOCK_LOG,
             // link: `/stock/${stockLogs.stockID}`
         });
         notify.save();

@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
 import { IAddress, IContact } from "./Company";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 import * as Yup from 'yup';
 import { objDiff} from '../../../utils'
 import authService from "../../authentication/auth.service";
@@ -67,7 +67,7 @@ export class Client implements IClient {
             message: `Client ${client.name} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            type: "CLIENT",
+            type: NotificationType.CLIENT,
             link: `/ledger/${client.id}`,
             isVisible: true,
             createdBy : authService.getUser()?.name || 'System',
@@ -85,7 +85,7 @@ export class Client implements IClient {
             message: `Client ${client.name} updated`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            type: "CLIENT",
+            type: NotificationType.CLIENT,
             changes: diff,
             link: `/ledger/${client.id}`,
             isVisible: true,
@@ -102,7 +102,7 @@ export class Client implements IClient {
             message: `Client ${client.name} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
-            type: "CLIENT",
+            type: NotificationType.CLIENT,
             link: `/ledger/${client.id}`,
             isVisible: true,
             createdBy : authService.getUser()?.name || 'System',

@@ -3,7 +3,7 @@ import { Transaction } from "dexie";
 import authService from "../../authentication/auth.service";
 import db from "../db";
 import { Client } from "./Client";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 import { Product } from "./Product";
 
 
@@ -103,7 +103,7 @@ export class Invoice implements IInvoice {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", 
             createdBy: authService.getUser()?.name || 'System',
-            type: "INVOICE",
+            type: NotificationType.INVOICE,
             link: `/invoice/${invoice.voucherNo}`,
             isVisible: true
         })
@@ -119,7 +119,7 @@ export class Invoice implements IInvoice {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             createdBy: authService.getUser()?.name || 'System',
-            type: "INVOICE",
+            type: NotificationType.INVOICE,
             link: `/invoice`,
             isVisible: true
         });

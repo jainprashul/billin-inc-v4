@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import authService from "../../authentication/auth.service";
 import db from "../db";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 
 export interface ILedger {
     id?: number;
@@ -72,7 +72,7 @@ export class Ledger implements ILedger {
             message: `Ledger Entry for ${ledgerItem.voucherNo} created`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", createdBy: authService.getUser()?.name || 'System',
-            type: "LEDGER",
+            type: NotificationType.LEDGER,
             link: `/ledger`
         });
         notify.save();
@@ -88,7 +88,7 @@ export class Ledger implements ILedger {
         notificationID: `ntf-${nanoid(8)}`,
             status: "NEW",
             createdBy: authService.getUser()?.name || 'System',
-            type: "LEDGER",
+            type: NotificationType.LEDGER,
             link: `/ledger`
         });
         notify.save();

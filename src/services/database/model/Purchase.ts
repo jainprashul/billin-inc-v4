@@ -3,7 +3,7 @@ import { Transaction } from "dexie";
 import authService from "../../authentication/auth.service";
 import db from "../db";
 import { Client } from "./Client";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 import { Product } from "./Product";
 
 export interface IPurchase {
@@ -104,7 +104,7 @@ export class Purchase implements IPurchase {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", createdBy: authService.getUser()?.name || 'System',
             link: `/purchase/${purchase.voucherNo}`,
-            type: "PURCHASE",
+            type: NotificationType.PURCHASE,
             isVisible: true
         });
         notify.save();
@@ -120,7 +120,7 @@ export class Purchase implements IPurchase {
             status: "NEW",
             createdBy: authService.getUser()?.name || 'System',
             link: `/purchase`,
-            type: "PURCHASE",
+            type: NotificationType.PURCHASE,
             isVisible: true
         });
         notify.save();
