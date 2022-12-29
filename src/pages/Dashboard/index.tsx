@@ -4,6 +4,7 @@ import { DataTesting } from '../../components'
 import Filters from '../../components/shared/Filters'
 import ExpensePieChart from '../Expenses/ExpensePieChart'
 import SalesChart from '../Invoices/SalesChart'
+import SalesNPurchaseGraph from '../Invoices/SalesNPurchaseGraph'
 import useDashboard from './useDashboard'
 
 type Props = {}
@@ -31,12 +32,16 @@ const Dashboard = (props: Props) => {
             <div>
               <Typography variant="body1">Sales Count </Typography>
               <SalesChart data={{ invoices, purchases: purchase }} date={filter.date} width={300} height={330} />
-
             </div>
           </div>
-
         </Grid>
 
+        <Grid item xs={12} md={6}>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <SalesNPurchaseGraph />
+        </Grid>
 
       </Grid>
 

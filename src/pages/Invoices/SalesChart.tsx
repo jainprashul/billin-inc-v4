@@ -1,9 +1,11 @@
 import { Card } from '@mui/material'
 import React from 'react'
 import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { Purchase } from '../../services/database/model'
 import { Invoice } from '../../services/database/model/Invoices'
 import { getDatesBetween, getRandomColor } from '../../utils'
+import { selectSalesData, setSalesData } from '../../utils/utilsSlice'
 
 type Props = {
     data: {
@@ -23,10 +25,12 @@ const SalesChart = ({ data, width = '100%', height = '100%', date={
     from: new Date(),
     to: new Date()
 }}: Props) => {
+    const dispatch = useAppDispatch()
+    const salesData = useAppSelector(selectSalesData)
 
 
     // count sales by date
-    const salesCountByDate = React.useMemo(() => {
+    React.useMemo(() => {
         const dates = getDatesBetween(date?.from, date?.to)
         let res = []
         for (let i = 0; i < data.invoices.length; i++) {
@@ -37,7 +41,7 @@ const SalesChart = ({ data, width = '100%', height = '100%', date={
                 res.push({
                     date,
                     salesCount: 1,
-                    purchasesCount : 0,
+                    purchaseCount : 0,
                     sAmount: inv.totalAmount,
                     pAmount: 0
                 })
@@ -55,12 +59,12 @@ const SalesChart = ({ data, width = '100%', height = '100%', date={
                 res.push({
                     date,
                     salesCount: 0,
-                    purchasesCount : 1,
+                    purchaseCount : 1,
                     sAmount: 0,
                     pAmount: pur.totalAmount
                 })
             } else {
-                res[index].purchasesCount += 1
+                res[index].purchaseCount += 1
                 res[index].pAmount += pur.totalAmount
             }
         }
@@ -85,9 +89,9 @@ const SalesChart = ({ data, width = '100%', height = '100%', date={
             const dateB = new Date(b.date)
             return dateA.getTime() - dateB.getTime()
         })
-
-        return res
-    }, [data, date])
+        dispatch(setSalesData(res))
+        // return res
+    }, [data, date, dispatch])
 
     return (
         <Card style={{
@@ -97,7 +101,7 @@ const SalesChart = ({ data, width = '100%', height = '100%', date={
             width: width,
         }}>
             <ResponsiveContainer>
-                <BarChart data={salesCountByDate} margin={{
+                <BarChart data={salesData} margin={{
                     left: 0,
                     right: 30,
                     top: 10,
@@ -106,8 +110,8 @@ const SalesChart = ({ data, width = '100%', height = '100%', date={
                     <YAxis   />
                     <Tooltip />
                     <Legend align='right' />
-                    <Bar dataKey="salesCount" accumulate='sum' fill={getRandomColor()} />
-                    <Bar dataKey="purchasesCount" accumulate='sum' fill={getRandomColor()} />
+                    <Bar dataKey="salesCount" name='Sales' accumulate='sum' fill={getRandomColor()} />
+                    <Bar dataKey="purchaseCount" name='Purchase' accumulate='sum' fill={getRandomColor()} />
                 </BarChart>
             </ResponsiveContainer>
         </Card>

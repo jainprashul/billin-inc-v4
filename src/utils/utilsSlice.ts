@@ -9,8 +9,20 @@ interface utils {
         inclusive: boolean;
     }
     isLoggedIn: boolean;
-    user : Usr | null
-        
+    user: Usr | null,
+
+    date: {
+        to: Date,
+        from: Date
+    }
+    salesData: {
+        date: string;
+        salesCount: number;
+        purchaseCount: number;
+        sAmount: number;
+        pAmount: number;
+    }[]
+
 }
 
 const initialState: utils = {
@@ -19,15 +31,21 @@ const initialState: utils = {
         inclusive: JSON.parse(localStorage.getItem("gstRateInclusive") || "false"),
     },
     isLoggedIn: false,
-    user : null
+    user: null,
+
+    date: {
+        to: new Date(),
+        from: new Date()
+    },
+    salesData: []
 };
 
-export const checkLogin = () : AppThunk  => (dispatch, getState ) => {
+export const checkLogin = (): AppThunk => (dispatch, getState) => {
     const user = authService.getUser()
     if (user) {
         dispatch(setLoginStatus(true));
         dispatch(setUser(user))
-        
+
     }
 }
 
@@ -52,17 +70,26 @@ export const utilsSlice = createSlice({
         setLoginStatus: (state, action: { payload: boolean }) => {
             state.isLoggedIn = action.payload;
         },
-        setUser : (state, action: {payload : Usr | null})  => {
+        setUser: (state, action: { payload: Usr | null }) => {
             state.user = action.payload
+        },
+        setFilterDate: (state, action: { payload: { to: Date, from: Date } }) => {
+            state.date = action.payload
+        },
+        setSalesData: (state, action: { payload: any[] }) => {
+            state.salesData = action.payload
         }
     }
 });
 
 
 export default utilsSlice.reducer;
-export const { setGstEnabled, setGstRateInclusive, setLoginStatus, setUser } = utilsSlice.actions;
+export const { setGstEnabled, setGstRateInclusive, setLoginStatus, setUser, setFilterDate, setSalesData } = utilsSlice.actions;
+
 export const selectGstEnabled = (state: RootState) => state.utils.gst.enabled;
 export const selectGstRateType = (state: RootState) => state.utils.gst.inclusive;
 export const selectIsLoggedIn = (state: RootState) => state.utils.isLoggedIn;
-export const selectUser = (state : RootState) => state.utils.user;
-export const selectIsAdmin = (state : RootState) => state.utils.user?.roleID === 1;
+export const selectUser = (state: RootState) => state.utils.user;
+export const selectIsAdmin = (state: RootState) => state.utils.user?.roleID === 1;
+export const selectFilterDate = (state: RootState) => state.utils.date;
+export const selectSalesData = (state: RootState) => state.utils.salesData;
