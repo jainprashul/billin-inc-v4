@@ -3,7 +3,7 @@ import { Transaction } from "dexie";
 import { objDiff } from "../../../utils";
 import authService from "../../authentication/auth.service";
 import db from "../db";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 import { StockLog } from "./StockLogs";
 
 export interface IStocks {
@@ -83,7 +83,7 @@ export class Stock implements IStocks {
             message: `${stock.name} has been added`,
             notificationID: `ntf-${nanoid(8)}`,
               status: "NEW",  createdBy : authService.getUser()?.name || 'System',
-            type: "STOCK",
+            type: NotificationType.STOCK,
             link: `/stocks/${stock.id}`,
             isVisible: true
         });
@@ -98,7 +98,7 @@ export class Stock implements IStocks {
             message: `${stock.name} has been removed`,
             notificationID: `ntf-${nanoid(8)}`,
               status: "NEW",  createdBy : authService.getUser()?.name || 'System',
-            type: "STOCK",
+            type: NotificationType.STOCK,
             link: `/stocks/${stock.id}`,
             isVisible: true
         });
@@ -115,7 +115,7 @@ export class Stock implements IStocks {
             message: `${stock.name} has been modified`,
             notificationID: `ntf-${nanoid(8)}`,
               status: "NEW",  createdBy : authService.getUser()?.name || 'System',
-            type: "STOCK",
+            type: NotificationType.STOCK,
             changes: diff,
             link: `/stocks/${stock.id}`,
             isVisible: true

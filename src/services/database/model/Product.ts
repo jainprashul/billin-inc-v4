@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import authService from "../../authentication/auth.service";
 import db from "../db";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 
 export interface IProduct {
     id?: string;
@@ -104,8 +104,9 @@ export class Product implements IProduct {
             date: new Date(),
             message: `Product ${product.id} created`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW", createdBy: authService.getUser()?.name || 'System',
-            type: "PRODUCT",
+            status: "NEW", 
+            createdBy: authService.getUser()?.name || 'System',
+            type: NotificationType.PRODUCT,
             link: `/stock/${product.id}`,
         });
         notify.save();
@@ -118,8 +119,9 @@ export class Product implements IProduct {
             date: new Date(),
             message: `Product ${product.id} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
-            status: "NEW", createdBy: authService.getUser()?.name || 'System',
-            type: "PRODUCT",
+            status: "NEW", 
+            createdBy: authService.getUser()?.name || 'System',
+            type: NotificationType.PRODUCT,
         });
         notify.save();
     }

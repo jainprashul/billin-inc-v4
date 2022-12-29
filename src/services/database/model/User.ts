@@ -1,7 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit";
 import { Transaction } from "dexie";
 import db from "../db";
-import { NotificationLog } from "./NotificationLog";
+import { NotificationLog, NotificationType } from "./NotificationLog";
 import * as Yup from 'yup';
 import authService from "../../authentication/auth.service";
 
@@ -98,7 +98,7 @@ export class User implements IUser {
                     message: `User ${user.username} created`,
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
-                    type: "USER",
+                    type: NotificationType.USER,
                     isVisible: true,
                     link: `/settings?tab=users`,
                     createdBy: authService.getUser()?.name || 'System',
@@ -120,7 +120,7 @@ export class User implements IUser {
                     message: `User ${user.username} deleted`,
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
-                    type: "USER",
+                    type: NotificationType.USER,
                     isVisible: true,
                     createdBy: authService.getUser()?.name || 'System',
                 });
@@ -140,7 +140,7 @@ export class User implements IUser {
                     message: `User ${user.username} updated`,
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
-                    type: "USER",
+                    type: NotificationType.USER,
                     isVisible: true,
                     link: `/settings?tab=users`,
                     createdBy: authService.getUser()?.name || 'System',

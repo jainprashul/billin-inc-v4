@@ -12,6 +12,7 @@ import { NOTIFICATIONS } from '../../constants/routes'
 
 type Props = {
   getNotificationCount?: (notifications: NotificationLog[]) => number
+  handleClose ?: () => void
 }
 
 const NotificationSide = (props: Props) => {
@@ -39,7 +40,7 @@ const NotificationSide = (props: Props) => {
               fontWeight: 'bold',
               fontStyle: 'italic',
               cursor: 'pointer'
-            }} onClick={() => { navigate(NOTIFICATIONS) }}>
+            }} onClick={() => { navigate(NOTIFICATIONS); props.handleClose?.() }}>
               Notifications ({notifications.length})
             </span>}
             subheader={`${notifications.filter(n => n.status === 'NEW').length} unread notifications`} action={
@@ -56,7 +57,7 @@ const NotificationSide = (props: Props) => {
           <List dense>
             {notifications.map((x) => {
               return (
-                <Grow in={!!x.id} key={x.id} >
+                <Grow in={!!x.id} key={x.id} timeout={1500}>
                   <ListItem onMouseEnter={() => {
                     if (x.status === 'NEW') {
                       x.markAsRead()
