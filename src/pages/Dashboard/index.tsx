@@ -1,3 +1,9 @@
-import Dashboard from "./Dashboard";
+import DashBoardPage from "./Dashboard";
+import { DashboardProvider } from "./useDashboard";
 
-export default Dashboard;
+const Dashboard = () => (
+    <DashboardProvider>
+        <DashBoardPage />
+    </DashboardProvider>
+)
+export default Dashboard

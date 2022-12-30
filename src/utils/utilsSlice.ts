@@ -36,6 +36,10 @@ interface utils {
         sales: CountMetric;
         purchase: CountMetric;
         expenses: CountMetric;
+        stocks: {
+            count: number;
+            totalValue: number;
+        }
     }
 }
 
@@ -76,6 +80,10 @@ const initialState: utils = {
             totalAmount: 0,
             deltaPercent: 0
         },
+        stocks: {
+            count: 0,
+            totalValue: 0
+        }
     }
 
 };
@@ -140,8 +148,9 @@ export const selectIsAdmin = (state: RootState) => state.utils.user?.roleID === 
 export const selectFilterDate = (state: RootState) => state.utils.date;
 export const selectSalesData = (state: RootState) => state.utils.salesData;
 export const selectNotification = (state: RootState) => state.utils.notification;
-export const selectNotificationCount = (state: RootState) => state.utils.notification.length;
+export const selectNotificationCount = (state: RootState) => state.utils.notification.filter((item) => item.status === 'NEW').length;
 
 export const selectSalesCount = (state: RootState) => state.utils.count.sales;
 export const selectPurchaseCount = (state: RootState) => state.utils.count.purchase;
 export const selectExpenseCount = (state: RootState) => state.utils.count.expenses;
+export const selectStockCount = (state: RootState) => state.utils.count.stocks;

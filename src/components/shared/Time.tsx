@@ -12,6 +12,8 @@ const Time = (props: Props) => {
     }, [])
   return (
     <div>
+        {time.toLocaleDateString()}
+        <br />
         {time.toLocaleTimeString()}
     </div>
   )

@@ -14,8 +14,8 @@ import FilterListOff from '@mui/icons-material/FilterListOff';
 let timeOut = 150;
 const _filter = {
     date: {
-        from: moment().startOf('day').toDate(),
-        to: moment().endOf('day').toDate()
+        from: moment().startOf('week').toDate(),
+        to: moment().endOf('week').toDate()
     },
     status: 'ALL',
     type: 'ALL',
