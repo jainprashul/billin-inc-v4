@@ -119,3 +119,40 @@ export const arrayToPages = <T>(array: Array<T>, pageSize: number) => {
     totalItems: array.length,
   }
 };
+
+
+export const changeURL = (url: string, routeParams : {key : string , value : string}[]) => {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  routeParams.forEach((param) => {
+    urlParams.set(param.key, param.value);
+  });
+  url = `${url}?${urlParams.toString()}`;
+  
+  if (typeof window !== "undefined") {
+    window.history.pushState({}, "", url);
+  }
+}
+
+// get Dates between two dates
+export const getDatesBetween = (startDate: Date, endDate: Date) => {
+  const dates = [];
+  const theDate = new Date(startDate);
+  while (theDate < endDate) {
+    dates.push(new Date(theDate));
+    theDate.setDate(theDate.getDate() + 1);
+  }
+  return dates;
+}
+
+// count number of days between two dates
+export const countDays = (date1: Date, date2: Date) => {
+  // The number of milliseconds in one day
+  const ONE_DAY = 1000 * 60 * 60 * 24;
+
+  // Calculate the difference in milliseconds
+  const differenceMs = Math.abs(date1.getTime() - date2.getTime());
+
+  // Convert back to days and return
+  return Math.round(differenceMs / ONE_DAY);
+};

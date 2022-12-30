@@ -69,6 +69,7 @@ export class StockLog implements IStockLogs {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.STOCK_LOG,
+            action: 'CREATE',
             link: `/stocks/${stockLogs.stockID}`
         });
         notify.save();
@@ -82,6 +83,7 @@ export class StockLog implements IStockLogs {
             message: `${stockLogs.voucherNo} has been ${stockLogs.logType}`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", 
+            action: 'DELETE',
             createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.STOCK_LOG,
             // link: `/stock/${stockLogs.stockID}`

@@ -105,6 +105,7 @@ export class Purchase implements IPurchase {
             status: "NEW", createdBy: authService.getUser()?.name || 'System',
             link: `/purchase/${purchase.voucherNo}`,
             type: NotificationType.PURCHASE,
+            action: 'CREATE',
             isVisible: true
         });
         notify.save();
@@ -121,6 +122,7 @@ export class Purchase implements IPurchase {
             createdBy: authService.getUser()?.name || 'System',
             link: `/purchase`,
             type: NotificationType.PURCHASE,
+            action: 'DELETE',
             isVisible: true
         });
         notify.save();

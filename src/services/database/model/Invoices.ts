@@ -104,6 +104,7 @@ export class Invoice implements IInvoice {
             status: "NEW", 
             createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.INVOICE,
+            action: 'CREATE',
             link: `/invoice/${invoice.voucherNo}`,
             isVisible: true
         })
@@ -120,6 +121,7 @@ export class Invoice implements IInvoice {
             status: "NEW",
             createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.INVOICE,
+            action: 'DELETE',
             link: `/invoice`,
             isVisible: true
         });

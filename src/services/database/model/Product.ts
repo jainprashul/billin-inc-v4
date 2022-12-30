@@ -107,6 +107,7 @@ export class Product implements IProduct {
             status: "NEW", 
             createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.PRODUCT,
+            action: "CREATE",
             link: `/stock/${product.id}`,
         });
         notify.save();
@@ -120,6 +121,7 @@ export class Product implements IProduct {
             message: `Product ${product.id} deleted`,
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", 
+            action: "DELETE",
             createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.PRODUCT,
         });

@@ -9,6 +9,7 @@ export type Filter = {
     value: any
     component: 'select' | 'date' | 'checkbox' | 'text'
     options?: any[]
+    default?: any
 }
 
 type Props = {
@@ -25,7 +26,7 @@ const Filters = ({ filters, getFilters }: Props) => {
         filters.forEach((x) => {
             state[x.name] = x.value
         })
-        console.log("filter, ", state)
+
 
         setFilterState(state)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,7 +92,6 @@ const SelectFilter = ({ filters, setFilters, filterName, options = [] }: SelectF
 
 // CREATE the checkbox component with the filters
 const CheckboxFilter = ({ filters, setFilters, filterName, options = [] }: SelectFilterProps) => {
-    console.log("check filter, ", filters, filterName, filters[filterName], options)
     return (
         <FormControl>
             <InputLabel id="demo-multiple-checkbox-label" style={{
@@ -126,8 +126,8 @@ const CheckboxFilter = ({ filters, setFilters, filterName, options = [] }: Selec
 const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
     const [custom, setCustom] = React.useState(false)
     const [customDate, setCustomDate] = React.useState({
-        from: moment().startOf('day').toDate(),
-        to: moment().endOf('day').toDate()
+        from: moment().startOf('week').toDate(),
+        to: moment().endOf('week').toDate()
     })
 
     React.useEffect(() => {
@@ -139,7 +139,6 @@ const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
     }, [customDate])
 
     const handleTimeChange = (val: string) => {
-        console.log("val, ", val)
         switch (val) {
             case 'today':
                 return {
@@ -184,7 +183,7 @@ const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
             }}>{filterName}</InputLabel>
             <Select
                 input={<OutlinedInput label={filterName} />}
-                defaultValue="today"
+                defaultValue="thisWeek"
                 onChange={(e) => {
                     let val = handleTimeChange(e.target.value)
                     if (e.target.value === 'custom') {

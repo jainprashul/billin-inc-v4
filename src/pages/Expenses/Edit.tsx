@@ -29,7 +29,7 @@ const Edit = ({ open, setOpen, expense }: Props) => {
                             handleClose()
                         }).catch((err) => {
                             toast.enqueueSnackbar('Error updating expense', { variant: 'error' })
-                            console.log(err)
+                            console.error(err)
                         })
                     }} />
                 </DialogContentText>

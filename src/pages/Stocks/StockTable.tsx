@@ -13,7 +13,7 @@ const StockTable = ({ data }: Props) => {
     const loading = !(data ? data.length !== 0 : false)
     const { navigate } = useDataUtils()
 
-    const columns: Array<Column<Stock>> = [
+    const columns: Array<Column<Stock>> = React.useMemo(() => [
         {
             title: 'Stock Name',
             field: 'name',
@@ -55,7 +55,7 @@ const StockTable = ({ data }: Props) => {
                 currencyCode: 'INR',
             }
         }
-    ];
+    ], [])
 
     return (
         <>

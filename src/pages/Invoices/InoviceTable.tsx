@@ -73,7 +73,7 @@ const InvoiceTable = ({ data }: Props) => {
         iframe.contentWindow?.print(); 
     }
 
-    const columns: Array<Column<Invoice>> = [
+    const columns: Array<Column<Invoice>> = React.useMemo(() => [
         {
             title: 'Invoice Number',
             field: 'voucherNo',
@@ -125,9 +125,9 @@ const InvoiceTable = ({ data }: Props) => {
                 currencyCode: 'INR',
             }
         },
-    ];
+    ], []);
 
-    const actions: Array<Action<Invoice>> = [
+    const actions: Array<Action<Invoice>> = React.useMemo(() => [
         {
             icon: () => <Print />,
             tooltip: 'Print Invoice',
@@ -208,7 +208,8 @@ const InvoiceTable = ({ data }: Props) => {
             },
 
         }
-    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ], [filter, toast]);
 
     return (
         <>

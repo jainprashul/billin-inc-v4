@@ -27,7 +27,7 @@ const Create = ({ open, setOpen }: Props) => {
                             handleClose()
                         }).catch((err) => {
                             toast.enqueueSnackbar('Error creating expense', { variant: 'error' })
-                            console.log(err)
+                            console.error(err)
                         })
                     }} />
                 </DialogContentText>

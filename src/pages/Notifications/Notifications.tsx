@@ -14,11 +14,12 @@ import FilterListOff from '@mui/icons-material/FilterListOff';
 let timeOut = 150;
 const _filter = {
     date: {
-        from: moment().startOf('day').toDate(),
-        to: moment().endOf('day').toDate()
+        from: moment().startOf('week').toDate(),
+        to: moment().endOf('week').toDate()
     },
     status: 'ALL',
     type: 'ALL',
+    action : 'ALL',
     user: ['ALL']
 }
 type Props = {}
@@ -30,8 +31,6 @@ const Notifications = (props: Props) => {
     const [filter, setFilter] = React.useState(_filter);
     const [showFilter, setShowFilter] = React.useState(false);
 
-
-
     const { companyDB, navigate } = useDataUtils();
     const notifications = useLiveQuery(async () => {
         if (companyDB) {
@@ -39,7 +38,8 @@ const Notifications = (props: Props) => {
                 return x.date >= filter.date.from && x.date <= filter.date.to &&
                     (filter.status === "ALL" || x.status === filter.status) &&
                     (filter.type === "ALL" || x.type === filter.type) &&
-                    (filter.user.includes("ALL") || filter.user.includes(x.createdBy))
+                    (filter.user.includes("ALL") || filter.user.includes(x.createdBy)) && 
+                    (filter.action === "ALL" || x.action === filter.action)
             })
                 .reverse().toArray()
             return notifications
@@ -71,6 +71,12 @@ const Notifications = (props: Props) => {
             component: 'select',
             value: filter.type,
             options: ['ALL', ...Object.values(NotificationType)]
+        },
+        {
+            name: 'action',
+            component: 'select',
+            value: filter.action,
+            options: ['ALL', 'CREATE', 'UPDATE', 'DELETE']
         },
         {
             name: 'user',
