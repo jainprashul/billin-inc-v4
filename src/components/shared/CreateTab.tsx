@@ -8,13 +8,15 @@ type Props = {
     panels: {
         name: string
         content: () => JSX.Element
-        hidden?: boolean
+        hidden?: boolean,
     }[]
+
+    tabIndex?: number
 }
 
-const CreateTab = ({ panels }: Props) => {
+const CreateTab = ({ panels, tabIndex = 0 }: Props) => {
     const Panels = useMemo(() => panels.sort((a, b) => a.hidden ? 1 : -1), [panels])
-    const [currentTab, setCurrentTab] = React.useState(0);
+    const [currentTab, setCurrentTab] = React.useState(tabIndex);
 
     const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
         setCurrentTab(newValue);

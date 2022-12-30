@@ -9,6 +9,7 @@ import React from 'react'
 import { NotificationLog } from '../../services/database/model'
 import { useDataUtils } from '../../utils/useDataUtils'
 import { NOTIFICATIONS } from '../../constants/routes'
+import { setNotification } from '../../utils/utilsSlice'
 
 type Props = {
   getNotificationCount?: (notifications: NotificationLog[]) => number
@@ -16,12 +17,13 @@ type Props = {
 }
 
 const NotificationSide = (props: Props) => {
-  const { companyDB, navigate } = useDataUtils()
+  const { companyDB, navigate, dispatch } = useDataUtils()
 
   const notifications = useLiveQuery(async () => {
     if (companyDB) {
       const notifications = await companyDB?.notificationlogs.orderBy("date").filter((x) => x.isVisible).reverse().toArray()
       props.getNotificationCount?.(notifications)
+      dispatch(setNotification(notifications))
       return notifications
     }
   }, [companyDB], []) ?? [];

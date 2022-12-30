@@ -1,34 +1,37 @@
 import { Card } from '@mui/material'
 import React from 'react'
 import { PieChart, Pie, Sector, ResponsiveContainer, Legend, Cell } from 'recharts'
-import { ExpenseModes } from '../../constants'
-import { Expense } from '../../services/database/model'
-import { getRandomColor } from '../../utils'
+import { useAppSelector } from '../../app/hooks'
+
+import { selectPurchaseCount, selectSalesCount } from '../../utils/utilsSlice'
 
 type Props = {
-    data: Expense[]
     width?: number | string
     height?: number | string
 }
 
-const ExpensePieChart = ({ data, width='100%', height='100%'  }: Props) => {
+const SalesVSPurchaseGraph = ({  width='100%', height='100%'  }: Props) => {
     const [activeIndex, setActiveIndex] = React.useState(0);
 
     const onPieEnter = (data: any, index: number) => {
         setActiveIndex(index);
     };
 
-    const res = React.useMemo(() => convertDataByExpenseMode(data), [data])
-    const totalExpenses = React.useMemo(() => (data.reduce((acc, curr) => {
-        return acc + curr.amount
-    }, 0)), [data])
+    const sales = useAppSelector(selectSalesCount);
+    const purchase = useAppSelector(selectPurchaseCount);
+
+    const data = [
+        { name: 'Sales', currentTotal : sales.amount, total: sales.totalAmount , color : '#00C49F'},
+        { name: 'Purchase', currentTotal : purchase.amount, total: purchase.totalAmount , color : '#FFBB28' },
+    ]
+
 
     const renderActiveShape = React.useCallback((props: any) => {
         const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
         return (
             <g>
                 <text x={cx} y={cy} dy={-130} textAnchor="middle" >
-                    Total Expenses : ₹ {totalExpenses}
+                    Sales VS Purchase
                 </text>
     
                 <text x={cx} y={cy} dy={14} textAnchor="middle" fill={fill}>
@@ -57,11 +60,11 @@ const ExpensePieChart = ({ data, width='100%', height='100%'  }: Props) => {
                 </text>
     
                 <text x={cx} y={cy} dy={120} textAnchor="middle" fill={fill}>
-                    {payload.expenseMode}
+                    {payload.name}
                 </text>
             </g>
         );
-    }, [totalExpenses]);
+    }, []);
     
     return (
         <Card style={{
@@ -76,16 +79,16 @@ const ExpensePieChart = ({ data, width='100%', height='100%'  }: Props) => {
                     <Pie
                         activeIndex={activeIndex}
                         activeShape={renderActiveShape}
-                        data={res}
+                        data={data}
                         cx="50%"
                         cy="50%"
                         innerRadius={50}
                         outerRadius={70}
                         fill="#8884d8"
-                        dataKey="amount" nameKey={'expenseMode'}
+                        dataKey="currentTotal" nameKey={'name'}
                         onMouseEnter={onPieEnter}
                     >
-                        {res.map((entry, index) => (
+                        {data.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                     </Pie>
@@ -97,27 +100,4 @@ const ExpensePieChart = ({ data, width='100%', height='100%'  }: Props) => {
     )
 }
 
-export default ExpensePieChart
-
-function convertDataByExpenseMode(data: Expense[]) {
-    const res: {
-        expenseMode: string,
-        amount: number,
-        color: string
-    }[] = []
-    data.forEach((expense) => {
-        let modeExists = res.some((item) => item.expenseMode === expense.expenseMode)
-        if (modeExists) {
-            let index = res.findIndex((item) => item.expenseMode === expense.expenseMode)
-            res[index].amount += expense.amount
-        } else {
-            res.push({
-                expenseMode: ExpenseModes.find((item) => item.value === expense.expenseMode)?.value!,
-                amount: expense.amount,
-                color: getRandomColor()
-            })
-        }
-    })
-    return res
-}
-
+export default SalesVSPurchaseGraph

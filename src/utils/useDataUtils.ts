@@ -3,6 +3,7 @@ import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLocalStorage } from ".";
+import { useAppDispatch } from "../app/hooks";
 import CompanyDB from "../services/database/companydb";
 import db from "../services/database/db";
 import { Company } from "../services/database/model";
@@ -10,6 +11,7 @@ import { Company } from "../services/database/model";
 export const useDataUtils = () => {
 
     const [ companyID , setCompanyID ] = useLocalStorage("companyID", 1);
+    const dispatch= useAppDispatch();
 
     const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
   
@@ -17,7 +19,7 @@ export const useDataUtils = () => {
       db.on('ready', () => {
         setTimeout(() => {
           setCompanyDB(db.getCompanyDB(companyID));
-        }, 200);
+        }, 1000);
       });
     }, [companyID]);
 
@@ -43,6 +45,7 @@ export const useDataUtils = () => {
         location,
         params,
         toast,
-        backups
+        backups,
+        dispatch
     }
 }

@@ -81,6 +81,16 @@
   min-width: 450px;
 }
 
+.dashboard-overall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-overall > * {
+  flex: 1 1 0;
+}
+
 ::-webkit-scrollbar {
   width: 0.5rem;
 }
@@ -92,4 +102,55 @@
 ::-webkit-scrollbar-thumb {
   background: #ccc;
   border-radius: 10px;
+}
+
+.mini-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 0 0.5rem #eee;
+  margin: 1rem 0;
+}
+
+.mini-card > .title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.mini-card > .value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.mini-card > .percent {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #ccc;
+}
+
+.flex {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.color-1 {
+  background: #452c63;
+  color: #fff;
+}
+.color-2 {
+  background: #4B0082;
+  color: #fff;
+}
+.color-3 {
+  background: #662d91;
+  color: #fff;
+}
+.color-4 {
+  background: #7b2d91;
+  color: #fff;
 }

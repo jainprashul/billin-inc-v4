@@ -33,9 +33,7 @@ const Ledgers = () => {
 
   const queries = useLiveQuery(async () => {
     const ledger = await companyDB?.ledger.orderBy('date').reverse().toArray() as Ledger[];
-    // const client = await companyDB?.clients.where('id').equals(clientID).first() as Client;
-    // await stk?.loadStockLogs();
-    // stk?.stockLogs.map(async (log) => { await log.loadClient(); return log; });
+
     return {
       ledger: filterDataByDate(ledger || [], moment(date).subtract('day', 1).toDate(), moment(date).toDate()),
       ledgerALL: ledger || [],

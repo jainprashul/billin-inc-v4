@@ -162,6 +162,7 @@ export const useTests = () => {
             type : 'TEST',
             link: '/test',
             createdBy: 'u_1',
+            action: 'CREATE',
         });
 
         return notification.save();

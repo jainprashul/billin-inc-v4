@@ -84,6 +84,7 @@ export class Stock implements IStocks {
             notificationID: `ntf-${nanoid(8)}`,
               status: "NEW",  createdBy : authService.getUser()?.name || 'System',
             type: NotificationType.STOCK,
+            action: 'CREATE',
             link: `/stocks/${stock.id}`,
             isVisible: true
         });
@@ -99,6 +100,7 @@ export class Stock implements IStocks {
             notificationID: `ntf-${nanoid(8)}`,
               status: "NEW",  createdBy : authService.getUser()?.name || 'System',
             type: NotificationType.STOCK,
+            action: 'DELETE',
             link: `/stocks/${stock.id}`,
             isVisible: true
         });
@@ -116,6 +118,7 @@ export class Stock implements IStocks {
             notificationID: `ntf-${nanoid(8)}`,
               status: "NEW",  createdBy : authService.getUser()?.name || 'System',
             type: NotificationType.STOCK,
+            action: 'UPDATE',
             changes: diff,
             link: `/stocks/${stock.id}`,
             isVisible: true

@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import SideDrawer, { DrawerHeader } from './shared/SideDrawer';
 import AppBar from './shared/AppBar';
 import { Container } from '@mui/material';
-import { setCurrentRoute } from '../routes/routeSlice';
+import { setCurrentRoute, setRouteParams } from '../routes/routeSlice';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 
@@ -21,8 +21,15 @@ export default function Layout({ children }: Props) {
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    const { pathname } = location;
+    const { pathname , search} = location;
+
+    const params = new URLSearchParams(search);
+    const routeParams = Array.from(params.entries()).reduce((acc, [key, value]) => (
+      [...acc, { key, value }] 
+    ), [] as { key: string, value: string }[]);
+
     dispatch(setCurrentRoute(pathname));
+    dispatch(setRouteParams(routeParams));
 
   }, [dispatch, location]);
 
@@ -44,7 +51,7 @@ export default function Layout({ children }: Props) {
       <SideDrawer open={open} handleDrawerClose={handleDrawerClose} theme={theme} />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Container maxWidth="lg">
+        <Container id='app-container' maxWidth="lg">
           {children}
         </Container>
       </Box>
