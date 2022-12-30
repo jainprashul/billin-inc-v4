@@ -30,8 +30,6 @@ const Notifications = (props: Props) => {
     const [filter, setFilter] = React.useState(_filter);
     const [showFilter, setShowFilter] = React.useState(false);
 
-
-
     const { companyDB, navigate } = useDataUtils();
     const notifications = useLiveQuery(async () => {
         if (companyDB) {

@@ -9,6 +9,7 @@ export type Filter = {
     value: any
     component: 'select' | 'date' | 'checkbox' | 'text'
     options?: any[]
+    default?: any
 }
 
 type Props = {
@@ -125,8 +126,8 @@ const CheckboxFilter = ({ filters, setFilters, filterName, options = [] }: Selec
 const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
     const [custom, setCustom] = React.useState(false)
     const [customDate, setCustomDate] = React.useState({
-        from: moment().startOf('day').toDate(),
-        to: moment().endOf('day').toDate()
+        from: moment().startOf('week').toDate(),
+        to: moment().endOf('week').toDate()
     })
 
     React.useEffect(() => {
@@ -182,7 +183,7 @@ const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
             }}>{filterName}</InputLabel>
             <Select
                 input={<OutlinedInput label={filterName} />}
-                defaultValue="today"
+                defaultValue="thisWeek"
                 onChange={(e) => {
                     let val = handleTimeChange(e.target.value)
                     if (e.target.value === 'custom') {

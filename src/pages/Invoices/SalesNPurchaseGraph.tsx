@@ -16,11 +16,11 @@ const SalesNPurchaseGraph = ({ width = '100%', height = '100%' }: Props) => {
 
     return (
         <Card style={{
-            minHeight: 300,
+            minHeight: 250,
             height: height,
             maxHeight: 500,
             width: width,
-            minWidth: 600,
+            minWidth: 400,
         }}>
             <ResponsiveContainer>
                 <LineChart data={salesData} margin={{
