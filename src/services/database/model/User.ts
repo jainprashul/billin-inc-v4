@@ -99,6 +99,7 @@ export class User implements IUser {
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
                     type: NotificationType.USER,
+                    action: 'CREATE',
                     isVisible: true,
                     link: `/settings?tab=users`,
                     createdBy: authService.getUser()?.name || 'System',
@@ -121,6 +122,7 @@ export class User implements IUser {
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
                     type: NotificationType.USER,
+                    action: 'DELETE',
                     isVisible: true,
                     createdBy: authService.getUser()?.name || 'System',
                 });
@@ -141,6 +143,7 @@ export class User implements IUser {
                     notificationID: `ntf-${nanoid(8)}`,
                     status: "NEW",
                     type: NotificationType.USER,
+                    action: 'UPDATE',
                     isVisible: true,
                     link: `/settings?tab=users`,
                     createdBy: authService.getUser()?.name || 'System',

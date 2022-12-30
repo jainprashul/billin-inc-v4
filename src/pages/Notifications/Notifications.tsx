@@ -19,6 +19,7 @@ const _filter = {
     },
     status: 'ALL',
     type: 'ALL',
+    action : 'ALL',
     user: ['ALL']
 }
 type Props = {}
@@ -37,7 +38,8 @@ const Notifications = (props: Props) => {
                 return x.date >= filter.date.from && x.date <= filter.date.to &&
                     (filter.status === "ALL" || x.status === filter.status) &&
                     (filter.type === "ALL" || x.type === filter.type) &&
-                    (filter.user.includes("ALL") || filter.user.includes(x.createdBy))
+                    (filter.user.includes("ALL") || filter.user.includes(x.createdBy)) && 
+                    (filter.action === "ALL" || x.action === filter.action)
             })
                 .reverse().toArray()
             return notifications
@@ -69,6 +71,12 @@ const Notifications = (props: Props) => {
             component: 'select',
             value: filter.type,
             options: ['ALL', ...Object.values(NotificationType)]
+        },
+        {
+            name: 'action',
+            component: 'select',
+            value: filter.action,
+            options: ['ALL', 'CREATE', 'UPDATE', 'DELETE']
         },
         {
             name: 'user',

@@ -73,6 +73,7 @@ export class Ledger implements ILedger {
             notificationID: `ntf-${nanoid(8)}`,
             status: "NEW", createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.LEDGER,
+            action: 'CREATE',
             link: `/ledger`
         });
         notify.save();
@@ -89,6 +90,7 @@ export class Ledger implements ILedger {
             status: "NEW",
             createdBy: authService.getUser()?.name || 'System',
             type: NotificationType.LEDGER,
+            action: 'DELETE',
             link: `/ledger`
         });
         notify.save();
