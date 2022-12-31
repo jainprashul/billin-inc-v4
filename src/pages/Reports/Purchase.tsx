@@ -1,12 +1,18 @@
 import MaterialTable, { Column } from '@material-table/core'
-import moment from 'moment'
 import React, { useEffect } from 'react'
 import { getGSTPurchases, GSTINFO, generateGSTReportData } from '../../services/analytics/GST'
 import { useDataUtils } from '../../utils/useDataUtils'
 
-type Props = {}
+type Props = {
+  filter: {
+    date: {
+      from: Date;
+      to: Date;
+    }
+  }
+}
 
-const Purchase = (props: Props) => {
+const Purchase = ({ filter }: Props) => {
 
   const { companyDB } = useDataUtils()
   const [loading, setLoading] = React.useState(false)
@@ -27,7 +33,7 @@ const Purchase = (props: Props) => {
     async function getPurchaseReport() {
       setLoading(true)
       if (companyDB) {
-        const data = await getGSTPurchases(companyDB, moment().startOf('month').toDate(), moment().endOf('month').toDate());
+        const data = await getGSTPurchases(companyDB, filter.date.from, filter.date.to);
         const report = await generateGSTReportData(data)
         setData(report)
         setLoading(false)
@@ -38,11 +44,11 @@ const Purchase = (props: Props) => {
 
     getPurchaseReport()
   }
-    , [companyDB])
+    , [companyDB, filter.date])
 
 
   return (
-    <div style ={{
+    <div style={{
       width: '140%',
       marginLeft: '-20%'
     }}>
@@ -59,7 +65,6 @@ const Purchase = (props: Props) => {
         options={{
           pageSize: 10,
           exportAllData: true,
-          grouping: true,
           columnResizable: true,
           pageSizeOptions: [5, 10, 20, 30, 50],
           draggable: true,

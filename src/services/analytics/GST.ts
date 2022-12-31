@@ -192,7 +192,7 @@ async function generateGSTReportData(data: Purchase[] | Invoice[], excel = false
                 InvoiceType: '',
                 ECommerceGSTIN: '',
 
-                Rate: rate,
+                Rate: `@${rate} %`,
                 IGST: await jsonata('$sum(IGST)').evaluate(rateData) || 0,
                 CGST: await jsonata('$sum(CGST)').evaluate(rateData) || 0,
                 SGST: await jsonata('$sum(SGST)').evaluate(rateData) || 0,
@@ -216,8 +216,124 @@ async function generateGSTReportData(data: Purchase[] | Invoice[], excel = false
     }
 }
 
+// type GSTReportResult = {
+//     gstData: GSTINFO[];
+//     total: GSTINFO;
+//     column: Column<GSTINFO>[];
+//     GSTTotals: GSTINFO[];
+// }
+export type Adjustments = {
+    title: string;
+    IGST: number;
+    CGST: number;
+    SGST: number;
+}
+export interface OverallAdjustments {
+    purchaseReports: {
+        data: GSTINFO[];
+        column: Column<GSTINFO>[];
+    };
+    salesReports: {
+        data: GSTINFO[];
+        column: Column<GSTINFO>[];
+    };
+    adjustments: {
+        data: Adjustments[];
+        column: Column<Adjustments>[];
+    }
+}
+// calculate the GST sales and purchase adjustments
+async function calculateAdjustments(companyDB: CompanyDB, from: Date, to: Date) {
+    const purchase = getGSTPurchases(companyDB, from, to);
+    const sales = getGSTSales(companyDB, from, to);
+    const [_purchase, _sales] = await Promise.all([purchase, sales]);
+    const _purchaseReport = await generateGSTReportData(_purchase);
+    const _salesReport = await generateGSTReportData(_sales);
+    const [purchaseReport, salesReport] = await Promise.all([_purchaseReport, _salesReport]);
+
+    const less = {
+        IGST: purchaseReport.total.IGST - salesReport.total.IGST,
+        CGST: purchaseReport.total.CGST - salesReport.total.CGST,
+        SGST: purchaseReport.total.SGST - salesReport.total.SGST,
+    }
+    const cross = {
+        IGST: 0,
+        CGST: 0,
+        SGST: 0,
+    }
+    const netPayable = {
+        IGST: less.IGST - cross.IGST,
+        CGST: less.CGST - cross.CGST,
+        SGST: less.SGST - cross.SGST,
+    }
+    return {
+        purchaseReports: {
+            data: [
+                ...purchaseReport.GSTTotals, purchaseReport.total
+            ],
+            column: [
+                { title: "Input Adjustments", field: "Rate", width: 20, },
+                { title: "IGST", field: "IGST", width: 20, type: 'currency', currencySetting: { currencyCode: 'INR' } },
+                { title: "CGST", field: "CGST", width: 20, type: 'currency', currencySetting: { currencyCode: 'INR' } },
+                { title: "SGST", field: "SGST", width: 20, type: 'currency', currencySetting: { currencyCode: 'INR' } },
+            ] as Array<Column<GSTINFO>>
+        },
+        salesReports: {
+            data: [
+                ...salesReport.GSTTotals, salesReport.total
+            ],
+            column: [
+                { title: "Output Adjustments", field: "Rate", width: 20, },
+                { title: "IGST", field: "IGST", width: 20, type: 'currency', currencySetting: { currencyCode: 'INR' } },
+                { title: "CGST", field: "CGST", width: 20, type: 'currency', currencySetting: { currencyCode: 'INR' } },
+                { title: "SGST", field: "SGST", width: 20, type: 'currency', currencySetting: { currencyCode: 'INR' } },
+            ] as Array<Column<GSTINFO>>
+        },
+        adjustments: {
+            data: [
+                {
+                    title: "Current ITC",
+                    IGST: purchaseReport.total.IGST,
+                    CGST: purchaseReport.total.CGST,
+                    SGST: purchaseReport.total.SGST,
+                }, {
+                    title: "Less : Output Tax",
+                    IGST: -1 * salesReport.total.IGST,
+                    CGST: -1 * salesReport.total.CGST,
+                    SGST: -1 * salesReport.total.SGST,
+                }, {
+                    title: "Less : Adjustments",
+                    IGST: -1 * less.IGST,
+                    CGST: -1 * less.CGST,
+                    SGST: -1 * less.SGST,
+                }, {
+                    title: "Less : Cross Charge",
+                    IGST: -1 * cross.IGST,
+                    CGST: -1 * cross.CGST,
+                    SGST: -1 * cross.SGST,
+                },
+                {
+                    title: "Net Payable / Receivable (ITC Carried Forward)",
+                    IGST: netPayable.IGST,
+                    CGST: netPayable.CGST,
+                    SGST: netPayable.SGST,
+                }
+            ] as Adjustments[],
+            column: [
+                { title: 'GST Payable', field: 'title', cellStyle: { width: 300 } },
+                { title: 'IGST', field: 'IGST', type: 'currency', currencySetting: { currencyCode: 'INR' } },
+                { title: 'CGST', field: 'CGST', type: 'currency', currencySetting: { currencyCode: 'INR' } },
+                { title: 'SGST', field: 'SGST', type: 'currency', currencySetting: { currencyCode: 'INR' } },
+            ] as Array<Column<Adjustments>>
+        }
+    }
+
+}
+
+
 export {
     getGSTPurchases,
     getGSTSales,
-    generateGSTReportData
+    generateGSTReportData,
+    calculateAdjustments
 }

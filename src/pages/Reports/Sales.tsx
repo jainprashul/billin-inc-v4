@@ -1,10 +1,16 @@
 import MaterialTable, { Column } from '@material-table/core'
-import moment from 'moment'
 import React, { useEffect } from 'react'
 import { GSTINFO, generateGSTReportData, getGSTSales } from '../../services/analytics/GST'
 import { useDataUtils } from '../../utils/useDataUtils'
 
-type Props = {}
+type Props = {
+  filter: {
+    date: {
+      from: Date;
+      to: Date;
+    }
+  }
+}
 
 const Sales = (props: Props) => {
 
@@ -27,7 +33,7 @@ const Sales = (props: Props) => {
     async function getSalesReport() {
       setLoading(true)
       if (companyDB) {
-        const data = await getGSTSales(companyDB, moment().startOf('month').toDate(), moment().endOf('month').toDate());
+        const data = await getGSTSales(companyDB, props.filter.date.from, props.filter.date.to);
         const report = await generateGSTReportData(data)
         setData(report)
         setLoading(false)
@@ -37,12 +43,11 @@ const Sales = (props: Props) => {
     }
 
     getSalesReport()
-  }
-    , [companyDB])
+  } , [companyDB, props.filter.date])
 
 
   return (
-    <div style ={{
+    <div style={{
       width: '140%',
       marginLeft: '-20%'
     }}>
@@ -59,7 +64,6 @@ const Sales = (props: Props) => {
         options={{
           pageSize: 10,
           exportAllData: true,
-          grouping: true,
           columnResizable: true,
           pageSizeOptions: [5, 10, 20, 30, 50],
           draggable: true,
