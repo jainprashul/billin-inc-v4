@@ -62,11 +62,11 @@ export class Purchase implements IPurchase {
         this.billingDate = purchase.billingDate;
         this.categoryID = purchase.categoryID;
         this.gstEnabled = purchase.gstEnabled;
-        this.gstTotal = purchase.gstTotal;
-        this.subTotal = purchase.subTotal;
+        this.gstTotal = parseFloat(purchase.gstTotal.toFixed(2));
+        this.subTotal = parseFloat(purchase.subTotal.toFixed(2));
         this.grossTotal = purchase.gstTotal + purchase.subTotal;
         this.discount = purchase.discount;
-        this.discountValue = purchase.discountValue || 0;
+        this.discountValue = parseFloat(purchase.discountValue?.toFixed(2) || '0');
         this.totalAmount = this.grossTotal - this.discountValue;
         this.amountPaid = purchase.amountPaid || 0;
 

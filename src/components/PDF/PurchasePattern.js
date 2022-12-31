@@ -365,10 +365,10 @@ thead.itembox{
             `
         <tr class='item-row start'>
             <td colSpan="6" style='text-align : left' className="">Total :  </td>
-            <td colSpan="1" className="">${(grossTotal).toFixed(2)}</td>
+            <td colSpan="1" className="">${(subTotal).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal / 2).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal / 2).toFixed(2)}</td>
-            <td colSpan="1" >${(subTotal).toFixed(2)}</td>
+            <td colSpan="1" >${(grossTotal).toFixed(2)}</td>    
         </tr >
          <tr className=''>
             <td colSpan="8" class="blank"> </td>

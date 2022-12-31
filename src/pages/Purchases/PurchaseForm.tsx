@@ -35,7 +35,7 @@ const purchaseSchema = Yup.object().shape({
 const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase Entry', purchase = new Purchase({
   id,
   billingDate: new Date(),
-  clientID: nanoid(),
+  clientID: `c_${nanoid(12)}`,
   companyID: parseInt(localStorage.getItem("companyID") ?? '1'),
   discount: false,
   discountValue: 0,
@@ -174,7 +174,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
             value={customerName}
             options={clientNames}
             onChange={(event, value, reason, detail) => {
-              console.log(value, reason, detail);
+              console.log('auto',value, reason, detail);
               if (reason === 'selectOption') {
                 setCustomerName(value as string)
                 db.getCompanyDB(purchase.companyID).clients.get({ name: value }).then(client => {
@@ -292,7 +292,6 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
                 renderInput={(params) => <TextField variant='standard' {...params} />}
               />
             </DateProvider>
-
 
           </div>
 

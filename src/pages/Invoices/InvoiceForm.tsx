@@ -174,7 +174,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             value={customerName}
             options={clientNames}
             onChange={(event, value, reason, detail) => {
-              console.log(value, reason, detail);
+              console.log('auto',value, reason, detail);
               if (reason === 'selectOption') {
                 setCustomerName(value as string)
                 db.getCompanyDB(invoice.companyID).clients.get({ name: value }).then(client => {

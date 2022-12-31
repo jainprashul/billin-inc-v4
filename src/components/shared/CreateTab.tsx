@@ -3,13 +3,14 @@ import Tab from '@mui/material/Tab';
 import { Box, Tabs } from '@mui/material'
 import { a11yProps, TabPanel } from '../../components/shared/TabPanel';
 
+export interface Panel {
+    name: string
+    content: () => JSX.Element
+    hidden?: boolean,
+}
 
 type Props = {
-    panels: {
-        name: string
-        content: () => JSX.Element
-        hidden?: boolean,
-    }[]
+    panels: Panel[]
 
     tabIndex?: number
 }

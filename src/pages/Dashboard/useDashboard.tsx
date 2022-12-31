@@ -10,6 +10,8 @@ import { useDataUtils } from '../../utils/useDataUtils'
 import { selectSalesData, setCount, setSalesData } from '../../utils/utilsSlice'
 import { NavigateOptions } from 'react-router-dom'
 import { Expense } from '../../services/database/model'
+// import jsonata from 'jsonata'
+
 
 const DashboardContext = React.createContext({
     companyDB: null as CompanyDB | null,
@@ -39,7 +41,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
             to: moment().endOf('day').toDate()
         },
     })
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const filterList: Filter[] = [
         {
@@ -96,6 +98,19 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         setLoading(true)
         const dates = getDatesBetween(filter.date.from, filter.date?.to)
         let res = []
+        // jsonatá, a query language for JSON
+        // query for getting the invoice count and amount by date
+
+        // const query = jsonata(`$.billingDate@$datex.$substringBefore($datex, 'T')@$date.totalAmount@$amt.{
+        //     "Date" : $date,
+        //     "Amount" : $amt
+        // }`)
+
+        // query.evaluate(invoices).then((result: any) => {
+        //     console.log('result inv', invoices)
+        //     console.log('result', result)
+        // })
+
         for (let i = 0; i < invoices.length; i++) {
             const inv = invoices[i]
             const date = inv.billingDate.toLocaleDateString()

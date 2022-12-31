@@ -19,6 +19,7 @@
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "jose": "^4.11.1",
+    "jsonata": "^2.0.0",
     "jszip": "^3.10.1",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.3",
