@@ -2,6 +2,7 @@ import MaterialTable from '@material-table/core';
 import { Grid } from '@mui/material';
 import React, { useEffect } from 'react'
 import { getAdjustments, OverallAdjustments } from '../../services/analytics/GST';
+import { Report } from '../../services/database/model/Report';
 import { useDataUtils } from '../../utils/useDataUtils';
 type Props = {
     filter: {
@@ -12,7 +13,7 @@ type Props = {
     }
 }
 const Adjustments = ({ filter }: Props) => {
-    const { companyDB } = useDataUtils()
+    const { companyDB, companyID } = useDataUtils()
     const [data, setData] = React.useState<OverallAdjustments>({
         purchaseReports: {
             data: [],
@@ -30,12 +31,36 @@ const Adjustments = ({ filter }: Props) => {
     useEffect(() => {
         async function getData() {
             if (companyDB) {
+
+                // check if there is any report in the database
+                const dbReport = await companyDB.reports.get({
+                    from: filter.date.from,
+                    to: filter.date.to,
+                    type: 'ADJUSTMENTS'
+                })
+
+                if (!dbReport) {
+                    console.log('No report Found')
+                }
+
                 const data = await getAdjustments(companyDB, filter.date.from, filter.date.to)
                 setData(data)
+
+                // update the report in the database
+                const reportLog = new Report({
+                    id: dbReport?.id,
+                    companyID,
+                    data,
+                    from: filter.date.from,
+                    to: filter.date.to,
+                    type: "ADJUSTMENTS",
+                    createdAt: dbReport?.createdAt || new Date()
+                })
+                reportLog.save()
             }
         }
         getData()
-    }, [companyDB, filter.date])
+    }, [companyDB, companyID, filter.date])
     return (
         <div>
             <Grid container spacing={2}>

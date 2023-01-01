@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { GSTINFO, generateGSTReportData, getGSTSales, getReportSheet } from '../../services/analytics/GST'
 import { useDataUtils } from '../../utils/useDataUtils'
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { Report } from '../../services/database/model/Report';
 
 type Props = {
   filter: {
@@ -15,7 +16,7 @@ type Props = {
 
 const Sales = (props: Props) => {
 
-  const { companyDB } = useDataUtils()
+  const { companyDB, companyID } = useDataUtils()
   const [loading, setLoading] = React.useState(false)
   const [data, setData] = React.useState<{
     gstData: GSTINFO[];
@@ -34,17 +35,38 @@ const Sales = (props: Props) => {
     async function getSalesReport() {
       setLoading(true)
       if (companyDB) {
+        let dbReport = await companyDB.reports.get({
+          from : props.filter.date.from,
+          to : props.filter.date.to,
+          type : 'GST_SALES'
+        })
+
+        if(!dbReport) {
+          console.log('No report Found')
+        }
+
         const data = await getGSTSales(companyDB, props.filter.date.from, props.filter.date.to);
         const report = await generateGSTReportData(data)
         setData(report)
         setLoading(false)
 
+        const reportLog = new Report({
+          id : dbReport?.id,
+          companyID ,
+          data : report,
+          from : props.filter.date.from,
+          to : props.filter.date.to,
+          type : "GST_SALES",
+          createdAt: dbReport?.createdAt || new Date()
+        })
+
+        reportLog.save()
         console.log("report", report)
       }
     }
 
-    getSalesReport()
-  } , [companyDB, props.filter.date])
+      getSalesReport()
+  } , [companyDB, companyID, props.filter.date])
 
 
   return (

@@ -27,7 +27,8 @@ export const NotificationType = {
     PURCHASE : "PURCHASE",
     STOCK_LOG : "STOCK_LOG",
     STOCK : "STOCK",
-    USER : "USER"
+    USER : "USER",
+    REPORT : "REPORT",
     
 }
 

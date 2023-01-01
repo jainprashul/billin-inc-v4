@@ -17,7 +17,7 @@ import Expenses from '../pages/Expenses'
 import Notifications from '../pages/Notifications'
 import Reports from '../pages/Reports'
 import { CompanyDBProvider } from '../utils/useCompanyDB'
-import AdminWrapper from './AdminWrapper'
+import { DashboardProvider } from '../pages/Dashboard/useDashboard'
 
 type Props = {}
 
@@ -35,7 +35,7 @@ const AppRoutes = (props: Props) => {
       <BrowserRouter >
         {/* <ErrorBoundary> */}
         <CompanyDBProvider>
-          {
+          <DashboardProvider>          {
             isAuthenticated ? (
               <Layout>
                 <Routes>
@@ -72,7 +72,8 @@ const AppRoutes = (props: Props) => {
               </Routes>
             )
           }
-          </CompanyDBProvider>
+          </DashboardProvider>
+        </CompanyDBProvider>
       </BrowserRouter>
     </ErrorBoundary>
 
