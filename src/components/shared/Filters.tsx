@@ -12,6 +12,86 @@ export type Filter = {
     default?: any
 }
 
+
+export const DateTimeFilters = [
+    {
+        name: 'today',
+        label: 'Today',
+        value : {
+            from : moment().startOf('day').toDate(),
+            to : moment().endOf('day').toDate()
+        }
+    },
+    {
+        name: 'yesterday',
+        label: 'Yesterday',
+        value : {
+            from : moment().subtract(1, 'days').startOf('day').toDate(),
+            to : moment().subtract(1, 'days').endOf('day').toDate()
+        }
+    },
+    {
+        name: 'thisWeek',
+        label: 'This Week',
+        value : {
+            from : moment().startOf('week').toDate(),
+            to : moment().endOf('week').toDate()
+        }
+    }, 
+    {
+        name: 'lastWeek',
+        label: 'Last Week',
+        value : {
+            from : moment().subtract(1, 'weeks').startOf('week').toDate(),
+            to : moment().subtract(1, 'weeks').endOf('week').toDate()
+        }
+    },
+    {
+        name: 'thisMonth',
+        label: 'This Month',
+        value : {
+            from : moment().startOf('month').toDate(),
+            to : moment().endOf('month').toDate()
+        }
+    }, {
+        name: 'lastMonth',
+        label: 'Last Month',
+        value : {
+            from : moment().subtract(1, 'months').startOf('month').toDate(),
+            to : moment().subtract(1, 'months').endOf('month').toDate()
+        },
+    }, {
+        name: 'thisQuarter',
+        label: 'This Quarter',
+        value : {
+            from : moment().startOf('quarter').toDate(),
+            to : moment().endOf('quarter').toDate()
+        }
+    }, {
+        name: 'lastQuarter',
+        label: 'Last Quarter',
+        value : {
+            from : moment().subtract(1, 'quarters').startOf('quarter').toDate(),
+            to : moment().subtract(1, 'quarters').endOf('quarter').toDate()
+        }
+    },
+    {
+        name: 'thisYear',
+        label: 'This Year',
+        value : {
+            from : moment().startOf('year').toDate(),
+            to : moment().endOf('year').toDate()
+        }
+    }, {
+        name: 'lastYear',
+        label: 'Last Year',
+        value : {
+            from : moment().subtract(1, 'years').startOf('year').toDate(),
+            to : moment().subtract(1, 'years').endOf('year').toDate()
+        }
+    }
+]
+
 type Props = {
     filters: Filter[],
     getFilters: (filters: any) => void
@@ -52,7 +132,7 @@ const Filters = ({ filters, getFilters }: Props) => {
                 }
                 if (x.component === 'date') {
                     return (
-                        <DateFilter filters={filterState} setFilters={setFilterState} filterName={x.name} />
+                        <DateFilter filters={filterState} setFilters={setFilterState} filterName={x.name} defaultVal={x.default} />
                     )
                 }
                 return null
@@ -62,7 +142,7 @@ const Filters = ({ filters, getFilters }: Props) => {
     )
 }
 
-type SelectFilterProps = { filters: any, setFilters: (filters: any) => void, filterName: string, options?: any[] }
+type SelectFilterProps = { filters: any, setFilters: (filters: any) => void, filterName: string, options?: any[], defaultVal?: any }
 // create a select component with the filters
 const SelectFilter = ({ filters, setFilters, filterName, options = [] }: SelectFilterProps) => {
     return (
@@ -123,9 +203,9 @@ const CheckboxFilter = ({ filters, setFilters, filterName, options = [] }: Selec
 }
 
 // create a date component with the filters
-const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
+const DateFilter = ({ filters, setFilters, filterName , defaultVal='thisWeek'  } : SelectFilterProps) => {
     const [custom, setCustom] = React.useState(false)
-    const [customDate, setCustomDate] = React.useState({
+    const [customDate, setCustomDate] = React.useState(DateTimeFilters.find((x) => x.name === defaultVal)?.value ?? {
         from: moment().startOf('week').toDate(),
         to: moment().endOf('week').toDate()
     })
@@ -139,42 +219,11 @@ const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
     }, [customDate])
 
     const handleTimeChange = (val: string) => {
-        switch (val) {
-            case 'today':
-                return {
-                    from: moment().startOf('day').toDate(),
-                    to: moment().endOf('day').toDate()
-                }
-
-            case 'yesterday':
-                return {
-                    from: moment().subtract(1, 'days').startOf('day').toDate(),
-                    to: moment().subtract(1, 'days').endOf('day').toDate()
-                }
-            case 'thisWeek':
-                return {
-                    from: moment().startOf('week').toDate(),
-                    to: moment().endOf('week').toDate()
-                }
-            case 'thisMonth':
-                return {
-                    from: moment().startOf('month').toDate(),
-                    to: moment().endOf('month').toDate()
-                }
-            case 'thisYear':
-                return {
-                    from: moment().startOf('year').toDate(),
-                    to: moment().endOf('year').toDate()
-                }
-            default:
-                return {
-                    from: moment().startOf('years').toDate(),
-                    to: moment().endOf('years').toDate()
-                }
+        return DateTimeFilters.find((x) => x.name === val)?.value ?? {
+            from: moment().startOf('week').toDate(),
+            to: moment().endOf('week').toDate()
         }
     }
-
-    
 
     return (
         <FormControl>
@@ -183,7 +232,7 @@ const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
             }}>{filterName}</InputLabel>
             <Select
                 input={<OutlinedInput label={filterName} />}
-                defaultValue="thisWeek"
+                defaultValue={defaultVal}
                 onChange={(e) => {
                     let val = handleTimeChange(e.target.value)
                     if (e.target.value === 'custom') {
@@ -199,12 +248,13 @@ const DateFilter = ({ filters, setFilters, filterName }: SelectFilterProps) => {
                     })
                 }}
             >
-                <MenuItem value="today">Today</MenuItem>
-                <MenuItem value="yesterday">Yesterday</MenuItem>
-                <MenuItem value="thisWeek">This Week</MenuItem>
-                <MenuItem value="thisMonth">This Month</MenuItem>
-                <MenuItem value="thisYear">This Year</MenuItem>
-                <MenuItem  value="custom">Custom</MenuItem>
+                {
+                    DateTimeFilters.map((x) => {
+                        return (
+                            <MenuItem value={x.name}>{x.label}</MenuItem>
+                        )
+                    })
+                }
             </Select>
 
             {custom && <>

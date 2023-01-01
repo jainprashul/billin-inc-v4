@@ -11,6 +11,7 @@ export interface IProduct {
     gstRate: GstRate;
     hsn: string;
     price: number;
+    discount?: number;
     quantity: number;
     unit: ProductUnit;
     companyID: number;
@@ -30,6 +31,7 @@ export class Product implements IProduct {
     hsn: string;
     price: number;
     quantity: number;
+    discount: number;
     unit: ProductUnit;
     companyID: number;
     gstAmount: number;
@@ -50,8 +52,9 @@ export class Product implements IProduct {
         this.price = isInclusive ? parseFloat((product.price * 100 / (100 + product.gstRate)).toFixed(2)) : product.price;
         this.quantity = product.quantity;
         this.unit = product.unit;
+        this.discount = product.discount || 0;
         this.companyID = product.companyID;
-        this.grossAmount = this.price * product.quantity;
+        this.grossAmount = Number(((this.price * this.quantity) - this.discount).toFixed(2));
         this.gstAmount = parseFloat((this.grossAmount * (this.gstRate / 100)).toFixed(2));
         this.totalAmount = this.grossAmount + this.gstAmount;
         this.createdAt = product.createdAt || new Date();

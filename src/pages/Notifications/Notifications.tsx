@@ -58,7 +58,8 @@ const Notifications = (props: Props) => {
         {
             name: 'date',
             component: 'date',
-            value: filter.date
+            value: filter.date,
+            default: 'thisWeek',
         },
         {
             name: 'status',

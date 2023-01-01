@@ -30,6 +30,7 @@ const StockTable = ({ data }: Props) => {
         {
             title: 'Unit',
             field: 'unit',
+
         },
         {
             title: 'Purchase Price',
