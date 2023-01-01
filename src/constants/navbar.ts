@@ -80,15 +80,16 @@ export const DRAWER_MENU: DrawerMenu[] = [
         admin: true
     },
     {
-        name: "Companies",
-        icon: BusinessIcon,
-        route: COMPANY,
-    },
-    {
         name: "Reports",
         icon: AssessmentIcon,
         route: REPORTS,
     },
+    {
+        name: "Companies",
+        icon: BusinessIcon,
+        route: COMPANY,
+    },
+    
     {
         name: "Settings",
         icon: SettingsIcon,

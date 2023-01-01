@@ -1,7 +1,8 @@
 import MaterialTable, { Column } from '@material-table/core'
 import React, { useEffect } from 'react'
-import { getGSTPurchases, GSTINFO, generateGSTReportData } from '../../services/analytics/GST'
+import { getGSTPurchases, GSTINFO, generateGSTReportData, getReportSheet } from '../../services/analytics/GST'
 import { useDataUtils } from '../../utils/useDataUtils'
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 type Props = {
   filter: {
@@ -37,15 +38,10 @@ const Purchase = ({ filter }: Props) => {
         const report = await generateGSTReportData(data)
         setData(report)
         setLoading(false)
-
-        console.log("report", report)
       }
     }
-
     getPurchaseReport()
-  }
-    , [companyDB, filter.date])
-
+  }, [companyDB, filter.date])
 
   return (
     <div style={{
@@ -62,6 +58,17 @@ const Purchase = ({ filter }: Props) => {
           //   state: row
           // })
         }}
+
+        actions={[
+          {
+            icon: () => <UploadFileIcon />,
+            tooltip: 'Export to Excel',
+            isFreeAction: true,
+            onClick: () => {
+              getReportSheet(companyDB!, filter.date.from, filter.date.to)
+            }
+          }
+        ]}
         options={{
           pageSize: 10,
           exportAllData: true,

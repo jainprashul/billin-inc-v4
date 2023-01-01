@@ -1,7 +1,7 @@
 import MaterialTable from '@material-table/core';
 import { Grid } from '@mui/material';
 import React, { useEffect } from 'react'
-import { calculateAdjustments, OverallAdjustments } from '../../services/analytics/GST';
+import { getAdjustments, OverallAdjustments } from '../../services/analytics/GST';
 import { useDataUtils } from '../../utils/useDataUtils';
 type Props = {
     filter: {
@@ -28,13 +28,13 @@ const Adjustments = ({ filter }: Props) => {
         }
     })
     useEffect(() => {
-        async function getAdjustments() {
+        async function getData() {
             if (companyDB) {
-                const data = await calculateAdjustments(companyDB, filter.date.from, filter.date.to)
+                const data = await getAdjustments(companyDB, filter.date.from, filter.date.to)
                 setData(data)
             }
         }
-        getAdjustments()
+        getData()
     }, [companyDB, filter.date])
     return (
         <div>

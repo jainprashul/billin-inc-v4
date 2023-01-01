@@ -5,6 +5,7 @@ import { Purchase } from "../database/model";
 import { Column } from '@material-table/core'
 import PlaceOfSupply from "../../constants/PlaceOfSupply";
 import { Invoice } from "../database/model/Invoices";
+import { Excel, ExcelColumn, styleSheet } from "./Excel";
 
 export interface GSTINFO {
     id: string;
@@ -216,12 +217,12 @@ async function generateGSTReportData(data: Purchase[] | Invoice[], excel = false
     }
 }
 
-// type GSTReportResult = {
-//     gstData: GSTINFO[];
-//     total: GSTINFO;
-//     column: Column<GSTINFO>[];
-//     GSTTotals: GSTINFO[];
-// }
+export type GSTReportResult = {
+    gstData: GSTINFO[];
+    total: GSTINFO;
+    column: Column<GSTINFO>[];
+    GSTTotals: GSTINFO[];
+}
 export type Adjustments = {
     title: string;
     IGST: number;
@@ -242,15 +243,19 @@ export interface OverallAdjustments {
         column: Column<Adjustments>[];
     }
 }
-// calculate the GST sales and purchase adjustments
-async function calculateAdjustments(companyDB: CompanyDB, from: Date, to: Date) {
+
+async function getAdjustments(companyDB: CompanyDB, from: Date, to: Date){
     const purchase = getGSTPurchases(companyDB, from, to);
     const sales = getGSTSales(companyDB, from, to);
     const [_purchase, _sales] = await Promise.all([purchase, sales]);
     const _purchaseReport = await generateGSTReportData(_purchase);
     const _salesReport = await generateGSTReportData(_sales);
     const [purchaseReport, salesReport] = await Promise.all([_purchaseReport, _salesReport]);
-
+    const adjustments = await calculateAdjustments(purchaseReport, salesReport);
+    return adjustments
+}
+// calculate the GST sales and purchase adjustments
+async function calculateAdjustments(purchaseReport : GSTReportResult , salesReport : GSTReportResult) {
     const less = {
         IGST: purchaseReport.total.IGST - salesReport.total.IGST,
         CGST: purchaseReport.total.CGST - salesReport.total.CGST,
@@ -331,9 +336,109 @@ async function calculateAdjustments(companyDB: CompanyDB, from: Date, to: Date) 
 }
 
 
+function ReportToSheet(workBook: Excel, report: GSTReportResult, sheetName: string) {
+    // add the sales report sheet
+    const sheet = workBook.addSheet(`${sheetName}`, {
+        headerFooter: {
+            firstFooter: `&L&B&16${sheetName}`,
+            oddHeader: `&L&B&16${sheetName}`,
+            oddFooter: `&L&B&16${sheetName}`,
+        }
+    })
+
+    sheet.columns = report.column.map((col) => {
+        const column: ExcelColumn = {
+            header: col.title as string,
+            key: col.field as string,
+            width: col.width as number,
+        }
+        if (col.type === 'currency') {
+            column.style = { numFmt: '#,##0.00' }
+        }
+        return column
+    })
+
+    sheet.addRows(report.gstData)
+    sheet.addRow(report.total)
+    sheet.addRows(report.GSTTotals)
+
+    styleSheet(sheet)
+
+    return sheet
+}
+
+async function getReportSheet(companyDB: CompanyDB, from: Date, to: Date){
+    const purchase = getGSTPurchases(companyDB, from, to);
+    const sales = getGSTSales(companyDB, from, to);
+    const [_purchase, _sales] = await Promise.all([purchase, sales]);
+    const _purchaseReport = await generateGSTReportData(_purchase);
+    const _salesReport = await generateGSTReportData(_sales);
+    const [purchaseReport, salesReport] = await Promise.all([_purchaseReport, _salesReport]);
+
+    return generateReportSheet(salesReport, purchaseReport, { from, to });
+}
+
+async function generateReportSheet(salesReport: GSTReportResult, purchaseReport: GSTReportResult, date?: {
+    from: Date,
+    to: Date
+}) {
+
+    const reportSheet = new Excel();
+
+    // add the sales report sheet
+    ReportToSheet(reportSheet, salesReport, 'Sales Report')
+
+    // add the purchase report sheet
+    ReportToSheet(reportSheet, purchaseReport, 'Purchase Report')
+
+    // add the Adjustments 
+    const adj = await calculateAdjustments(salesReport, purchaseReport);
+
+    const sheet = reportSheet.addSheet('GST Adjustments');
+    sheet.columns = adj.adjustments.column.map((col) => {
+        const column: ExcelColumn = {
+            header: col.title as string,
+            key: col.field as string,
+            width: col.width as number,
+        }
+        return column
+    })
+    sheet.addRows(adj.adjustments.data);
+  
+    const sheet2 = reportSheet.addSheet('Output GST Adjustments');
+    sheet2.columns = adj.salesReports.column.map((col) => {
+        const column: ExcelColumn = {
+            header: col.title as string,
+            key: col.field as string,
+            width: col.width as number,
+        }
+        return column
+    })
+
+    sheet2.addRows(adj.salesReports.data);
+  
+    const sheet3 = reportSheet.addSheet('Input GST Adjustments');
+    sheet3.columns = adj.purchaseReports.column.map((col) => {
+        const column: ExcelColumn = {
+            header: col.title as string,
+            key: col.field as string,
+            width: col.width as number,
+        }
+        return column
+    })
+
+    sheet3.addRows(adj.purchaseReports.data);
+
+    // save the report
+    const fileName = `GST Report ${date?.from?.toLocaleDateString()}-${date?.to?.toLocaleDateString()}.xlsx`
+    await reportSheet.save(fileName)
+
+}
 export {
     getGSTPurchases,
     getGSTSales,
     generateGSTReportData,
-    calculateAdjustments
+    calculateAdjustments,
+    getAdjustments,
+    getReportSheet,
 }
