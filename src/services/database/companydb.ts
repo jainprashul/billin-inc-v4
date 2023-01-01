@@ -1,5 +1,6 @@
 import Dexie from "dexie";
 import { Client, Expense, IConfig, Invoices, Ledger, NotificationLog, Product, Purchase, Stock, StockLog } from './model';
+import { Report } from "./model/Report";
 
 
 export class CompanyDB extends Dexie {
@@ -13,11 +14,12 @@ export class CompanyDB extends Dexie {
     products!: Dexie.Table<Product, string>;
     settings!: Dexie.Table<IConfig, number>;
     notificationlogs!: Dexie.Table<NotificationLog, number>;
+    reports!: Dexie.Table<Report , number>;
 
     constructor(dbID: string) {
         super(`${dbID}`);
         // Declare tables
-        this.version(1).stores({
+        this.version(1.2).stores({
             expenses: 'id, companyID, amount, date, categoryID',
             stocks: '++id, companyID, &name, quantity',
             ledger: '++id, companyID, assetID, clientID, amount, date, categoryID',
@@ -25,9 +27,10 @@ export class CompanyDB extends Dexie {
             invoices: 'id, companyID, voucherNo, clientID, billingDate, categoryID',
             clients: 'id, companyID, &name, gst , address.city, address.state',
             settings: '++id, companyID, name, value',
-            notificationlogs: '++id, companyID, clientID, date, isVisible',
+            notificationlogs: '++id, companyID, clientID, date, isVisible, type, action, createdBy',
             products: 'id, companyID, name, hsn, unit, voucherID, categoryID',
-            stocklogs: '++id, stockID, voucherNo, logType, companyID, clientID, date'
+            stocklogs: '++id, stockID, voucherNo, logType, companyID, clientID, date',
+            reports : '++id, companyID, type, from, to, [from+to+type]',
         });
         this.invoices.mapToClass(Invoices);
         this.purchases.mapToClass(Purchase);
@@ -38,6 +41,7 @@ export class CompanyDB extends Dexie {
         this.products.mapToClass(Product);
         this.stocklogs.mapToClass(StockLog);
         this.stocks.mapToClass(Stock);
+        this.reports.mapToClass(Report);
 
     }
 

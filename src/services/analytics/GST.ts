@@ -251,21 +251,39 @@ async function getAdjustments(companyDB: CompanyDB, from: Date, to: Date){
     const _purchaseReport = await generateGSTReportData(_purchase);
     const _salesReport = await generateGSTReportData(_sales);
     const [purchaseReport, salesReport] = await Promise.all([_purchaseReport, _salesReport]);
-    const adjustments = await calculateAdjustments(purchaseReport, salesReport);
+    
+    const daysDiff = moment(to).diff(moment(from), 'days') + 1
+
+    console.log('daysDiff', daysDiff, moment(from).subtract(daysDiff, 'days').startOf('day').toDate(), moment(to).subtract(daysDiff, 'days').endOf('day').toDate())
+    
+    const prev = await companyDB.reports.get({
+        from: moment(from).subtract(daysDiff, 'days').startOf('day').toDate(),
+        to: moment(to).subtract(daysDiff, 'days').endOf('day').toDate(),
+        type : 'ADJUSTMENTS'
+    })
+
+    console.log('prev', prev)
+
+    const prevAdjustments = prev?.data as OverallAdjustments
+
+    const adjustments = await calculateAdjustments(purchaseReport, salesReport, prevAdjustments);
     return adjustments
 }
 // calculate the GST sales and purchase adjustments
-async function calculateAdjustments(purchaseReport : GSTReportResult , salesReport : GSTReportResult) {
+async function calculateAdjustments(purchaseReport : GSTReportResult , salesReport : GSTReportResult, prevAdjustments?: OverallAdjustments) {
+    console.log('prevAdjustments', prevAdjustments)
     const less = {
         IGST: purchaseReport.total.IGST - salesReport.total.IGST,
         CGST: purchaseReport.total.CGST - salesReport.total.CGST,
         SGST: purchaseReport.total.SGST - salesReport.total.SGST,
     }
     const cross = {
-        IGST: 0,
-        CGST: 0,
-        SGST: 0,
+        IGST: prevAdjustments ? prevAdjustments?.adjustments.data[4].IGST : 0,
+        CGST: prevAdjustments ? prevAdjustments?.adjustments.data[4].CGST : 0,
+        SGST: prevAdjustments ? prevAdjustments?.adjustments.data[4].SGST : 0,
     }
+
+    
     const netPayable = {
         IGST: less.IGST - cross.IGST,
         CGST: less.CGST - cross.CGST,
