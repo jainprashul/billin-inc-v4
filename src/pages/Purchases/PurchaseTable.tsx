@@ -10,6 +10,7 @@ import { Purchase } from '../../services/database/model';
 import purchasePattern from '../../components/PDF/PurchasePattern';
 import { Link } from 'react-router-dom';
 import { theme } from '../../styles/theme';
+import db from '../../services/database/db';
 
 type Props = {
     data: Array<Purchase>
@@ -21,7 +22,7 @@ const PurchaseTable = ({ data }: Props) => {
     const { enqueueSnackbar } = useSnackbar();
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState(false);
-    const { company, navigate } = useDataUtils()
+    const { navigate, companyID } = useDataUtils()
 
 
 
@@ -36,7 +37,10 @@ const PurchaseTable = ({ data }: Props) => {
         await new Purchase(purchase).delete();
     };
 
-    const viewPurchase = async (purchase: Purchase) => {
+    const viewPurchase = React.useCallback(async (purchase: Purchase) => {
+
+        const company = await db.companies.get(companyID)!;
+        console.log('company', company)
         // navigate(`/purchase/${invoice.id}`, {
         //     state: invoice
         // });
@@ -50,7 +54,7 @@ const PurchaseTable = ({ data }: Props) => {
             w.document.write(purchasePattern(data));
             w.document.close();
         }
-    }
+    }, [companyID]);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const editPurchase = async (purchase: Purchase) => {
@@ -59,8 +63,9 @@ const PurchaseTable = ({ data }: Props) => {
         });
     }
 
-    const printPurchaseBill = (purchase: Purchase) => {
+    const printPurchaseBill = React.useCallback(async(purchase: Purchase) => {
         console.log('printBill', purchase)
+        const company = await db.companies.get(companyID)!;
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
@@ -75,7 +80,7 @@ const PurchaseTable = ({ data }: Props) => {
         iframe.contentDocument?.close();
         iframe.contentWindow?.focus();
         iframe.contentWindow?.print();
-    }
+    }, [companyID]);
 
     const columns: Array<Column<Purchase>> = React.useMemo(() => [
         {

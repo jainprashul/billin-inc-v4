@@ -1,14 +1,14 @@
 
 import GSTSettings from './GSTSettings';
 import BackupSettings from './BackupSettings';
-import CreateTab from '../../components/shared/CreateTab';
+import CreateTab, { Panel } from '../../components/shared/CreateTab';
 import Auth from './Auth';
 import UserAccounts from './UserAccounts';
 import authService from '../../services/authentication/auth.service';
 
 type Props = {}
 
-const panels = [
+const panels : Panel[] = [
     {
         name: "GST Settings",
         content: () => (

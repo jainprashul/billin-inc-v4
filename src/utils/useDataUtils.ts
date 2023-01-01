@@ -1,51 +1,28 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useSnackbar } from "notistack";
-import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useLocalStorage } from ".";
 import { useAppDispatch } from "../app/hooks";
-import CompanyDB from "../services/database/companydb";
 import db from "../services/database/db";
-import { Company } from "../services/database/model";
+import { useCompanyDB } from "./useCompanyDB";
 
 export const useDataUtils = () => {
+  const dispatch = useAppDispatch();
+  const { company, companyDB, companyID, setCompanyID } = useCompanyDB()
+  const backups = useLiveQuery(async () => {
+    return db.backups.toArray();
+  })!;
 
-    const [ companyID , setCompanyID ] = useLocalStorage("companyID", 1);
-    const dispatch= useAppDispatch();
-
-    const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
-  
-    useEffect(() => {
-      db.on('ready', () => {
-        setTimeout(() => {
-          setCompanyDB(db.getCompanyDB(companyID));
-        }, 1000);
-      });
-    }, [companyID]);
-
-    const company = useLiveQuery( async ()=> {
-        return db.companies.get(companyID);
-    }) as Company;
-
-    const backups = useLiveQuery( async ()=> {
-        return db.backups.toArray();
-    })!;
-
-    const navigate = useNavigate();
-    const location  = useLocation();
-    const params = useParams();
-
-    const toast = useSnackbar();
-
-
-    return {
-        company, companyID, setCompanyID,
-        companyDB,
-        navigate,
-        location,
-        params,
-        toast,
-        backups,
-        dispatch
-    }
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams();
+  const toast = useSnackbar();
+  return {
+    company, companyDB, companyID, setCompanyID,
+    navigate,
+    location,
+    params,
+    toast,
+    backups,
+    dispatch
+  }
 }

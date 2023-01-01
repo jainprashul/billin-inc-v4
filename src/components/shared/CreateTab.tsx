@@ -3,18 +3,19 @@ import Tab from '@mui/material/Tab';
 import { Box, Tabs } from '@mui/material'
 import { a11yProps, TabPanel } from '../../components/shared/TabPanel';
 
+export interface Panel {
+    name: string
+    content: () => JSX.Element
+    hidden?: boolean,
+}
 
 type Props = {
-    panels: {
-        name: string
-        content: () => JSX.Element
-        hidden?: boolean,
-    }[]
-
+    panels: Panel[]
+    children?: React.ReactNode
     tabIndex?: number
 }
 
-const CreateTab = ({ panels, tabIndex = 0 }: Props) => {
+const CreateTab = ({ panels, tabIndex = 0, children }: Props) => {
     const Panels = useMemo(() => panels.sort((a, b) => a.hidden ? 1 : -1), [panels])
     const [currentTab, setCurrentTab] = React.useState(tabIndex);
 
@@ -23,7 +24,8 @@ const CreateTab = ({ panels, tabIndex = 0 }: Props) => {
     };
     return (
         <>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box borderBottom={1} borderColor={'divider'} display={'flex'} justifyContent={'space-between'} alignItems={'flex-end'}>
+                <div>
                 <Tabs value={currentTab} onChange={handleChangeTab} aria-label="settings tab">
                     {
                         Panels.map((panel, index) => (
@@ -31,6 +33,8 @@ const CreateTab = ({ panels, tabIndex = 0 }: Props) => {
                         ))
                     }
                 </Tabs>
+                </div>
+                {children}
             </Box>
 
             {

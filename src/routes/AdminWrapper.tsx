@@ -16,3 +16,9 @@ const AdminWrapper = (props: Props) => {
 }
 
 export default AdminWrapper
+
+export const withAdmin = (Component: React.FC) => ({ ...props }) => (
+    <AdminWrapper>
+        <Component {...props} />
+    </AdminWrapper>
+)
