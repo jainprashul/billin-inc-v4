@@ -119,20 +119,20 @@ const Filters = ({ filters, getFilters }: Props) => {
 
     return (
         <Stack direction="row" spacing={2} m={1}>
-            {Object.keys(filterState).length && filters.map((x) => {
+            {Object.keys(filterState).length && filters.map((x, i) => {
                 if (x.component === 'select') {
                     return (
-                        <SelectFilter filters={filterState} setFilters={setFilterState} filterName={x.name} options={x.options} />
+                        <SelectFilter key={i} filters={filterState} setFilters={setFilterState} filterName={x.name} options={x.options} />
                     )
                 }
                 if (x.component === 'checkbox') {
                     return (
-                        <CheckboxFilter filters={filterState} setFilters={setFilterState} filterName={x.name} options={x.options} />
+                        <CheckboxFilter key={i} filters={filterState} setFilters={setFilterState} filterName={x.name} options={x.options} />
                     )
                 }
                 if (x.component === 'date') {
                     return (
-                        <DateFilter filters={filterState} setFilters={setFilterState} filterName={x.name} defaultVal={x.default} />
+                        <DateFilter key={i} filters={filterState} setFilters={setFilterState} filterName={x.name} defaultVal={x.default} />
                     )
                 }
                 return null
@@ -249,9 +249,9 @@ const DateFilter = ({ filters, setFilters, filterName , defaultVal='thisWeek'  }
                 }}
             >
                 {
-                    DateTimeFilters.map((x) => {
+                    DateTimeFilters.map((x, i) => {
                         return (
-                            <MenuItem value={x.name}>{x.label}</MenuItem>
+                            <MenuItem key={i} value={x.name}>{x.label}</MenuItem>
                         )
                     })
                 }

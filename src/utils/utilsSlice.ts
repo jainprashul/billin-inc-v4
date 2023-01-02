@@ -17,11 +17,6 @@ interface utils {
     }
     isLoggedIn: boolean;
     user: Usr | null,
-
-    date: {
-        to: Date,
-        from: Date
-    }
     salesData: {
         date: string;
         salesCount: number;
@@ -50,11 +45,6 @@ const initialState: utils = {
     },
     isLoggedIn: false,
     user: null,
-
-    date: {
-        to: new Date(),
-        from: new Date()
-    },
     salesData: [],
     notification: [],
 
@@ -120,9 +110,6 @@ export const utilsSlice = createSlice({
         setUser: (state, action: { payload: Usr | null }) => {
             state.user = action.payload
         },
-        setFilterDate: (state, action: { payload: { to: Date, from: Date } }) => {
-            state.date = action.payload
-        },
         setSalesData: (state, action: { payload: any[] }) => {
             state.salesData = action.payload
         },
@@ -137,7 +124,7 @@ export const utilsSlice = createSlice({
 
 
 export default utilsSlice.reducer;
-export const { setGstEnabled, setGstRateInclusive, setLoginStatus, setUser, setFilterDate, setSalesData, setNotification, setCount } = utilsSlice.actions;
+export const { setGstEnabled, setGstRateInclusive, setLoginStatus, setUser, setSalesData, setNotification, setCount } = utilsSlice.actions;
 
 export const selectGstEnabled = (state: RootState) => state.utils.gst.enabled;
 export const selectGstRateType = (state: RootState) => state.utils.gst.inclusive;
@@ -145,10 +132,7 @@ export const selectIsLoggedIn = (state: RootState) => state.utils.isLoggedIn;
 export const selectUser = (state: RootState) => state.utils.user;
 export const selectIsAdmin = (state: RootState) => state.utils.user?.roleID === 1;
 
-export const selectFilterDate = (state: RootState) => state.utils.date;
 export const selectSalesData = (state: RootState) => state.utils.salesData;
-export const selectNotification = (state: RootState) => state.utils.notification;
-export const selectNotificationCount = (state: RootState) => state.utils.notification.filter((item) => item.status === 'NEW').length;
 
 export const selectSalesCount = (state: RootState) => state.utils.count.sales;
 export const selectPurchaseCount = (state: RootState) => state.utils.count.purchase;

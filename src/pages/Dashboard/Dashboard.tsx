@@ -7,7 +7,7 @@ import Time from '../../components/shared/Time'
 import { INVOICE_CREATE, PURCHASE_CREATE } from '../../constants/routes'
 import authService from '../../services/authentication/auth.service'
 import { countDays } from '../../utils'
-import { selectExpenseCount, selectNotificationCount, selectPurchaseCount, selectSalesCount, selectStockCount } from '../../utils/utilsSlice'
+import { selectExpenseCount, selectPurchaseCount, selectSalesCount, selectStockCount } from '../../utils/utilsSlice'
 import ExpensePieChart from '../Expenses/ExpensePieChart'
 import SalesChart from '../Invoices/SalesChart'
 import SalesNPurchaseGraph from '../Invoices/SalesNPurchaseGraph'
@@ -19,13 +19,12 @@ type Props = {}
 const Dashboard = (props: Props) => {
     const user = authService.getUser();
 
-    const notificationCount = useAppSelector(selectNotificationCount);
     const salesCount = useAppSelector(selectSalesCount);
     const purchaseCount = useAppSelector(selectPurchaseCount);
     const expenseCount = useAppSelector(selectExpenseCount);
     const stockCount = useAppSelector(selectStockCount);
 
-    const { filterList, handleFilterChange, expenses, filter, companyDB, navigate } = useDashboard()
+    const { filterList, handleFilterChange, expenses, filter, companyDB, navigate, notificationCount } = useDashboard()
 
     if (!companyDB) {
         return <LoadingX />
