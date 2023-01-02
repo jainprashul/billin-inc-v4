@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
 import Purchases, { PurchaseCreate, PurchaseDetails, PurchaseEdit } from '../pages/Purchases'
@@ -12,12 +12,13 @@ import ErrorBoundary from '../components/shared/ErrorBoundary'
 import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
 import Settings from '../pages/Settings'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { checkLogin, selectIsLoggedIn } from '../utils/utilsSlice'
+import { onStart, selectIsLoggedIn } from '../utils/utilsSlice'
 import Expenses from '../pages/Expenses'
 import Notifications from '../pages/Notifications'
 import Reports from '../pages/Reports'
 import { CompanyDBProvider } from '../utils/useCompanyDB'
 import { DashboardProvider } from '../pages/Dashboard/useDashboard'
+import Config from '../pages/Config'
 
 type Props = {}
 
@@ -27,7 +28,7 @@ const AppRoutes = (props: Props) => {
   const isAuthenticated = useAppSelector(selectIsLoggedIn)
 
   React.useEffect(() => {
-    dispatch(checkLogin())
+    dispatch(onStart())
   }, [dispatch])
 
   return (
@@ -61,12 +62,14 @@ const AppRoutes = (props: Props) => {
                   <Route path={SETTINGS} element={<Settings />} />
                   <Route path={REPORTS} element={<Reports />} />
                   <Route path={NOTIFICATIONS} element={<Notifications />} />
+                  <Route path={INTERNAL_CONFIG} element={<Config/>} />
                   <Route path={NOT_FOUND} element={<NotFound />} />
                 </Routes>
               </Layout>
             ) : (
               <Routes>
                 <Route path={LOGIN} element={<Login />} />
+                <Route path={INTERNAL_CONFIG} element={<Config/>} />
                 {/* <Route path={SIGNUP} element={<h1>Signup</h1>} /> */}
                 <Route path={NOT_FOUND} element={<Navigation path={LOGIN} />} />
               </Routes>

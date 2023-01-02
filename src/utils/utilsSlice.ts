@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../app/store";
 import authService from "../services/authentication/auth.service";
+import { getConfig } from "../services/database/db";
 import { NotificationLog, Usr } from "../services/database/model";
 
 interface CountMetric {
@@ -11,9 +12,11 @@ interface CountMetric {
     deltaPercent: number;
 }
 interface utils {
-    gst: {
-        enabled: boolean;
-        inclusive: boolean;
+    settings : {
+        gst: {
+            enabled: boolean;
+            inclusive: boolean;
+        }
     }
     isLoggedIn: boolean;
     user: Usr | null,
@@ -39,9 +42,11 @@ interface utils {
 }
 
 const initialState: utils = {
-    gst: {
-        enabled: JSON.parse(localStorage.getItem("gstEnabled") || "false"),
-        inclusive: JSON.parse(localStorage.getItem("gstRateInclusive") || "false"),
+    settings : {
+        gst: {
+            enabled: false,
+            inclusive: true,
+        },
     },
     isLoggedIn: false,
     user: null,
@@ -78,12 +83,19 @@ const initialState: utils = {
 
 };
 
-export const checkLogin = (): AppThunk => (dispatch, getState) => {
+export const onStart = (): AppThunk => async (dispatch, getState) => {
+    // get auth status and user
     const user = authService.getUser()
     if (user) {
         dispatch(setLoginStatus(true));
         dispatch(setUser(user))
     }
+    
+    // load settings from db
+    const settings = (await getConfig()).settings;
+    dispatch(setGstEnabled(settings.gstEnabled));
+    dispatch(setGstRateInclusive(settings.gstRateInclusive));
+    
 }
 
 
@@ -93,16 +105,33 @@ export const utilsSlice = createSlice({
     name: "utils",
     reducers: {
         setGstEnabled: (state, action: { payload: boolean }) => {
-            state.gst.enabled = action.payload;
-            localStorage.setItem("gstEnabled", JSON.stringify(action.payload));
-            if (action.payload === false) {
-                state.gst.inclusive = false;
-                localStorage.setItem("gstRateInclusive", JSON.stringify(false));
+
+            let gst = {
+                enabled: action.payload,
+                inclusive: !action.payload ? false : state.settings.gst.inclusive
             }
+            state.settings.gst = gst;
+            // localStorage.setItem("gstEnabled", JSON.stringify(gst.enabled));
+            // localStorage.setItem("gstRateInclusive", JSON.stringify(gst.inclusive));
+
+            // update db
+            getConfig().then((config) => {
+                config.settings.gstEnabled = gst.enabled;
+                config.settings.gstRateInclusive = gst.inclusive;
+                config.save();
+                console.log("updated settings")
+            })
+            
         },
         setGstRateInclusive: (state, action: { payload: boolean }) => {
-            state.gst.inclusive = action.payload;
-            localStorage.setItem("gstRateInclusive", JSON.stringify(action.payload));
+            state.settings.gst.inclusive = action.payload;
+            // localStorage.setItem("gstRateInclusive", JSON.stringify(action.payload));
+            // update db
+            getConfig().then((config) => {
+                config.settings.gstRateInclusive = action.payload;
+                config.save();
+                console.log("updated settings")
+            })
         },
         setLoginStatus: (state, action: { payload: boolean }) => {
             state.isLoggedIn = action.payload;
@@ -126,8 +155,8 @@ export const utilsSlice = createSlice({
 export default utilsSlice.reducer;
 export const { setGstEnabled, setGstRateInclusive, setLoginStatus, setUser, setSalesData, setNotification, setCount } = utilsSlice.actions;
 
-export const selectGstEnabled = (state: RootState) => state.utils.gst.enabled;
-export const selectGstRateType = (state: RootState) => state.utils.gst.inclusive;
+export const selectGstEnabled = (state: RootState) => state.utils.settings.gst.enabled;
+export const selectGstRateType = (state: RootState) => state.utils.settings.gst.inclusive;
 export const selectIsLoggedIn = (state: RootState) => state.utils.isLoggedIn;
 export const selectUser = (state: RootState) => state.utils.user;
 export const selectIsAdmin = (state: RootState) => state.utils.user?.roleID === 1;

@@ -14,7 +14,7 @@ type Props = {
 const CompanyCard = ({ company, companyID, handleDelete, handleSwitch }: Props) => {
   const { navigate, } = useDataUtils()
   return (
-    <Grid item xs={4} key={company.id}>
+    <Grid item xs={12} sm={6} md={4} key={company.id}>
       <Card key={company.id}>
         <CardContent style={{
           minHeight: '16rem',
@@ -70,7 +70,7 @@ export const CompanyCardAdd = () => {
   }
 
   return (
-    <Grid item xs={4}>
+    <Grid item xs={12} sm={6} md={4}>
       <Card>
         <CardContent sx={{
           minHeight: '19rem',

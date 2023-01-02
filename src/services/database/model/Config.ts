@@ -5,7 +5,6 @@ export interface IConfig {
     id?: number;
     appExpired: boolean
     expiryDate: Date
-    gstEnabled: boolean
     lastBackupID: string
     lastOnlineBackupDate: Date
     lisenseKey?: string
@@ -15,6 +14,7 @@ export interface IConfig {
     lisenseValidTill?: Date
     lisenseVersion?: string
     lisenseeName?: string
+    settings?: ISettings
     whatsappEnabled: boolean
     scheduleBackup: ISchedule
     companyID: number
@@ -25,11 +25,14 @@ interface ISchedule {
     backupDuration: Date
 }
 
+interface ISettings {
+    [key: string]: any
+}
+
 export class Config implements IConfig {
     id?: number;
     appExpired: boolean
     expiryDate: Date
-    gstEnabled: boolean
     lastBackupID: string
     lastOnlineBackupDate: Date
     lisenseKey?: string
@@ -41,13 +44,13 @@ export class Config implements IConfig {
     lisenseeName?: string
     whatsappEnabled: boolean
     scheduleBackup: ISchedule
+    settings: ISettings
     companyID: number
 
     constructor(config: IConfig) {
         this.id = config.id;
         this.appExpired = config.appExpired;
         this.expiryDate = config.expiryDate;
-        this.gstEnabled = config.gstEnabled;
         this.lastBackupID = config.lastBackupID;
         this.lastOnlineBackupDate = config.lastOnlineBackupDate;
         this.lisenseKey = config.lisenseKey;
@@ -60,6 +63,7 @@ export class Config implements IConfig {
         this.whatsappEnabled = config.whatsappEnabled;
         this.scheduleBackup = config.scheduleBackup;
         this.companyID = config.companyID;
+        this.settings = config.settings || {};
     }
 
     async save() {
@@ -73,12 +77,17 @@ export class Config implements IConfig {
             return await db.config.update(this.id!, this);
         });
     }
+
+    async updateSettings(settings : ISettings) {
+        return db.transaction('rw', db.config, async (tx) => {
+            return await db.config.update(this.id!, { settings: { ...this.settings, ...settings }});
+        });
+    }
 }
 
 export const defaultConfig = new Config({
     appExpired: false,
     expiryDate: moment().add(2, 'month').toDate(),
-    gstEnabled: false,
     lastBackupID: '',
     lastOnlineBackupDate: new Date(),
     lisenseValid: false,
@@ -86,6 +95,10 @@ export const defaultConfig = new Config({
     scheduleBackup: {
         enabled: false,
         backupDuration: new Date()
+    },
+    settings : {
+        "gstEnabled": false,
+        "gstRateInclusive": true,
     },
     companyID: 1,
     id: 1
