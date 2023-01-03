@@ -14,7 +14,7 @@ const NotFound = (props: Props) => {
       height: '70vh'
   }}>
       
-      <img src={'./404.png'} width={400}  alt="error" />
+      <img src={'/assets/404.png'} width={400}  alt="error" />
       <Typography variant="h4" >
           The page you are looking for is not available.
       </Typography>

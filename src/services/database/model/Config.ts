@@ -10,13 +10,14 @@ export interface IConfig {
     lisenseKey?: string
     lisenseType?: string
     lisenseValid: boolean
-    lisenseValidDate?: Date
+    lisenseValidationDate?: Date
     lisenseValidTill?: Date
     lisenseVersion?: string
     lisenseeName?: string
     settings?: ISettings
     whatsappEnabled: boolean
     scheduleBackup: ISchedule
+    firstTime?: boolean;
     companyID: number
 }
 interface ISchedule {
@@ -38,12 +39,13 @@ export class Config implements IConfig {
     lisenseKey?: string
     lisenseType?: string
     lisenseValid: boolean
-    lisenseValidDate?: Date
+    lisenseValidationDate?: Date
     lisenseValidTill?: Date
     lisenseVersion?: string
     lisenseeName?: string
     whatsappEnabled: boolean
     scheduleBackup: ISchedule
+    firstTime: boolean;
     settings: ISettings
     companyID: number
 
@@ -56,7 +58,7 @@ export class Config implements IConfig {
         this.lisenseKey = config.lisenseKey;
         this.lisenseType = config.lisenseType;
         this.lisenseValid = config.lisenseValid;
-        this.lisenseValidDate = config.lisenseValidDate;
+        this.lisenseValidationDate = config.lisenseValidationDate;
         this.lisenseValidTill = config.lisenseValidTill;
         this.lisenseVersion = config.lisenseVersion;
         this.lisenseeName = config.lisenseeName;
@@ -64,6 +66,7 @@ export class Config implements IConfig {
         this.scheduleBackup = config.scheduleBackup;
         this.companyID = config.companyID;
         this.settings = config.settings || {};
+        this.firstTime = config.firstTime || true;
     }
 
     async save() {

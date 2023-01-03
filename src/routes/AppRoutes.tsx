@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG, WELCOME } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
 import Purchases, { PurchaseCreate, PurchaseDetails, PurchaseEdit } from '../pages/Purchases'
@@ -12,13 +12,15 @@ import ErrorBoundary from '../components/shared/ErrorBoundary'
 import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
 import Settings from '../pages/Settings'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { onStart, selectIsLoggedIn } from '../utils/utilsSlice'
+import { onStart, selectFirstTime, selectIsLoggedIn } from '../utils/utilsSlice'
 import Expenses from '../pages/Expenses'
 import Notifications from '../pages/Notifications'
 import Reports from '../pages/Reports'
 import { CompanyDBProvider } from '../utils/useCompanyDB'
 import { DashboardProvider } from '../pages/Dashboard/useDashboard'
 import Config from '../pages/Config'
+import Welcome from '../pages/Welcome'
+import Signup from '../pages/Signup'
 
 type Props = {}
 
@@ -26,11 +28,15 @@ const AppRoutes = (props: Props) => {
 
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(selectIsLoggedIn)
+  const isFirstTime = useAppSelector(selectFirstTime);
 
   React.useEffect(() => {
     dispatch(onStart())
   }, [dispatch])
 
+  // if (isFirstTime) {
+  //   return <Welcome/>
+  // }
   return (
     <ErrorBoundary>
       <BrowserRouter >
@@ -70,8 +76,9 @@ const AppRoutes = (props: Props) => {
               <Routes>
                 <Route path={LOGIN} element={<Login />} />
                 <Route path={INTERNAL_CONFIG} element={<Config/>} />
-                {/* <Route path={SIGNUP} element={<h1>Signup</h1>} /> */}
-                <Route path={NOT_FOUND} element={<Navigation path={LOGIN} />} />
+                <Route path={SIGNUP} element={<Signup/>} />
+                <Route path={WELCOME} element={<Welcome/>} />
+                <Route path={NOT_FOUND} element={<Navigation path={LOGIN} firstTime={isFirstTime} />} />
               </Routes>
             )
           }
@@ -85,8 +92,12 @@ const AppRoutes = (props: Props) => {
 
 type NavigateProp = {
   path?: string
+  firstTime?: boolean
 }
-const Navigation = ({ path = HOME }: NavigateProp) => {
+const Navigation = ({ path = HOME, firstTime=false }: NavigateProp) => {
+  if (firstTime) {
+    return <Navigate to={WELCOME} replace />
+  }
   return (
     <Navigate to={path} replace />
   )

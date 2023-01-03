@@ -39,6 +39,8 @@ interface utils {
             totalValue: number;
         }
     }
+
+    firstTime: boolean;
 }
 
 const initialState: utils = {
@@ -53,6 +55,7 @@ const initialState: utils = {
     salesData: [],
     notification: [],
 
+    firstTime: true,
     count: {
         sales: {
             total: 0,
@@ -90,11 +93,13 @@ export const onStart = (): AppThunk => async (dispatch, getState) => {
         dispatch(setLoginStatus(true));
         dispatch(setUser(user))
     }
-    
+
     // load settings from db
-    const settings = (await getConfig()).settings;
+    const confg = (await getConfig())
+    const settings = confg.settings
     dispatch(setGstEnabled(settings.gstEnabled));
     dispatch(setGstRateInclusive(settings.gstRateInclusive));
+    dispatch(setFirstTime(confg.firstTime));
     
 }
 
@@ -147,13 +152,22 @@ export const utilsSlice = createSlice({
         },
         setCount: (state, action: { payload: any }) => {
             state.count = action.payload
+        },
+        setFirstTime: (state, action: { payload: boolean }) => {
+            state.firstTime = action.payload
+            // update db
+            getConfig().then((config) => {
+                config.firstTime = action.payload;
+                config.save();
+                console.log("updated settings")
+            })
         }
     }
 });
 
 
 export default utilsSlice.reducer;
-export const { setGstEnabled, setGstRateInclusive, setLoginStatus, setUser, setSalesData, setNotification, setCount } = utilsSlice.actions;
+export const { setGstEnabled, setGstRateInclusive, setLoginStatus, setUser, setSalesData, setFirstTime, setNotification, setCount } = utilsSlice.actions;
 
 export const selectGstEnabled = (state: RootState) => state.utils.settings.gst.enabled;
 export const selectGstRateType = (state: RootState) => state.utils.settings.gst.inclusive;
@@ -167,3 +181,5 @@ export const selectSalesCount = (state: RootState) => state.utils.count.sales;
 export const selectPurchaseCount = (state: RootState) => state.utils.count.purchase;
 export const selectExpenseCount = (state: RootState) => state.utils.count.expenses;
 export const selectStockCount = (state: RootState) => state.utils.count.stocks;
+
+export const selectFirstTime = (state: RootState) => state.utils.firstTime;
