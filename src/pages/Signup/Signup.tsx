@@ -26,8 +26,11 @@ function Copyright(props: any) {
     );
 }
 
+type Props = {
+    setFirstTime : React.Dispatch<React.SetStateAction<boolean>>
 
-export default function Signup() {
+}
+export default function Signup(props : Props) {
     const [error, setError] = React.useState<string | null>(null);
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -47,6 +50,7 @@ export default function Signup() {
         
         authService.register(creds).then((response) => {
             console.log(response);
+            props.setFirstTime(false);
             window.location.href = "/";
         }).catch((error) => {
             setError(error.message);

@@ -12,7 +12,7 @@ import ErrorBoundary from '../components/shared/ErrorBoundary'
 import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
 import Settings from '../pages/Settings'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { onStart, selectFirstTime, selectIsLoggedIn } from '../utils/utilsSlice'
+import { onStart,selectIsLoggedIn } from '../utils/utilsSlice'
 import Expenses from '../pages/Expenses'
 import Notifications from '../pages/Notifications'
 import Reports from '../pages/Reports'
@@ -21,6 +21,7 @@ import { DashboardProvider } from '../pages/Dashboard/useDashboard'
 import Config from '../pages/Config'
 import Welcome from '../pages/Welcome'
 import Signup from '../pages/Signup'
+import { useLocalStorage } from '../utils'
 
 type Props = {}
 
@@ -28,7 +29,7 @@ const AppRoutes = (props: Props) => {
 
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(selectIsLoggedIn)
-  const isFirstTime = useAppSelector(selectFirstTime);
+  const [isFirstTime, setFirstTime] = useLocalStorage('ft', true)
 
   React.useEffect(() => {
     dispatch(onStart())
@@ -76,7 +77,7 @@ const AppRoutes = (props: Props) => {
               <Routes>
                 <Route path={LOGIN} element={<Login />} />
                 <Route path={INTERNAL_CONFIG} element={<Config/>} />
-                <Route path={SIGNUP} element={<Signup/>} />
+                <Route path={SIGNUP} element={<Signup setFirstTime={setFirstTime}/>} />
                 <Route path={WELCOME} element={<Welcome/>} />
                 <Route path={NOT_FOUND} element={<Navigation path={LOGIN} firstTime={isFirstTime} />} />
               </Routes>

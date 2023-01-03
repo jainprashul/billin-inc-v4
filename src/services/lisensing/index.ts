@@ -73,6 +73,8 @@ async function CreateTrialLicense() {
     confg.lisenseValid = true
     confg.appExpired = false
 
+    confg.firstTime = false
+
     confg.expiryDate = moment().add(2, 'month').toDate()
 
     return confg.save()
