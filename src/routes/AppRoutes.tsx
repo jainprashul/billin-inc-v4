@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG, WELCOME } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG, WELCOME, LISENSE } from '../constants/routes'
 import Dashboard from '../pages/Dashboard'
 import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
 import Purchases, { PurchaseCreate, PurchaseDetails, PurchaseEdit } from '../pages/Purchases'
@@ -22,6 +22,8 @@ import Config from '../pages/Config'
 import Welcome from '../pages/Welcome'
 import Signup from '../pages/Signup'
 import { useLocalStorage } from '../utils'
+import Lisense from '../pages/Lisense'
+import { checkLicense } from '../services/lisensing'
 
 type Props = {}
 
@@ -30,10 +32,18 @@ const AppRoutes = (props: Props) => {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(selectIsLoggedIn)
   const [isFirstTime, setFirstTime] = useLocalStorage('ft', true)
+  const [lisenseValid, setLisenseValid] = useLocalStorage('lv', true)
 
   React.useEffect(() => {
     dispatch(onStart())
-  }, [dispatch])
+    async function validation(){
+      const valid = await checkLicense()
+      console.log('valid ',valid)
+      setLisenseValid(valid)
+    }
+    validation()
+
+  }, [dispatch, setLisenseValid])
 
   // if (isFirstTime) {
   //   return <Welcome/>
@@ -79,7 +89,8 @@ const AppRoutes = (props: Props) => {
                 <Route path={INTERNAL_CONFIG} element={<Config/>} />
                 <Route path={SIGNUP} element={<Signup setFirstTime={setFirstTime}/>} />
                 <Route path={WELCOME} element={<Welcome/>} />
-                <Route path={NOT_FOUND} element={<Navigation path={LOGIN} firstTime={isFirstTime} />} />
+                <Route path={LISENSE} element={<Lisense/>} />
+                <Route path={NOT_FOUND} element={<Navigation path={LOGIN} firstTime={isFirstTime} valid={lisenseValid} />} />
               </Routes>
             )
           }
@@ -94,8 +105,12 @@ const AppRoutes = (props: Props) => {
 type NavigateProp = {
   path?: string
   firstTime?: boolean
+  valid?: boolean
 }
-const Navigation = ({ path = HOME, firstTime=false }: NavigateProp) => {
+const Navigation = ({ path = HOME, firstTime=false , valid=false }: NavigateProp) => {
+  if (!valid) {
+    return <Navigate to={LISENSE} replace />
+  }
   if (firstTime) {
     return <Navigate to={WELCOME} replace />
   }

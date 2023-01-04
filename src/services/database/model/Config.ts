@@ -1,4 +1,5 @@
 import moment from "moment";
+import { generateSerialKey } from "../../lisensing";
 import db from "../db";
 
 export interface IConfig {
@@ -37,6 +38,7 @@ export class Config implements IConfig {
     lastBackupID: string
     lastOnlineBackupDate: Date
     lisenseKey?: string
+    readonly serialKey: string
     lisenseType?: string
     lisenseValid: boolean
     lisenseValidationDate?: Date
@@ -57,6 +59,7 @@ export class Config implements IConfig {
         this.lastOnlineBackupDate = config.lastOnlineBackupDate;
         this.lisenseKey = config.lisenseKey;
         this.lisenseType = config.lisenseType;
+        this.serialKey = generateSerialKey();
         this.lisenseValid = config.lisenseValid;
         this.lisenseValidationDate = config.lisenseValidationDate;
         this.lisenseValidTill = config.lisenseValidTill;

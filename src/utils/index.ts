@@ -156,3 +156,27 @@ export const countDays = (date1: Date, date2: Date) => {
   // Convert back to days and return
   return Math.round(differenceMs / ONE_DAY);
 };
+
+
+/* encrypt the payload via SHA1 hashing retrun a hash as a string */
+export async function hash(text: string) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+
+  const hash = await window.crypto.subtle.digest('SHA-1', data);
+  return hex(hash);
+}
+
+// convert array buffer to hex string
+function hex(buffer: ArrayBuffer) {
+  const byteArray = new Uint8Array(buffer);
+  const hexParts: string[] = [];
+  byteArray.forEach((byte) => {
+      const hex = byte.toString(16);
+      const paddedHex = ('00' + hex).slice(-2);
+      hexParts.push(paddedHex);
+  });
+
+  return hexParts.join('');
+}
+  

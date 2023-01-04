@@ -40,7 +40,11 @@ const Dashboard = (props: Props) => {
                     }}>{notificationCount} unread notifications!</span></Typography>
                 </div>
 
-                <div className='flex'>
+                <div style={{
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'baseline'
+                }}>
                     <Button variant="contained"  color='primary' startIcon={<AddBox />} onClick={() => navigate(INVOICE_CREATE)}>New Invoice</Button>
                     <Button variant="contained" color='primary' startIcon={<AddBox />} onClick={() => navigate(PURCHASE_CREATE)}>New Purchase</Button>
                     <Filters filters={filterList} getFilters={handleFilterChange} />

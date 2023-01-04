@@ -1,4 +1,5 @@
 import moment from "moment"
+import { hash } from "../../utils"
 import { getConfig } from "../database/db"
 
 export interface License {
@@ -80,6 +81,38 @@ async function CreateTrialLicense() {
     return confg.save()
 }
 
+//generate serial key
+ function generateSerialKey(): string {
+    const chars: string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const serialLength: number = 16;
+    let random: number;
+
+    let result: string = "";
+    for (let i: number = 0; i < serialLength; i++) {
+        random = Math.floor(Math.random() * chars.length);
+        result += chars.substring(random, random + 1);
+    }
+   
+    // add a dash after every 4 characters
+    result = result.replace(/(.{4})/g, "$1-").slice(0, -1);
+    return result;
+}
+
+async function checkLicenseKey(license: string, name: string): Promise<boolean> {
+    const confg = await getConfig()
+    const serial = confg.serialKey.replace(/-/g, '')
+    const date = moment().format('YYYYMMDD');
+
+    // Make the hash key from the serial number and the name
+    const hashKey = `${serial}${name}${date}`
+
+    // Hash the key
+    const hashVal = await hash(hashKey)
+
+    // Compare the hash to the license
+    return hashVal === license
+}
+
 
 async function CreateLicense({
     license,
@@ -116,6 +149,8 @@ async function CreateLicense({
 export {
     checkLicense,
     CreateLicense,
-    CreateTrialLicense
+    CreateTrialLicense,
+    generateSerialKey,
+    checkLicenseKey
 }
 
