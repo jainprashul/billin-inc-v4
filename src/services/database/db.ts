@@ -1,4 +1,5 @@
 import AppDB from ".";
+import { defaultConfig } from "./model";
 
 import { AdminRole, defaultUser, UserRole } from "./model/User";
 
@@ -8,6 +9,7 @@ db.on("populate", () => {
     db.roles.bulkPut([AdminRole, UserRole]);
     // defaultCompany.save();
     defaultUser.save();
+    defaultConfig.save();
     console.log("Database populated");
 });
 
@@ -20,7 +22,7 @@ db.on("ready", (dexie) => {
 
 // listeners for the database tables USERS
 db.users.hook("creating", (id, user, trans) => {
-
+    
 });
 db.companies.hook("creating", (id, company, trans) => {
     //  console.log(company)
@@ -49,5 +51,8 @@ function subscribeCompany() {
     })
 }
 
+export async function getConfig(){
+   return await db.config.get(1) ?? defaultConfig;
+}
 
 export default db;

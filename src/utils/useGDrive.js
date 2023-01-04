@@ -1,3 +1,4 @@
+import { getConfig } from "../services/database/db";
 import { Backup } from "../services/database/model";
 import { generateBackupFile, importData } from "./dbUtils";
 import { useGoogle } from "./useGoogle"
@@ -108,8 +109,13 @@ function SaveFileID(data){
         name : data.name,
         date: new Date(),
     }
-    localStorage.setItem("backupFileId", opts.id);
-    localStorage.setItem("backupFileDate", opts.date);
+
+    // save the object to the database
+    getConfig().then((config) => {
+        config.lastBackupID = opts.id;
+        config.lastOnlineBackupDate = opts.date;
+        config.save();
+    });
     
     // save the object to the database
     const backup = new Backup({

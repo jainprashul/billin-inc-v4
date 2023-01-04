@@ -23,6 +23,7 @@
     "jsonata": "^2.0.0",
     "jszip": "^3.10.1",
     "lodash.debounce": "^4.0.8",
+    "lottie-react": "^2.3.1",
     "moment": "^2.29.3",
     "notistack": "^2.0.5",
     "num-words": "^1.2.2",

@@ -38,3 +38,7 @@ export const REPORTS = '/reports';
 export const NOTIFICATIONS = '/notifications';
 
 export const NOT_FOUND = '*';
+
+export const INTERNAL_CONFIG = '/intrnl/confg';
+export const WELCOME = '/welcome';
+export const LISENSE = '/lisense';

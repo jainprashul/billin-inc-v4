@@ -42,32 +42,38 @@ export const configBackEnd = () => {
                         });
 
                     } else {
-                        return ok({ message: 'Username or password is incorrect' }, 400);
+                        return failed({ message: 'Username or password is incorrect' }, 400);
                     }
                 }
 
                 // register user
                 if (URL.endsWith('/api/register') && opts?.method === 'POST') {
-                    // get new user object from post body
-                    let newUser = JSON.parse(opts.body as string);
-                    const user = new User({
-                        ...newUser,
-                    })
-
-                    user.save()
-
-                    console.log('user', user);
-
-                    // return user with token
-                    let responseJson: Partial<User> = {
-                        ...user,
-                    }
-                    delete responseJson.password;
-                    let token = await generateToken(responseJson);
-                    return ok({
-                        ...responseJson,
-                        token
-                    });
+                   try {
+                     // get new user object from post body
+                     let newUser = JSON.parse(opts.body as string);
+                     const user = new User({
+                         ...newUser,
+                     })
+ 
+                     await user.save()
+ 
+                     console.log('user', user);
+ 
+                     // return user with token
+                     let responseJson: Partial<User> = {
+                         ...user,
+                     }
+                     delete responseJson.password;
+                     let token = await generateToken(responseJson);
+                     return ok({
+                         ...responseJson,
+                         token
+                     });
+                   } catch (error :any) {
+                        console.error('error', error);
+                        console.log();
+                        return failed({ message: error.message }, 400);
+                   }
                 }
 
 
@@ -95,6 +101,10 @@ export const configBackEnd = () => {
             // call fetch with the url and options object
             function ok(body: any, status: number = 200) {
                 const response = new Response(JSON.stringify(body), { status, statusText: 'OK', headers: { 'Content-Type': 'application/json' } });
+                resolve(response);
+            }
+            function failed(body: any, status: number = 400) {
+                const response = new Response(JSON.stringify(body), { status, statusText: 'Bad Request', headers: { 'Content-Type': 'application/json' } });
                 resolve(response);
             }
             function unauthorized() {
