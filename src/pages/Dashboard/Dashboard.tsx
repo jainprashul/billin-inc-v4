@@ -4,7 +4,7 @@ import { useAppSelector } from '../../app/hooks'
 import Filters from '../../components/shared/Filters'
 import LoadingX from '../../components/shared/LoadingX'
 import Time from '../../components/shared/Time'
-import { INVOICE_CREATE, PURCHASE_CREATE } from '../../constants/routes'
+import { COMPANY_CREATE, INVOICE_CREATE, PURCHASE_CREATE } from '../../constants/routes'
 import authService from '../../services/authentication/auth.service'
 import { countDays } from '../../utils'
 import { selectExpenseCount, selectPurchaseCount, selectSalesCount, selectStockCount } from '../../utils/utilsSlice'
@@ -13,6 +13,9 @@ import SalesChart from '../Invoices/SalesChart'
 import SalesNPurchaseGraph from '../Invoices/SalesNPurchaseGraph'
 import SalesVSPurchaseGraph from '../Invoices/SalesVSPurchaseGraph'
 import useDashboard from './useDashboard'
+import animationData from '../../assets/office.json'
+import Lottie from 'lottie-react';
+
 
 type Props = {}
 
@@ -27,7 +30,43 @@ const Dashboard = (props: Props) => {
     const { filterList, handleFilterChange, expenses, filter, companyDB, navigate, notificationCount } = useDashboard()
 
     if (!companyDB) {
-        return <LoadingX />
+        return <>
+            <div style={{
+                display: 'flex',
+                height: '100%',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                minWidth: '110%',
+                alignItems: 'center',
+                // flexDirection: 'column'
+            }}>
+                <div style={{
+                    flex: '1',
+                }}>
+                    <Typography variant='h5'> Welcome , <b>{user?.name}</b></Typography>
+                    <br />
+                    <Typography variant='h4'>
+                        Looks like you have not setup your company yet!
+                    </Typography>
+                    <br />
+                    <Typography variant='h5'>
+                        Please setup your company to continue.
+                    </Typography>
+                    <br />
+                    <Button variant='contained' color='primary' onClick={() => navigate(COMPANY_CREATE)}>Getting Started</Button>
+
+                </div>
+
+                <Lottie animationData={animationData} style={{
+                    width: 'clamp(300px, 700px, 900px)',
+                    marginTop: '1rem',
+                    flex: '1',
+                }} />
+
+
+            </div>
+            <LoadingX />
+        </>
     }
 
     return (
@@ -45,7 +84,7 @@ const Dashboard = (props: Props) => {
                     gap: '1rem',
                     alignItems: 'baseline'
                 }}>
-                    <Button variant="contained"  color='primary' startIcon={<AddBox />} onClick={() => navigate(INVOICE_CREATE)}>New Invoice</Button>
+                    <Button variant="contained" color='primary' startIcon={<AddBox />} onClick={() => navigate(INVOICE_CREATE)}>New Invoice</Button>
                     <Button variant="contained" color='primary' startIcon={<AddBox />} onClick={() => navigate(PURCHASE_CREATE)}>New Purchase</Button>
                     <Filters filters={filterList} getFilters={handleFilterChange} />
                 </div>
