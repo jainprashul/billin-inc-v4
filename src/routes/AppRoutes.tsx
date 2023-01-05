@@ -24,7 +24,7 @@ import Signup from '../pages/Signup'
 import { useLocalStorage } from '../utils'
 import Lisense from '../pages/Lisense'
 import { checkLicense } from '../services/lisensing'
-import { selectServiceWorker, selectSWIsUpdated } from '../utils/service/swSlice'
+import { checktheNetworkStatus, selectServiceWorker, selectSWIsUpdated } from '../utils/service/swSlice'
 import AlertDialog from '../components/shared/AlertDialog'
 
 type Props = {}
@@ -59,6 +59,8 @@ const AppRoutes = (props: Props) => {
       setLisenseValid(valid)
     }
     validation()
+
+    checktheNetworkStatus()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
