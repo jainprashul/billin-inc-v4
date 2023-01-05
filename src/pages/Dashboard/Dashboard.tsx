@@ -1,4 +1,4 @@
-import { AddBox } from '@mui/icons-material'
+import { AddBox, InstallDesktop } from '@mui/icons-material'
 import { Button, Grid, Stack, Typography } from '@mui/material'
 import { useAppSelector } from '../../app/hooks'
 import Filters from '../../components/shared/Filters'
@@ -15,6 +15,7 @@ import SalesVSPurchaseGraph from '../Invoices/SalesVSPurchaseGraph'
 import useDashboard from './useDashboard'
 import animationData from '../../assets/office.json'
 import Lottie from 'lottie-react';
+import { selectPromptEvent, selectShowInstallPrompt } from '../../utils/service/swSlice'
 
 
 type Props = {}
@@ -28,6 +29,22 @@ const Dashboard = (props: Props) => {
     const stockCount = useAppSelector(selectStockCount);
 
     const { filterList, handleFilterChange, expenses, filter, companyDB, navigate, notificationCount } = useDashboard()
+
+    const showInstall = useAppSelector(selectShowInstallPrompt)
+    const installPrompt = useAppSelector(selectPromptEvent)
+
+    function handleInstall() {
+        if (installPrompt) {
+            installPrompt.prompt()
+            installPrompt.userChoice.then((choiceResult: any) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the A2HS prompt');
+                } else {
+                    console.log('User dismissed the A2HS prompt');
+                }
+            })
+        }
+    }
 
     if (!companyDB) {
         return <>
@@ -84,6 +101,7 @@ const Dashboard = (props: Props) => {
                     gap: '1rem',
                     alignItems: 'baseline'
                 }}>
+                    { showInstall && <Button variant="contained" color='primary' startIcon={<InstallDesktop />} onClick={() => handleInstall()}>Install App</Button>}
                     <Button variant="contained" color='primary' startIcon={<AddBox />} onClick={() => navigate(INVOICE_CREATE)}>New Invoice</Button>
                     <Button variant="contained" color='primary' startIcon={<AddBox />} onClick={() => navigate(PURCHASE_CREATE)}>New Purchase</Button>
                     <Filters filters={filterList} getFilters={handleFilterChange} />

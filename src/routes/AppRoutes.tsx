@@ -51,7 +51,6 @@ const AppRoutes = (props: Props) => {
       }
   }
 
-
   React.useEffect(() => {
     dispatch(onStart())
     async function validation() {
@@ -61,7 +60,8 @@ const AppRoutes = (props: Props) => {
     }
     validation()
 
-  }, [dispatch, setLisenseValid])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   // if (isFirstTime) {
   //   return <Welcome/>
