@@ -6,6 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.css';
 import { configBackEnd } from './services/authentication/auth.backend';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -19,6 +20,8 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
+
+serviceWorkerRegistration.unregister();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
