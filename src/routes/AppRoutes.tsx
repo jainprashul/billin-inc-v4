@@ -12,7 +12,7 @@ import ErrorBoundary from '../components/shared/ErrorBoundary'
 import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
 import Settings from '../pages/Settings'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { onStart,selectIsLoggedIn } from '../utils/utilsSlice'
+import { onStart, selectIsLoggedIn } from '../utils/utilsSlice'
 import Expenses from '../pages/Expenses'
 import Notifications from '../pages/Notifications'
 import Reports from '../pages/Reports'
@@ -36,9 +36,9 @@ const AppRoutes = (props: Props) => {
 
   React.useEffect(() => {
     dispatch(onStart())
-    async function validation(){
+    async function validation() {
       const valid = await checkLicense()
-      console.log('valid ',valid)
+      console.log('valid ', valid)
       setLisenseValid(valid)
     }
     validation()
@@ -79,17 +79,21 @@ const AppRoutes = (props: Props) => {
                   <Route path={SETTINGS} element={<Settings />} />
                   <Route path={REPORTS} element={<Reports />} />
                   <Route path={NOTIFICATIONS} element={<Notifications />} />
-                  <Route path={INTERNAL_CONFIG} element={<Config/>} />
+                  <Route path={INTERNAL_CONFIG} element={<Config />} />
                   <Route path={NOT_FOUND} element={<NotFound />} />
                 </Routes>
               </Layout>
             ) : (
               <Routes>
-                <Route path={LOGIN} element={<Login />} />
-                <Route path={INTERNAL_CONFIG} element={<Config/>} />
-                <Route path={SIGNUP} element={<Signup setFirstTime={setFirstTime}/>} />
-                <Route path={WELCOME} element={<Welcome/>} />
-                <Route path={LISENSE} element={<Lisense/>} />
+                {
+                  (!isFirstTime &&  lisenseValid) && (<>
+                    <Route path={LOGIN} element={<Login />} />
+                  </>)
+                }
+                <Route path={INTERNAL_CONFIG} element={<Config />} />
+                <Route path={SIGNUP} element={isFirstTime ? <Signup setFirstTime={setFirstTime} /> : <Navigation />} />
+                <Route path={WELCOME} element={<Welcome />} />
+                <Route path={LISENSE} element={<Lisense />} />
                 <Route path={NOT_FOUND} element={<Navigation path={LOGIN} firstTime={isFirstTime} valid={lisenseValid} />} />
               </Routes>
             )
@@ -107,7 +111,7 @@ type NavigateProp = {
   firstTime?: boolean
   valid?: boolean
 }
-const Navigation = ({ path = HOME, firstTime=false , valid=false }: NavigateProp) => {
+const Navigation = ({ path = HOME, firstTime = false, valid = true }: NavigateProp) => {
   if (!valid) {
     return <Navigate to={LISENSE} replace />
   }
