@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import './styles/index.css';
 import { configBackEnd } from './services/authentication/auth.backend';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import { initServiceWorker, updateServiceWorker } from './utils/service/swSlice';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -21,7 +22,17 @@ root.render(
   </React.StrictMode>
 );
 
-serviceWorkerRegistration.unregister();
+serviceWorkerRegistration.register({
+  onUpdate: (registration) => {
+    store.dispatch(updateServiceWorker(registration))
+    console.log('New content is available; please refresh.');
+  },
+  onSuccess: (registration) => {
+    store.dispatch(initServiceWorker(registration))
+    console.log('Service worker registration successful with scope: ', registration.scope);
+  }
+
+});
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

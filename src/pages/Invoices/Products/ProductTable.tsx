@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddProductRow from './AddProductRow';
 import ProductTableGST from './ProductTableGST';
+import React from 'react'
 
 type Props = {
   products: Product[],

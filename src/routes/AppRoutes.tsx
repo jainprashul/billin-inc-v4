@@ -24,6 +24,8 @@ import Signup from '../pages/Signup'
 import { useLocalStorage } from '../utils'
 import Lisense from '../pages/Lisense'
 import { checkLicense } from '../services/lisensing'
+import { selectServiceWorker, selectSWIsUpdated } from '../utils/service/swSlice'
+import AlertDialog from '../components/shared/AlertDialog'
 
 type Props = {}
 
@@ -33,6 +35,22 @@ const AppRoutes = (props: Props) => {
   const isAuthenticated = useAppSelector(selectIsLoggedIn)
   const [isFirstTime, setFirstTime] = useLocalStorage('ft', true)
   const [lisenseValid, setLisenseValid] = useLocalStorage('lv', true)
+
+  const isAppUpdateAvailable = useAppSelector(selectSWIsUpdated)
+  const sw = useAppSelector(selectServiceWorker)
+
+  function updateApp() {
+      const registrationWaiting = sw?.waiting;
+      if (registrationWaiting) {
+        registrationWaiting.postMessage({ type: 'SKIP_WAITING' });
+        registrationWaiting.addEventListener('statechange', e => {
+          if (e.target && (e.target as any).state === 'activated') {
+            window.location.reload();
+          }
+        });
+      }
+  }
+
 
   React.useEffect(() => {
     dispatch(onStart())
@@ -86,7 +104,7 @@ const AppRoutes = (props: Props) => {
             ) : (
               <Routes>
                 {
-                  (!isFirstTime &&  lisenseValid) && (<>
+                  (!isFirstTime && lisenseValid) && (<>
                     <Route path={LOGIN} element={<Login />} />
                   </>)
                 }
@@ -101,6 +119,15 @@ const AppRoutes = (props: Props) => {
           </DashboardProvider>
         </CompanyDBProvider>
       </BrowserRouter>
+      <AlertDialog
+        open={isAppUpdateAvailable}
+        setOpen={() => { }}
+        title="Update Available"
+        message="New version of the app is available. Please refresh the page to update."
+        confirmText='Refresh'
+        onConfirm={() => updateApp()}
+        showCancel={false}
+      />
     </ErrorBoundary>
 
   )

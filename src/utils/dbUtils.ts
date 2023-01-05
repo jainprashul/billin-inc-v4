@@ -20,7 +20,7 @@ export const generateBackupFile = async () => {
     const DBBLob = await exportDatabase(db);
     const companyDbs = Object.values(db.companyDB);
 
-    let blobs = [];
+    let blobs : Blob[] = [];
     for (let i = 0; i < companyDbs.length; i++) {
         const companyDB = companyDbs[i];
         const companyDBBlob = await exportDatabase(companyDB);
