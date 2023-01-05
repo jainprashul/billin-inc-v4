@@ -1,6 +1,6 @@
 import { AddBox, InstallDesktop } from '@mui/icons-material'
 import { Button, Grid, Stack, Typography } from '@mui/material'
-import { useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import Filters from '../../components/shared/Filters'
 import LoadingX from '../../components/shared/LoadingX'
 import Time from '../../components/shared/Time'
@@ -15,13 +15,14 @@ import SalesVSPurchaseGraph from '../Invoices/SalesVSPurchaseGraph'
 import useDashboard from './useDashboard'
 import animationData from '../../assets/office.json'
 import Lottie from 'lottie-react';
-import { selectPromptEvent, selectShowInstallPrompt } from '../../utils/service/swSlice'
+import { selectPromptEvent, selectShowInstallPrompt, setInstallPrompt } from '../../utils/service/swSlice'
 
 
 type Props = {}
 
 const Dashboard = (props: Props) => {
     const user = authService.getUser();
+    const dispatch = useAppDispatch()
 
     const salesCount = useAppSelector(selectSalesCount);
     const purchaseCount = useAppSelector(selectPurchaseCount);
@@ -38,6 +39,10 @@ const Dashboard = (props: Props) => {
             installPrompt.prompt()
             installPrompt.userChoice.then((choiceResult: any) => {
                 if (choiceResult.outcome === 'accepted') {
+                    dispatch(setInstallPrompt({
+                        showInstallPrompt: false,
+                        promptEvent: null,
+                    }))
                     console.log('User accepted the A2HS prompt');
                 } else {
                     console.log('User dismissed the A2HS prompt');

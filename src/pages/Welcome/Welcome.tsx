@@ -4,13 +4,14 @@ import { checkLicense } from '../../services/lisensing'
 import Lottie from 'lottie-react';
 import animationDate from '../../assets/mario-coin-animation.json';
 import { LISENSE, SIGNUP } from '../../constants/routes';
-import { useAppSelector } from '../../app/hooks';
-import { selectPromptEvent, selectShowInstallPrompt } from '../../utils/service/swSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectPromptEvent, selectShowInstallPrompt, setInstallPrompt , } from '../../utils/service/swSlice';
 
 type Props = {
 }
 
 const Welcome = (props: Props) => {
+    const dispatch = useAppDispatch()
 
     const handleStart = async () => {
         const isValid = await checkLicense();
@@ -34,6 +35,10 @@ const Welcome = (props: Props) => {
             installPrompt.userChoice.then((choiceResult: any) => {
                 if (choiceResult.outcome === 'accepted') {
                     console.log('User accepted the A2HS prompt');
+                    dispatch(setInstallPrompt({
+                        showInstallPrompt: false,
+                        promptEvent: null,
+                    }))
                 } else {
                     console.log('User dismissed the A2HS prompt');
                 }
