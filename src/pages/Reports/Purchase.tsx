@@ -66,6 +66,7 @@ const Purchase = ({ filter }: Props) => {
 
         reportLog.save()
       }
+      setLoading(false)
     }
     getPurchaseReport()
   }, [companyDB, companyID, filter.date])

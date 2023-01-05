@@ -70,7 +70,11 @@ const ExpensePieChart = ({ data, width='100%', height='100%'  }: Props) => {
             maxHeight: 500,
             width: width,
         }}>
-            
+            {
+                res.length === 0 && <div className='no-data-card'>
+                    <h3>No Expenses has been added yet</h3>
+                </div>
+            }
             <ResponsiveContainer width={'100%'}>
                 <PieChart>
                     <Pie

@@ -64,7 +64,12 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
     const cityOptions = getStateCites(address.state) || [];
     const stateOptions = stateList || [];
     return (
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+        }}>
             {Object.keys(formik.errors).length ? <Alert severity="error" >
                 {JSON.stringify(formik.errors)}
             </Alert> : <></>}

@@ -63,6 +63,7 @@ const Sales = (props: Props) => {
         reportLog.save()
         console.log("report", report)
       }
+      setLoading(false)
     }
 
       getSalesReport()

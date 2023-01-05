@@ -11,6 +11,7 @@ import { useAppSelector } from '../../app/hooks';
 import { selectCurrentRoute } from '../../routes/routeSlice';
 import { RoutesHasSettings } from '../../constants/navbar';
 import NotificationBar from './NotificationBar';
+import { useDataUtils } from '../../utils/useDataUtils';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -41,6 +42,9 @@ type Props = {
 
 const AppBar = ({ open, handleDrawerOpen }: Props) => {
   const currentRoute = useAppSelector(selectCurrentRoute);
+  const { company } = useDataUtils()
+
+  const name = company?.name || APP_NAME
 
   return (
     <Bar data-testid="app-bar-container" position="fixed" open={open}>
@@ -61,7 +65,7 @@ const AppBar = ({ open, handleDrawerOpen }: Props) => {
           flexGrow: 1,
         }}>
           <Typography variant="h6" noWrap component="div">
-            {APP_NAME}
+            {name} <Typography variant="caption" component="span" sx={{ color: 'grey.500' }} >/{APP_NAME}</Typography>
           </Typography>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems:'center' }} >

@@ -10,8 +10,17 @@ type Props = {
 
 
 const StockTable = ({ data }: Props) => {
-    const loading = !(data ? data.length !== 0 : false)
     const { navigate } = useDataUtils()
+    
+    const [loading, setLoading] = React.useState(true)
+    React.useEffect(() => {
+        setLoading(!(data ? data.length !== 0 : false))
+        setTimeout(() => {
+            setLoading(false)
+        }, 2000);
+    }, [data])
+
+    
 
     const columns: Array<Column<Stock>> = React.useMemo(() => [
         {

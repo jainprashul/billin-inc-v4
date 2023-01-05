@@ -18,12 +18,18 @@ type Props = {
 
 
 const PurchaseTable = ({ data }: Props) => {
-    const loading = !(data ? data.length !== 0 : false)
     const { enqueueSnackbar } = useSnackbar();
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState(false);
     const { navigate, companyID } = useDataUtils()
 
+    const [loading, setLoading] = React.useState(true)
+    React.useEffect(() => {
+        setLoading(!(data ? data.length !== 0 : false))
+        setTimeout(() => {
+            setLoading(false)
+        }, 2000);
+    }, [data])
 
 
     const [dialog, setDialog] = React.useState({

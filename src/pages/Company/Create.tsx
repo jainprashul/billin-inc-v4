@@ -8,7 +8,12 @@ type Props = {}
 const Create = (props: Props) => {
     const { navigate, toast } = useDataUtils();
     return (
-        <div id='create-company'>
+        <div id='create-company' style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+        }}>
             <Typography variant='h5'>Create Company</Typography>
             <CompanyForm onSubmit={(company) => {
                 console.log(company)

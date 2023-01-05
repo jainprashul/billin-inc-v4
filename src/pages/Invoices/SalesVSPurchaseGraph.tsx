@@ -10,7 +10,7 @@ type Props = {
     height?: number | string
 }
 
-const SalesVSPurchaseGraph = ({  width='100%', height='100%'  }: Props) => {
+const SalesVSPurchaseGraph = ({ width = '100%', height = '100%' }: Props) => {
     const [activeIndex, setActiveIndex] = React.useState(0);
 
     const onPieEnter = (data: any, index: number) => {
@@ -21,10 +21,9 @@ const SalesVSPurchaseGraph = ({  width='100%', height='100%'  }: Props) => {
     const purchase = useAppSelector(selectPurchaseCount);
 
     const data = [
-        { name: 'Sales', currentTotal : sales.amount, total: sales.totalAmount , color : '#00C49F'},
-        { name: 'Purchase', currentTotal : purchase.amount, total: purchase.totalAmount , color : '#FFBB28' },
+        { name: 'Sales', currentTotal: sales.amount, total: sales.totalAmount, color: '#00C49F' },
+        { name: 'Purchase', currentTotal: purchase.amount, total: purchase.totalAmount, color: '#FFBB28' },
     ]
-
 
     const renderActiveShape = React.useCallback((props: any) => {
         const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
@@ -33,9 +32,9 @@ const SalesVSPurchaseGraph = ({  width='100%', height='100%'  }: Props) => {
                 <text x={cx} y={cy} dy={-130} textAnchor="middle" >
                     Sales VS Purchase
                 </text>
-    
+
                 <text x={cx} y={cy} dy={14} textAnchor="middle" fill={fill}>
-                {(percent * 100).toFixed(2)}%
+                    {(percent * 100).toFixed(2)}%
                 </text>
                 <Sector
                     cx={cx}
@@ -55,17 +54,17 @@ const SalesVSPurchaseGraph = ({  width='100%', height='100%'  }: Props) => {
                     outerRadius={outerRadius + 10}
                     fill={fill}
                 />
-                <text x={cx} y={cy} dy={-4} textAnchor="middle" fill={fill}> 
-                ₹ {value}
+                <text x={cx} y={cy} dy={-4} textAnchor="middle" fill={fill}>
+                    ₹ {value}
                 </text>
-    
+
                 <text x={cx} y={cy} dy={120} textAnchor="middle" fill={fill}>
                     {payload.name}
                 </text>
             </g>
         );
     }, []);
-    
+
     return (
         <Card style={{
             minHeight: 300,
@@ -73,7 +72,13 @@ const SalesVSPurchaseGraph = ({  width='100%', height='100%'  }: Props) => {
             maxHeight: 500,
             width: width,
         }}>
-            
+            {
+                sales.amount === 0 && purchase.amount === 0 && (
+                    <div className='no-data-card' >
+                        <h3> No Sales or Purchase Data Available </h3>
+                    </div>
+                )
+            }
             <ResponsiveContainer width={'100%'}>
                 <PieChart>
                     <Pie

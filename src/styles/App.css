@@ -180,3 +180,16 @@
     align-items: center;
     gap : 1rem;
 }
+
+.no-data-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin: 1rem ;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  text-align: center;
+  height: 90%;
+}
