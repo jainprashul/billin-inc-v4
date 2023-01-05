@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import {  Button, Typography } from '@mui/material'
 import React from 'react'
 import { checkLicense } from '../../services/lisensing'
 import Lottie from 'lottie-react';
