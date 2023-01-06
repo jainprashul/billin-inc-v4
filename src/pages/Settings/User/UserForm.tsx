@@ -8,9 +8,10 @@ import { User, UserRoles } from '../../../services/database/model'
 type Props = {
   user?: User,
   onSubmit: (values: User) => void
+  errors ?: any
 }
 
-const UserForm = ({ onSubmit, user = new User({
+const UserForm = ({ onSubmit, errors, user = new User({
   name: "",
   email: "",
   username: "",
@@ -38,6 +39,11 @@ const UserForm = ({ onSubmit, user = new User({
       {Object.keys(formik.errors).length ? <Alert severity="error" >
         {JSON.stringify(formik.errors)}
       </Alert> : <></>}
+      {
+        errors ? <Alert severity="error" >
+          {JSON.stringify(errors)}
+        </Alert> : <></>
+      }
 
       <Grid container spacing={2}>
         <Grid item xs={9} md={9}>

@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import Dexie from 'dexie'
 import React from 'react'
 import { useDataUtils } from '../../../utils/useDataUtils'
 import UserForm from './UserForm'
@@ -13,6 +14,7 @@ const Create = ({ open, setOpen }: Props) => {
     function handleClose() {
         setOpen(false)
     }
+    const [errors, setErrors] = React.useState<any>()
 
     return (
         <Dialog open={open} onClose={handleClose} >
@@ -26,10 +28,12 @@ const Create = ({ open, setOpen }: Props) => {
                             toast.enqueueSnackbar('User created successfully', { variant: 'success' })
                             handleClose()
                         }).catch((err) => {
-                            toast.enqueueSnackbar('Error creating user', { variant: 'error' })
-                            console.log(err)
+                            toast.enqueueSnackbar('Error creating User ', { variant: 'error' })
+                            console.error(err)
+                            console.log(err.message, err.type , err.name,  err instanceof Dexie.ConstraintError)
+                            setErrors(err.message)
                         })
-                    }} />
+                    }}  errors={errors} />
                 </DialogContentText>
             </DialogContent>
         </Dialog>

@@ -73,8 +73,8 @@ const Purchase = ({ filter }: Props) => {
 
   return (
     <div style={{
-      width: '140%',
-      marginLeft: '-20%'
+      width: '120%',
+      marginLeft: '-10%'
     }}>
       <MaterialTable
         isLoading={loading}
