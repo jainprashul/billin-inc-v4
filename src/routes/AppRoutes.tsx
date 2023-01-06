@@ -2,30 +2,54 @@ import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
 import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG, WELCOME, LISENSE } from '../constants/routes'
-import Dashboard from '../pages/Dashboard'
-import Invoices, { InvoiceCreate, InvoiceDetail, InvoiceEdit } from '../pages/Invoices'
-import Purchases, { PurchaseCreate, PurchaseDetails, PurchaseEdit } from '../pages/Purchases'
-import Login from '../pages/Login'
-import { StockDetail, Stocks } from '../pages/Stocks'
-import Ledger, { LedgerDetails } from '../pages/Ledger'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
-import Company, { CompanyCreate, CompanyEdit } from '../pages/Company'
-import Settings from '../pages/Settings'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { onStart, selectIsLoggedIn } from '../utils/utilsSlice'
-import Expenses from '../pages/Expenses'
-import Notifications from '../pages/Notifications'
-import Reports from '../pages/Reports'
 import { CompanyDBProvider } from '../utils/useCompanyDB'
 import { DashboardProvider } from '../pages/Dashboard/useDashboard'
-import Config from '../pages/Config'
-import Welcome from '../pages/Welcome'
-import Signup from '../pages/Signup'
 import { useLocalStorage } from '../utils'
-import Lisense from '../pages/Lisense'
 import { checkLicense } from '../services/lisensing'
 import { checktheNetworkStatus, selectServiceWorker, selectSWIsUpdated } from '../utils/service/swSlice'
 import AlertDialog from '../components/shared/AlertDialog'
+import LoadingX from '../components/shared/LoadingX'
+
+// Use Lazy Loading for large components
+const Dashboard = React.lazy(() => import('../pages/Dashboard'));
+
+const Invoices = React.lazy(() => import('../pages/Invoices'));
+const InvoiceCreate = React.lazy(() => import('../pages/Invoices/Create'));
+const InvoiceDetail = React.lazy(() => import('../pages/Invoices/Details'));
+const InvoiceEdit = React.lazy(() => import('../pages/Invoices/Edit'));
+
+const Purchases = React.lazy(() => import('../pages/Purchases'));
+const PurchaseCreate = React.lazy(() => import('../pages/Purchases/Create'));
+const PurchaseEdit = React.lazy(() => import('../pages/Purchases/Edit'));
+const PurchaseDetails = React.lazy(() => import('../pages/Purchases/Details'));
+
+const Login = React.lazy(() => import('../pages/Login'));
+
+const Stocks = React.lazy(() => import('../pages/Stocks/Stocks'));
+const StockDetail = React.lazy(() => import('../pages/Stocks/StockDetail'));
+
+const Company = React.lazy(() => import('../pages/Company'));
+const CompanyCreate = React.lazy(() => import('../pages/Company/Create'));
+const CompanyEdit = React.lazy(() => import('../pages/Company/Edit'));
+
+const Ledger = React.lazy(() => import('../pages/Ledger'));
+const LedgerDetails = React.lazy(() => import('../pages/Ledger/LedgerDetails'));
+
+const Settings = React.lazy(() => import('../pages/Settings'));
+const Expenses = React.lazy(() => import('../pages/Expenses'));
+const Notifications = React.lazy(() => import('../pages/Notifications'));
+const Reports = React.lazy(() => import('../pages/Reports'));
+const Config = React.lazy(() => import('../pages/Config'));
+
+const Welcome = React.lazy(() => import('../pages/Welcome'));
+const Signup = React.lazy(() => import('../pages/Signup'));
+const Lisense = React.lazy(() => import('../pages/Lisense'));
+
+
+
 
 type Props = {}
 
@@ -70,6 +94,7 @@ const AppRoutes = (props: Props) => {
   // }
   return (
     <ErrorBoundary>
+      <React.Suspense fallback={<LoadingX />}>
       <BrowserRouter >
         {/* <ErrorBoundary> */}
         <CompanyDBProvider>
@@ -130,6 +155,7 @@ const AppRoutes = (props: Props) => {
         onConfirm={() => updateApp()}
         showCancel={false}
       />
+      </React.Suspense>
     </ErrorBoundary>
 
   )
