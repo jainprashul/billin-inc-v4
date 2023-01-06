@@ -27,6 +27,7 @@ type Props = {
 
 
 let id = `pur_${nanoid(8)}`
+let cid = `c_${nanoid(12)}`
 
 const purchaseSchema = Yup.object().shape({
   // productIDs: Yup.array().of(Yup.string()).min(1, 'At least one product is required').required(),
@@ -35,7 +36,7 @@ const purchaseSchema = Yup.object().shape({
 const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase Entry', purchase = new Purchase({
   id,
   billingDate: new Date(),
-  clientID: `c_${nanoid(12)}`,
+  clientID: cid,
   companyID: parseInt(localStorage.getItem("companyID") ?? '1'),
   discount: false,
   discountValue: 0,
@@ -79,6 +80,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
   // console.log(client, clientID);
 
   const clearForm = () => {
+    formik.resetForm()
     setClientID('')
     setCustomerContact('')
     setCustomerName('')
@@ -89,7 +91,8 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
     setClientOpen(false)
     setProducts([])
     id = `pur_${nanoid(8)}`
-    formik.resetForm()
+    cid = `c_${nanoid(12)}`
+
   }
 
 

@@ -11,7 +11,7 @@ let cid = `c_${nanoid(12)}`
 
 const usePurchaseForm = (purchase: Purchase) => {
   const { companyID } = useDataUtils();
-  console.log(purchase)
+  // console.log(purchase)
   const [date, setDate] = useState<Date | null>(new Date())
   const [products, setProducts] = useState<Product[]>(purchase?.products || []);
   const [total, setTotal] = useState<number>(purchase?.totalAmount);
@@ -19,7 +19,7 @@ const usePurchaseForm = (purchase: Purchase) => {
   const [gstAmt, setGstAmt] = useState<number>(purchase?.gstTotal);
   const [amountPaid, setAmountPaid] = useState<number>(purchase?.amountPaid || 0);
   const [discount, setDiscount] = useState<number>(purchase?.discountValue || 0);
-
+  
   const [clientID, setClientID] = useState<string | undefined>(purchase?.clientID);
 
   const [clientOpen, setClientOpen] = useState<boolean>(false);

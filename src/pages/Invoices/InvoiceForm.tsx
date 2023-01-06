@@ -27,6 +27,7 @@ type Props = {
 
 
 let id = `inv_${nanoid(8)}`
+let cid = `c_${nanoid(12)}`
 
 const invoiceSchema = Yup.object().shape({
   // productIDs: Yup.array().of(Yup.string()).min(1, 'At least one product is required').required(),
@@ -35,7 +36,7 @@ const invoiceSchema = Yup.object().shape({
 const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', invoice = new Invoices({
   id,
   billingDate: new Date(),
-  clientID: `c_${nanoid(12)}`,
+  clientID: cid,
   companyID: parseInt(localStorage.getItem("companyID") ?? '1'),
   discount: false,
   discountValue: 0,
@@ -79,6 +80,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   // console.log(client, clientID);
 
   const clearForm = () => {
+    formik.resetForm()
     setClientID('')
     setCustomerContact('')
     setCustomerName('')
@@ -89,7 +91,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     setClientOpen(false)
     setProducts([])
     id = `inv_${nanoid(8)}`
-    formik.resetForm()
+    cid = `c_${nanoid(12)}`
   }
 
 
