@@ -8,11 +8,13 @@ import './styles/index.css';
 import { configBackEnd } from './services/authentication/auth.backend';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { initServiceWorker, updateServiceWorker } from './utils/service/swSlice';
+import { persistStorage } from './utils/service/storage';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
-configBackEnd()
+configBackEnd();
+persistStorage();
 
 root.render(
   <React.StrictMode>

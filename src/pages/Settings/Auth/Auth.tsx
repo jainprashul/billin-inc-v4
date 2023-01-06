@@ -1,8 +1,8 @@
 import { Login, Logout } from '@mui/icons-material'
 import { Avatar, Button } from '@mui/material'
 import React from 'react'
-import { useGoogle } from '../../utils/useGoogle'
-
+import { useGoogle } from '../../../utils/useGoogle'
+import Lottie from 'lottie-react'
 type Props = {}
 
 const Auth = (props: Props) => {
@@ -10,6 +10,17 @@ const Auth = (props: Props) => {
 
   return (
     <div>
+       <div style={{
+        width: 450,
+        float: 'right',
+      }}>
+        <Lottie
+          animationData={require('../../../assets/auth.json')}
+          loop={true}
+          autoPlay={true}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
       {
         isSignedIn ? (<>
           Google Account Sign in as :

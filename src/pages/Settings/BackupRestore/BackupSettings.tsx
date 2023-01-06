@@ -1,18 +1,19 @@
 import { Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React from 'react'
-import { clearALLCache, deleteData, exportData, importData } from '../../utils/dbUtils'
+import { clearALLCache, deleteData, exportData, importData } from '../../../utils/dbUtils'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
-import AlertDialog from '../../components/shared/AlertDialog';
-import { useGDrive } from '../../utils/useGDrive';
+import AlertDialog from '../../../components/shared/AlertDialog';
+import { useGDrive } from '../../../utils/useGDrive';
 import { Folder } from '@mui/icons-material';
 import BackupList from './BackupList';
-import { useLoading } from '../../components/shared/LoadingX';
+import { useLoading } from '../../../components/shared/LoadingX';
+import Lottie from 'lottie-react';
 
 type Props = {}
 
@@ -142,6 +143,18 @@ const BackupSettings = (props: Props) => {
 
   return (
     <div>
+
+      <div style={{
+        width: 600,
+        float: 'right',
+      }}>
+        <Lottie
+          animationData={require('../../../assets/restore.json')}
+          loop={true}
+          autoPlay={true}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
       <Button startIcon={<DownloadForOfflineIcon />} onClick={() => exportDataHandler()}>Backup Data</Button>
       {/* <Button>Backup via Excel</Button> */}
       <br />
@@ -163,7 +176,7 @@ const BackupSettings = (props: Props) => {
         isSignedIn && (<>
           <Button onClick={() => exportDataHandler(false)} startIcon={<CloudUploadIcon />}>Online Backup</Button>
           <br />
-          <Button onClick={()=> handleOnlineRestore()} startIcon={<CloudDownloadIcon />}>Online Restore</Button>
+          <Button onClick={() => handleOnlineRestore()} startIcon={<CloudDownloadIcon />}>Online Restore</Button>
           <br />
           <Button onClick={async () => {
             const data = await fileListfromDrive()

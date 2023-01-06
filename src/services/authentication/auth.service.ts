@@ -38,12 +38,12 @@ class AuthService {
        
     }
 
-    async logout() {
+    async logout(redirect = '/') {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
-        window.location.href = "/";
+        window.location.href = redirect;
     }
     
     getUser() {

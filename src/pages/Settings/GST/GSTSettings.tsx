@@ -1,7 +1,8 @@
 import { FormControlLabel, Switch } from '@mui/material'
 import React from 'react'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectGstEnabled, selectGstRateType, setGstEnabled, setGstRateInclusive } from '../../utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../app/hooks'
+import { selectGstEnabled, selectGstRateType, setGstEnabled, setGstRateInclusive } from '../../../utils/utilsSlice'
+import Lottie from 'lottie-react'
 
 type Props = {}
 
@@ -10,6 +11,19 @@ const GSTSettings = (props: Props) => {
     const gstEnabled = useAppSelector(selectGstEnabled)
     const dispatch = useAppDispatch();
     return (
+        <div id="GSTSettings">
+            
+      <div style={{
+        width: 300,
+        float: 'right',
+      }}>
+        <Lottie
+          animationData={require('../../../assets/settings.json')}
+          loop={true}
+          autoPlay={true}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
         <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -38,6 +52,7 @@ const GSTSettings = (props: Props) => {
                     }
                 />
             }
+        </div>
         </div>
     )
 }
