@@ -33,6 +33,11 @@ export const EXPENSES_CREATE = '/expenses/create';
 export const EXPENSES_EDIT = '/expenses/:id/edit';
 export const EXPENSES_DETAIL = '/expenses/:id';
 
+export const BANK_ACCOUNT = '/bank-account';
+export const BANK_ACCOUNT_CREATE = '/bank-account/create';
+export const BANK_ACCOUNT_EDIT = '/bank-account/:id/edit';
+export const BANK_ACCOUNT_DETAIL = '/bank-account/:id';
+
 export const REPORTS = '/reports';
 
 export const NOTIFICATIONS = '/notifications';

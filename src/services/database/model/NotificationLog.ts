@@ -10,7 +10,7 @@ export interface INotificationLog {
     link?: string;
     changes?: any;
     type: string;
-    action : string;
+    action: string;
     status: NotificationStatus;
     isVisible?: boolean;
     createdBy: string;
@@ -19,17 +19,18 @@ export interface INotificationLog {
 type NotificationStatus = "NEW" | "SEEN" | "READ";
 
 export const NotificationType = {
-    CLIENT : "CLIENT",
-    EXPENSE : 'EXPENSE',
-    INVOICE : "INVOICE",
-    LEDGER : "LEDGER",
-    PRODUCT : "PRODUCT",
-    PURCHASE : "PURCHASE",
-    STOCK_LOG : "STOCK_LOG",
-    STOCK : "STOCK",
-    USER : "USER",
-    REPORT : "REPORT",
-    
+    CLIENT: "CLIENT",
+    EXPENSE: 'EXPENSE',
+    INVOICE: "INVOICE",
+    LEDGER: "LEDGER",
+    PRODUCT: "PRODUCT",
+    PURCHASE: "PURCHASE",
+    STOCK_LOG: "STOCK_LOG",
+    STOCK: "STOCK",
+    USER: "USER",
+    REPORT: "REPORT",
+    BANK_ACCOUNT: "BANK_ACCOUNT",
+
 }
 
 export class NotificationLog implements INotificationLog {
@@ -42,7 +43,7 @@ export class NotificationLog implements INotificationLog {
     link?: string;
     changes?: any;
     type: string;
-    action : string;
+    action: string;
     status: NotificationStatus;
     isVisible: boolean;
     createdAt: Date;
@@ -126,7 +127,7 @@ export class NotificationLog implements INotificationLog {
                 // clear means visible = false  
                 companyDB.notificationlogs.toArray().then((notifications) => {
                     notifications.forEach((notification) => {
-                        companyDB.notificationlogs.update(notification.id!, { isVisible: false, status : 'SEEN' })
+                        companyDB.notificationlogs.update(notification.id!, { isVisible: false, status: 'SEEN' })
                     })
                 })
                 console.log('All Notification Cleared');

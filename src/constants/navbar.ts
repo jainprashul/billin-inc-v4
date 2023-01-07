@@ -1,4 +1,4 @@
-import { COMPANY, EXPENSES, HOME, INVOICES, INVOICE_CREATE, LEDGER, PURCHASE, PURCHASE_CREATE, REPORTS, SETTINGS, STOCKS, } from "./routes";
+import { BANK_ACCOUNT, COMPANY, EXPENSES, HOME, INVOICES, INVOICE_CREATE, LEDGER, PURCHASE, PURCHASE_CREATE, REPORTS, SETTINGS, STOCKS, } from "./routes";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import TaskIcon from '@mui/icons-material/Task';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -9,6 +9,7 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import authService from "../services/authentication/auth.service";
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 type DrawerMenu = {
     name: string
     icon?: any
@@ -89,7 +90,11 @@ export const DRAWER_MENU: DrawerMenu[] = [
         icon: BusinessIcon,
         route: COMPANY,
     },
-    
+    {
+        name: "Bank Accounts",
+        icon: AccountBalanceIcon,
+        route: BANK_ACCOUNT,
+    },
     {
         name: "Settings",
         icon: SettingsIcon,

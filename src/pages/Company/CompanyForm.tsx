@@ -1,10 +1,12 @@
-import { Alert, Autocomplete, Button, FormControl, FormLabel, Grid, TextField, } from '@mui/material'
+import { Alert, Autocomplete, Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, TextField, } from '@mui/material'
 import { useFormik } from 'formik'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import React from 'react'
 import * as Yup from 'yup';
 import { getStateCites, stateList } from '../../constants/states';
 import { Company } from '../../services/database/model'
+import { useDataUtils } from '../../utils/useDataUtils';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 type Props = {
     company?: Company
@@ -35,6 +37,14 @@ const initCompany: Company = new Company({
 
 const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
 
+    const { companyDB } = useDataUtils();
+
+    const accounts = useLiveQuery(async () => {
+        if (!companyDB) return []
+        const bankAccounts = await companyDB.bankAccounts.toArray()
+        return bankAccounts
+    }, [companyDB])!
+
     const submitHandler = (values: Company) => {
         values.createdAt = new Date();
         values.createdBy = 'admin';
@@ -60,7 +70,7 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
         }),
         validateOnChange: false,
     })
-    const { name, address, contacts, gst, email } = formik.values;
+    const { name, address, contacts, gst, email, bankAccountID: backAccountID } = formik.values;
     const cityOptions = getStateCites(address.state) || [];
     const stateOptions = stateList || [];
     return (
@@ -181,7 +191,7 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
                         />
 
                     </Grid>
-                    <Grid item xs={6} md={6}>
+                    <Grid item xs={12} md={6}>
                         <TextField variant='standard'
                             fullWidth
                             id="gst"
@@ -191,10 +201,31 @@ const CompanyForm = ({ company = initCompany, onSubmit }: Props) => {
                             autoComplete="gst"
                             value={gst}
                             inputProps={{
-                                
+
                             }}
                             onChange={formik.handleChange}
                         />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Account Type</InputLabel>
+                            <Select
+                                value={backAccountID ?? 'none'}
+                                name="bankAccountID"
+                                label="Bank Account"
+                                labelId='bankAccountID'
+                                fullWidth
+                                variant='standard'
+                                onChange={formik.handleChange}
+                            >
+                                <MenuItem value='none'>Select Bank Account</MenuItem>
+                                {
+                                    accounts?.map((bankAccount, i) => (
+                                        <MenuItem key={i} value={bankAccount.id}>{bankAccount.bankName} - {bankAccount.accountHolder}</MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
             </FormControl>

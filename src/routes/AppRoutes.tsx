@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { Layout, NotFound } from '../components'
-import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG, WELCOME, LISENSE } from '../constants/routes'
+import { HOME, INVOICES, INVOICE_CREATE, INVOICE_DETAIL, LOGIN, SIGNUP, NOT_FOUND, INVOICE_EDIT, PURCHASE, PURCHASE_CREATE, PURCHASE_EDIT, STOCKS, STOCK_DETAIL, LEDGER, LEDGER_DETAIL, COMPANY, COMPANY_CREATE, COMPANY_EDIT, PURCHASE_DETAIL, SETTINGS, EXPENSES, NOTIFICATIONS, REPORTS, INTERNAL_CONFIG, WELCOME, LISENSE, BANK_ACCOUNT, BANK_ACCOUNT_CREATE, BANK_ACCOUNT_EDIT, BANK_ACCOUNT_DETAIL } from '../constants/routes'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { onStart, selectIsLoggedIn } from '../utils/utilsSlice'
@@ -48,7 +48,10 @@ const Welcome = React.lazy(() => import('../pages/Welcome'));
 const Signup = React.lazy(() => import('../pages/Signup'));
 const Lisense = React.lazy(() => import('../pages/Lisense'));
 
-
+const BankAccount = React.lazy(() => import('../pages/Bank/Bank'));
+const BankAccountCreate = React.lazy(() => import('../pages/Bank/Create'));
+const BankAccountEdit = React.lazy(() => import('../pages/Bank/Edit'));
+const BankAccountDetail = React.lazy(() => import('../pages/Bank/Details'));
 
 
 type Props = {}
@@ -105,26 +108,38 @@ const AppRoutes = (props: Props) => {
                   <Route path={HOME} element={<Dashboard />} />
                   <Route path={LOGIN} element={<Navigation />} />
                   <Route path={SIGNUP} element={<Navigation />} />
+                  
                   <Route path={INVOICES} element={<Invoices />} />
                   <Route path={INVOICE_CREATE} element={<InvoiceCreate />} />
                   <Route path={INVOICE_EDIT} element={<InvoiceEdit />} />
                   <Route path={INVOICE_DETAIL} element={<InvoiceDetail />} />
+
                   <Route path={PURCHASE} element={<Purchases />} />
                   <Route path={PURCHASE_CREATE} element={<PurchaseCreate />} />
                   <Route path={PURCHASE_EDIT} element={<PurchaseEdit />} />
                   <Route path={PURCHASE_DETAIL} element={<PurchaseDetails />} />
+
                   <Route path={STOCKS} element={<Stocks />} />
                   <Route path={STOCK_DETAIL} element={<StockDetail />} />
+
                   <Route path={LEDGER} element={<Ledger />} />
                   <Route path={LEDGER_DETAIL} element={<LedgerDetails />} />
+
                   <Route path={EXPENSES} element={<Expenses />} />
                   <Route path={COMPANY} element={<Company />} />
                   <Route path={COMPANY_CREATE} element={<CompanyCreate />} />
                   <Route path={COMPANY_EDIT} element={<CompanyEdit />} />
+
                   <Route path={SETTINGS} element={<Settings />} />
                   <Route path={REPORTS} element={<Reports />} />
                   <Route path={NOTIFICATIONS} element={<Notifications />} />
                   <Route path={INTERNAL_CONFIG} element={<Config />} />
+
+                  <Route path={BANK_ACCOUNT} element={<BankAccount/>} />
+                  <Route path={BANK_ACCOUNT_CREATE} element={<BankAccountCreate/>} />
+                  <Route path={BANK_ACCOUNT_EDIT} element={<BankAccountEdit/>} />
+                  <Route path={BANK_ACCOUNT_DETAIL} element={<BankAccountDetail/>} />
+
                   <Route path={NOT_FOUND} element={<NotFound />} />
                 </Routes>
               </Layout>
