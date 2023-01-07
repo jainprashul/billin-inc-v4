@@ -3,8 +3,9 @@ import moment from 'moment';
 import numWords from 'num-words'
 
 /** Invoice Template */
-const invoicePattern = ({ company, gstEnabled, client, voucherNo, billingDate, products, grossTotal, gstTotal, subTotal, totalAmount, discount, discountValue, amountPaid, voucherType }) => {
+const invoicePattern = ({ company, account, gstEnabled, client, voucherNo, billingDate, products, grossTotal, gstTotal, subTotal, totalAmount, discount, discountValue, amountPaid, voucherType }) => {
     const { name, address, contacts, gst } = company;
+    const qr = localStorage.getItem('qr'); // QR Code
     return `
 <!DOCTYPE html >
 <html >
@@ -192,13 +193,20 @@ table th {
 }
 
 #payment {
-    margin: 16px 0 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }
 
 #signature {
-    margin-top: -56px;
     text-align: right;
     padding-top: 5px;
+}
+
+#qr {
+    width: 100px;
 }
 
 #sign {
@@ -481,10 +489,30 @@ thead.itembox{
 
         <div class="footer">
         <div id="payment">
+
+        ${account ? (
+            `<div id="bank-details">
+                <b>Bank Details</b>
+                <p>Account Number: ${account.accountNo}</p>
+                <p>Bank Name: ${account.bankName}</p>
+                <p>IFSC Code: ${account.ifsc}</p>
+                <p>Branch: ${account.branch}</p>
+            </div>`) : ('')
+        }
+        
+        <div id="payment-details">
         <p> For the current bill. </p>
         <p> <span class="payment-due">Paid:</span> <span id="totalDue">Rs. ${amountPaid.toFixed(2)}</span> </p>
         <p> <span class="payment-due">Remaining:</span> <span id="totalDue">Rs. ${(totalAmount - amountPaid).toFixed(2)}</span> </p>
-        
+        </div>
+
+        ${qr ? (
+            `<div id="qr">
+                <img style='width:inherit' src="${qr}" alt="qr" />
+                </div>`
+        ) : ('')
+        }
+
         <div id="signature">
         <p >For ${name}</p>
         <p id='sign'>Authorized Signature</p>

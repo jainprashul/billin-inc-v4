@@ -11,7 +11,7 @@ import { useDataUtils } from '../../utils/useDataUtils';
 let cid = `c_${nanoid(12)}`
 
 const useInvoiceForm = (invoice: Invoices) => {
-  const { companyID } = useDataUtils();
+  const { companyID, getAccountDetails } = useDataUtils();
   // console.log(invoice)
   const [date, setDate] = useState<Date | null>(new Date())
   const [products, setProducts] = useState<Product[]>(invoice?.products || []);
@@ -137,7 +137,8 @@ const useInvoiceForm = (invoice: Invoices) => {
     iframe.contentWindow?.print();
   }
 
-  const printInvoice = (invoice: Invoice) => {
+  const printInvoice = async (invoice: Invoice) => {
+    const account = await getAccountDetails();
     const printInv = {
       ...invoice,
       products,
@@ -145,6 +146,7 @@ const useInvoiceForm = (invoice: Invoices) => {
       // voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
       company: query?.company,
       amountPaid: amountPaid,
+      account,
     }
     printBill(printInv);
   }

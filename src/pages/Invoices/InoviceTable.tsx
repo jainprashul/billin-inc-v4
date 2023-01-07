@@ -18,7 +18,7 @@ type Props = {
 const InvoiceTable = ({ data }: Props) => {
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState(false);
-    const { company, navigate , toast } = useDataUtils()
+    const { company, navigate , toast, getAccountDetails } = useDataUtils()
 
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
@@ -44,11 +44,13 @@ const InvoiceTable = ({ data }: Props) => {
         //     state: invoice
         // });
 
+        const account = await getAccountDetails();
         const w = window.open( '', `Invoice ${invoice.voucherNo}`, 'width=800,height=720');
         if (w) {
             const data : any = {
                 ...invoice,
                 company,
+                account,
             }
             w.document.write(invoicePattern(data));
             w.document.close(); 
@@ -62,15 +64,18 @@ const InvoiceTable = ({ data }: Props) => {
         });
     }
 
-    const printInvoice = (invoice: Invoice) => {
+    const printInvoice = async (invoice: Invoice) => {
         console.log('printBill', invoice)
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
 
+        const account = await getAccountDetails();
+
         const data : any = {
             ...invoice,
             company,
+            account,
         }
 
 

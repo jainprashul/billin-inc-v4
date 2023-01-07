@@ -1,5 +1,5 @@
-
-import GSTSettings from './GST/GSTSettings';
+import React from 'react'
+import General from './General';
 import BackupSettings from './BackupRestore/BackupSettings';
 import CreateTab, { Panel } from '../../components/shared/CreateTab';
 import Auth from './Auth/Auth';
@@ -11,9 +11,9 @@ type Props = {}
 
 const panels : Panel[] = [
     {
-        name: "GST Settings",
+        name: "General",
         content: () => (
-            <GSTSettings />
+            <General />
         )
     },
     {

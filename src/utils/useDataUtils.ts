@@ -16,6 +16,14 @@ export const useDataUtils = () => {
   const location = useLocation();
   const params = useParams();
   const toast = useSnackbar();
+
+  async function getAccountDetails() {
+    const accountID = company?.bankAccountID
+    if (!accountID) return
+    const account = await companyDB?.bankAccounts.get(accountID)
+    return account?.toJSON() 
+  }
+
   return {
     company, companyDB, companyID, setCompanyID,
     navigate,
@@ -23,6 +31,7 @@ export const useDataUtils = () => {
     params,
     toast,
     backups,
+    getAccountDetails,
     dispatch
   }
 }

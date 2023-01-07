@@ -148,4 +148,9 @@ export class BankAccount implements IBankAccount {
         });
     }
 
+    toJSON() {
+        const val : IBankAccount = { ...this };
+        return val;
+    }
+
 }
