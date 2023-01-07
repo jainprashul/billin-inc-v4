@@ -73,7 +73,7 @@ const LogTable = ({ data }: Props) => {
                 data={data}
                 options={{
                     actionsColumnIndex: -1,
-                    pageSize: 8,
+                    pageSize: 7,
                     pageSizeOptions: [5, 10, 20, 30, 50],
                     draggable: true,
                     headerStyle: {

@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 import React from 'react'
+import { BANK_ACCOUNT } from '../../constants/routes'
 import { BankAccount } from '../../services/database/model/BankAccount'
 import { useDataUtils } from '../../utils/useDataUtils'
 import BankForm from './BankForm'
@@ -19,7 +20,7 @@ const Edit = (props: Props) => {
             account.save().then(()=>{
                 console.log('Saved')
                 toast.enqueueSnackbar('Bank Account Updated', { variant: 'success' });
-                navigate('/bank')
+                navigate(BANK_ACCOUNT)
             }
             ).catch((err)=>{
                 console.log('Error', err)

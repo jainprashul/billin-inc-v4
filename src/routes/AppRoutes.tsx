@@ -51,7 +51,7 @@ const Lisense = React.lazy(() => import('../pages/Lisense'));
 const BankAccount = React.lazy(() => import('../pages/Bank/Bank'));
 const BankAccountCreate = React.lazy(() => import('../pages/Bank/Create'));
 const BankAccountEdit = React.lazy(() => import('../pages/Bank/Edit'));
-const BankAccountDetail = React.lazy(() => import('../pages/Bank/Details'));
+const BankAccountDetail = React.lazy(() => import('../pages/Bank/BankDetails'));
 
 
 type Props = {}

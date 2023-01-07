@@ -3,6 +3,7 @@ export interface ITransaction {
     bankAccountID: number | string;
     date: Date;
     amount: number;
+    /** @example deposit | withdrawal | transfer */
     type: string;
     description?: string;
     createdAt?: Date;
