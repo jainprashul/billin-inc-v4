@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import React, {useEffect} from 'react'
+import React, {} from 'react'
 import { useLocalStorage } from '.';
 import CompanyDB from '../services/database/companydb';
 import db from '../services/database/db';
@@ -23,19 +23,31 @@ export const useCompanyDB = () => React.useContext(CompanyDBContext);
 
 export const CompanyDBProvider = ({ children }: { children: React.ReactNode }) => {
     const [ companyID , setCompanyID ] = useLocalStorage("companyID", 1);
-    const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
+    // const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
 
     const company = useLiveQuery( async ()=> {
         return db.companies.get(companyID);
     }, [companyID])!
 
-    useEffect(() => {
+    const companyDB = React.useMemo(() => {
+        let dataBase = db.getCompanyDB(companyID);
         db.on('ready', () => {
-          setTimeout(() => {
-            setCompanyDB(db.getCompanyDB(companyID));
-          }, 500);
+            setTimeout(() => {
+                dataBase = db.getCompanyDB(companyID);
+            }, 500);
         });
-      }, [companyID]);
+        return dataBase;
+    }, [companyID]);
+
+        
+
+    // useEffect(() => {
+    //     db.on('ready', () => {
+    //       setTimeout(() => {
+    //         setCompanyDB(db.getCompanyDB(companyID));
+    //       }, 500);
+    //     });
+    //   }, [companyID]);
 
     const Context = {
         companyDB,

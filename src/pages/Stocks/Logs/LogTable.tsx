@@ -82,6 +82,10 @@ const LogTable = ({ data }: Props) => {
                     showTitle: false,
 
                 }}
+                style={{
+                    maxWidth: '100%',
+                    overflowX: 'auto',
+                }}
             />
         </>
     )

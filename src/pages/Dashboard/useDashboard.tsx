@@ -22,6 +22,7 @@ const DashboardContext = React.createContext({
         },
     },
     notificationCount: 0,
+    isMobile: false,
     setNotificationCount: (count: number) => { },
     filterList: [] as Filter[],
     handleFilterChange: (data: any) => { },
@@ -30,7 +31,7 @@ const DashboardContext = React.createContext({
 })
 
 export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
-    const { companyDB, navigate } = useDataUtils()
+    const { companyDB, navigate, isMobile } = useDataUtils()
     const dispatch = useAppDispatch()
 
     const salesData = useAppSelector(selectSalesData);
@@ -266,8 +267,9 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         handleFilterChange,
         expenses,
         navigate,
+        isMobile,
         notificationCount, setNotificationCount
-    }), [companyDB, filterList, filter, handleFilterChange, expenses, navigate, notificationCount])
+    }), [companyDB, filterList, filter, handleFilterChange, expenses, navigate, isMobile, notificationCount])
 
     return (
         <DashboardContext.Provider value={Context}>

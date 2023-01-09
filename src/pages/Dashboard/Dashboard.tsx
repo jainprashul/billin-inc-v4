@@ -29,7 +29,7 @@ const Dashboard = (props: Props) => {
     const expenseCount = useAppSelector(selectExpenseCount);
     const stockCount = useAppSelector(selectStockCount);
 
-    const { filterList, handleFilterChange, expenses, filter, companyDB, navigate, notificationCount } = useDashboard()
+    const { filterList, handleFilterChange, expenses, filter, companyDB, navigate, notificationCount, isMobile } = useDashboard()
 
     const showInstall = useAppSelector(selectShowInstallPrompt)
     const installPrompt = useAppSelector(selectPromptEvent)
@@ -60,7 +60,7 @@ const Dashboard = (props: Props) => {
                 justifyContent: 'space-between',
                 minWidth: '110%',
                 alignItems: 'center',
-                // flexDirection: 'column'
+                flexDirection: isMobile ? 'column' : 'row',
             }}>
                 <div style={{
                     flex: '1',
@@ -81,6 +81,7 @@ const Dashboard = (props: Props) => {
 
                 <Lottie animationData={animationData} style={{
                     width: 'clamp(300px, 700px, 900px)',
+                    maxWidth: isMobile ? '68dvw' : '',
                     marginTop: '1rem',
                     flex: '1',
                 }} />

@@ -1,3 +1,4 @@
+import { useMediaQuery, useTheme } from "@mui/material";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useSnackbar } from "notistack";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -17,6 +18,9 @@ export const useDataUtils = () => {
   const params = useParams();
   const toast = useSnackbar();
 
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
   async function getAccountDetails() {
     const accountID = company?.bankAccountID
     if (!accountID) return
@@ -32,6 +36,7 @@ export const useDataUtils = () => {
     toast,
     backups,
     getAccountDetails,
+    isMobile,
     dispatch
   }
 }
