@@ -1,6 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import AlertDialog from '../../components/shared/AlertDialog';
 import authService from '../../services/authentication/auth.service';
 import db from '../../services/database/db';
