@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Edit from './Edit';
 import React from 'react';
 import AlertDialog from '../../components/shared/AlertDialog';
+import { withAdmin } from '../../routes/AdminWrapper';
 
 
 type Props = {
@@ -116,4 +117,4 @@ const StockDetail = (props: Props) => {
     )
 }
 
-export default StockDetail
+export default withAdmin(StockDetail);

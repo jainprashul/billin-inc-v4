@@ -1,7 +1,9 @@
 import MaterialTable, { Column } from '@material-table/core';
 import React from 'react'
+import { useAppSelector } from '../../app/hooks';
 import { Stock } from '../../services/database/model/Stocks';
 import { useDataUtils } from '../../utils/useDataUtils';
+import { selectIsAdmin } from '../../utils/utilsSlice';
 
 
 type Props = {
@@ -10,7 +12,9 @@ type Props = {
 
 
 const StockTable = ({ data }: Props) => {
-    const { navigate } = useDataUtils()
+    const { navigate  } = useDataUtils()
+    const isAdmin = useAppSelector(selectIsAdmin)
+
     
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
@@ -63,7 +67,7 @@ const StockTable = ({ data }: Props) => {
             type: 'currency',
             currencySetting: {
                 currencyCode: 'INR',
-            }
+            },
         }
     ], [])
 
@@ -75,6 +79,7 @@ const StockTable = ({ data }: Props) => {
                 title="Stocks"
                 data={data}
                 onRowClick={ (event , row) => {
+                    if (!isAdmin) return;
                     navigate(`/stocks/${row?.id}`, {
                         state: row
                     })

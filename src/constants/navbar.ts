@@ -84,16 +84,18 @@ export const DRAWER_MENU: DrawerMenu[] = [
         name: "Reports",
         icon: AssessmentIcon,
         route: REPORTS,
-    },
-    {
-        name: "Companies",
-        icon: BusinessIcon,
-        route: COMPANY,
+        admin: true
     },
     {
         name: "Bank Accounts",
         icon: AccountBalanceIcon,
         route: BANK_ACCOUNT,
+        admin: true
+    },
+    {
+        name: "Companies",
+        icon: BusinessIcon,
+        route: COMPANY,
     },
     {
         name: "Settings",

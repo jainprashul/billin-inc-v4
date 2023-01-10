@@ -1,7 +1,8 @@
 import { Grid, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import AlertDialog from '../../components/shared/AlertDialog';
+import authService from '../../services/authentication/auth.service';
 import db from '../../services/database/db';
 import { Company as ICompany } from '../../services/database/model';
 import { useDataUtils } from '../../utils/useDataUtils';
@@ -12,6 +13,7 @@ type Props = {}
 const Company = (props: Props) => {
   const { toast, companyID, setCompanyID } = useDataUtils();
   const [open, setOpen] = useState(false)
+  const user = authService.getUser();
 
   const [dialog, setDialog] = React.useState({
     title: '',
@@ -24,7 +26,9 @@ const Company = (props: Props) => {
 
   const company = useLiveQuery(async () => {
     return db.companies.toArray();
-  });
+  }) ?? [];
+
+  const filteredCompany = company?.filter(company => user?.companyIDs?.includes(company.id!) || user?.roleID === 1)!;
 
   const handleDelete = (company: ICompany) => {
     setOpen(true);
@@ -74,7 +78,7 @@ const Company = (props: Props) => {
   return (
     <div id="company-page">
       <Grid container spacing={3}>
-        {company?.map(company => {
+        {filteredCompany?.map(company => {
           return (
             <CompanyCard key={company.id} companyID={companyID} company={company} handleDelete={handleDelete} handleSwitch={handleSwitch} />
           )

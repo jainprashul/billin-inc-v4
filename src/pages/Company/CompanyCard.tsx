@@ -12,7 +12,8 @@ type Props = {
 }
 
 const CompanyCard = ({ company, companyID, handleDelete, handleSwitch }: Props) => {
-  const { navigate, } = useDataUtils()
+  const { navigate } = useDataUtils()
+  const isAdmin = useAppSelector(selectIsAdmin)
   return (
     <Grid item xs={12} sm={6} md={4} key={company.id}>
       <Card key={company.id}>
@@ -41,19 +42,18 @@ const CompanyCard = ({ company, companyID, handleDelete, handleSwitch }: Props) 
         </CardContent>
 
         <CardActions>
-          <Button size="small" onClick={() => {
-            navigate(`/company/${company.id}/edit`, {
-              state: company
-            });
-          }}>Update</Button>
-          {/* <Button size="small" color="primary"> View </Button> */}
-          <IconButton size="small" color="primary" onClick={() => { handleDelete(company) }}>
-            <Delete />
-          </IconButton>
+          {isAdmin && <>
+            <Button size="small" onClick={() => {
+              navigate(`/company/${company.id}/edit`, {
+                state: company
+              });
+            }}>Update</Button>
+            <IconButton size="small" color="primary" onClick={() => { handleDelete(company) }}>
+              <Delete />
+            </IconButton></>}
           <IconButton onClick={() => { handleSwitch(company) }}>
             <CheckCircle color={company.id! === companyID ? 'success' : 'inherit'} />
           </IconButton>
-
         </CardActions>
 
       </Card>
