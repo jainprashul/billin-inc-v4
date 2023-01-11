@@ -13,6 +13,7 @@ export interface IStocks {
     quantity: number;
     salesPrice: number;
     purchasePrice: number;
+    mrp?: number;
     stockValue: number;
     gstRate: number;
     logIDs: Set<string>;
@@ -34,6 +35,7 @@ export class Stock implements IStocks {
     quantity: number;
     salesPrice: number;
     purchasePrice: number;
+    mrp: number;
     stockValue: number;
     gstRate: number;
     logIDs: Set<string>;
@@ -52,6 +54,7 @@ export class Stock implements IStocks {
         this.quantity = stock.quantity;
         this.salesPrice = stock.salesPrice;
         this.purchasePrice = stock.purchasePrice;
+        this.mrp = stock.mrp || this.salesPrice;
         this.stockValue = stock.stockValue;
         this.gstRate = stock.gstRate;
         this.logIDs = stock.logIDs;

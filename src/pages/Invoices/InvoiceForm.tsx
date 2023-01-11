@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import moment from 'moment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import DateProvider from '../../components/shared/DateProvider';
+import { useDataUtils } from '../../utils/useDataUtils';
 
 
 type Props = {
@@ -76,6 +77,8 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     invoiceNo, gstInvoiceNo, clientNames,
     setClientID, client, customerContact, customerName, setCustomerContact, setCustomerName,
     updateInvoiceVoucher, updateStock, validateInvoice, getVoucherType, printInvoice } = useInvoiceForm(formik.values)
+
+  const { isMobile } = useDataUtils()
 
   // console.log(client, clientID);
 
@@ -176,7 +179,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
             value={customerName}
             options={clientNames}
             onChange={(event, value, reason, detail) => {
-              console.log('auto',value, reason, detail);
+              console.log('auto', value, reason, detail);
               if (reason === 'selectOption') {
                 setCustomerName(value as string)
                 db.getCompanyDB(invoice.companyID).clients.get({ name: value }).then(client => {
@@ -299,11 +302,14 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
 
         </Grid>
       </Grid>
+      <br />
 
       <div className="totals" style={{
         marginTop: '1rem',
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
       }}>
 
         <div className="balances">
@@ -336,7 +342,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
         </div>
 
         <div className="submitBtn" style={{
-          marginTop: '-3rem',
+          marginTop: isMobile ? 0 : '-3rem',
         }}>
 
           <TextField variant='standard' style={{
@@ -375,7 +381,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
           <br />
 
           <Button style={{
-            float: 'right',
+            float: isMobile ? 'inherit' : 'right',
           }} onClick={() => formik.handleSubmit()} variant="contained" color="primary" startIcon={<NavigationIcon />}>
             {submitText}
           </Button>

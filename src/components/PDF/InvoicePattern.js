@@ -291,8 +291,9 @@ thead.itembox{
             <th>Name</th>
             <th>HSN</th>
             <th>Quantity</th>
-            <th>Unit</th>
             <th>Price</th>
+            <th>Unit</th>
+            ${gstEnabled ? (`<th>MRP</th>`) : ('')}
             <th>Amount</th>
             ${voucherType === 'INTRA_STATE' ? (`
             <th colspan='2'>CGST</th>
@@ -304,7 +305,7 @@ thead.itembox{
 
             ${gstEnabled ? (`
             <tr>
-            <th colspan='7'></th>
+            <th colspan='8'></th>
             ${voucherType === 'INTRA_STATE' ? (`
             <th>%</th>
             <th>Amt</th>
@@ -325,8 +326,9 @@ thead.itembox{
                     <td class="item-name">${product.name}</td>
                     <td>${product.hsn ? product.hsn : ''}</td>
                     <td>${product.quantity}</td>
-                    <td>${product.unit}</td>
                     <td>${(product.price).toFixed(2)}</td>
+                    <td>${product.unit}</td>
+            ${gstEnabled ? (`<td>${(product.mrp).toFixed(2)}</td>`) : ('')}
                     <td>${(product.grossAmount).toFixed(2)}</td>    
             ${voucherType === 'INTRA_STATE' ? (`
                     <td>${product.gstRate / 2}</td>
@@ -372,41 +374,41 @@ thead.itembox{
 		${voucherType === 'INTRA_STATE' ? (
             `
         <tr class='item-row start'>
-            <td colSpan="6" style='text-align : left' className="">Total :  </td>
+            <td colSpan="7" style='text-align : left' className="">Total :  </td>
             <td colSpan="1" className="">${(grossTotal).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal / 2).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal / 2).toFixed(2)}</td>
             <td colSpan="1" >${(subTotal).toFixed(2)}</td>
         </tr >
          <tr className=''>
-            <td colSpan="8" class="blank"> </td>
+            <td colSpan="9" class="blank"> </td>
             <td colSpan="2" class="total-line">SubTotal : </td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(subTotal).toFixed(2)}</span></td>
         </tr >
         <tr className=''>
-            <td colSpan="8" class="blank "></td>
+            <td colSpan="9" class="blank "></td>
             <td colSpan="2" class="total-line">CGST : </td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(gstTotal / 2).toFixed(2)}</span></td>
         </tr>
         <tr className=''>
-            <td colSpan="8" class="blank "></td>
+            <td colSpan="9" class="blank "></td>
             <td colSpan="2" class="total-line">SGST : </td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(gstTotal / 2).toFixed(2)}</span></td>
         </tr>
         ${discount ? (`
         <tr className=''>
-            <td colSpan="8" class="blank"></td>
+            <td colSpan="9" class="blank"></td>
             <td colSpan="2" class="total-line">GrossTotal :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
         </tr>
         <tr className=''>
-            <td colSpan="8" class="blank"></td>
+            <td colSpan="9" class="blank"></td>
             <td colSpan="2" class="total-line">Discount :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(discountValue).toFixed(2)}</span></td>
         </tr>
         `) : (``)} 
         <tr className=''>
-            <td colSpan="8" class="blank end text-capital">(in words) ${numWords(parseInt(totalAmount))} rupees only</td>
+            <td colSpan="9" class="blank end text-capital">(in words) ${numWords(parseInt(totalAmount))} rupees only</td>
             <td colSpan="2" class="total-line">Total</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${totalAmount.toFixed(2)}</span></td>
         </tr>`
@@ -416,35 +418,35 @@ thead.itembox{
         ${voucherType === 'INTER_STATE' ? (
             `
             <tr class='item-row start'>
-            <td colSpan="6" style='text-align : left' className="">Total  </td>
+            <td colSpan="7" style='text-align : left' className="">Total  </td>
             <td colSpan="1" className="">${(subTotal).toFixed(2)}</td>
             <td colSpan="2" >${(gstTotal).toFixed(2)}</td>
             <td colSpan="1" >${(grossTotal).toFixed(2)}</td>
         </tr >
             <tr className=''>
-            <td colSpan="6" class="blank start"> </td>
+            <td colSpan="7" class="blank start"> </td>
             <td colSpan="2" class="total-line">Sub Total :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(subTotal.toFixed(2))}</span></td>
         </tr >
         <tr className=''>
-            <td colSpan="6" class="blank"></td>
+            <td colSpan="7" class="blank"></td>
             <td colSpan="2" class="total-line">IGST :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(gstTotal).toFixed(2)}</span></td>
         </tr>
         ${discount ? (`
         <tr className=''>
-            <td colSpan="6" class="blank"></td>
+            <td colSpan="7" class="blank"></td>
             <td colSpan="2" class="total-line">GrossTotal :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(grossTotal).toFixed(2)}</span></td>
         </tr>
         <tr className=''>
-            <td colSpan="6" class="blank"></td>
+            <td colSpan="7" class="blank"></td>
             <td colSpan="2" class="total-line">Discount :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${(discountValue).toFixed(2)}</span></td>
         </tr>
         `) : (``)} 
         <tr className=''>
-            <td colSpan="6" class="blank end text-capital">(in words) ${numWords(parseInt(totalAmount))} rupees only</td>
+            <td colSpan="7" class="blank end text-capital">(in words) ${numWords(parseInt(totalAmount))} rupees only</td>
             <td colSpan="2" class="total-line">Total :</td>
             <td colSpan="2" class="total-value"><span id="total">Rs. ${totalAmount.toFixed(2)}</span></td>
         </tr>`

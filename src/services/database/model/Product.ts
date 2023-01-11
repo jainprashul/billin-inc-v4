@@ -3,6 +3,7 @@ import { Transaction } from "dexie";
 import authService from "../../authentication/auth.service";
 import db from "../db";
 import { NotificationLog, NotificationType } from "./NotificationLog";
+import * as yup from 'yup';
 
 export interface IProduct {
     id?: string;
@@ -10,6 +11,7 @@ export interface IProduct {
     categoryID?: number;
     gstRate: GstRate;
     hsn: string;
+    mrp?: number;
     price: number;
     discount?: number;
     quantity: number;
@@ -30,6 +32,7 @@ export class Product implements IProduct {
     gstRate: GstRate;
     hsn: string;
     price: number;
+    mrp: number;
     quantity: number;
     discount: number;
     unit: ProductUnit;
@@ -50,6 +53,7 @@ export class Product implements IProduct {
         this.gstRate = product.gstRate;
         this.hsn = product.hsn;
         this.price = isInclusive ? parseFloat((product.price * 100 / (100 + product.gstRate)).toFixed(2)) : product.price;
+        this.mrp = product.mrp ?? this.price;
         this.quantity = product.quantity;
         this.unit = product.unit;
         this.discount = product.discount || 0;
@@ -60,6 +64,15 @@ export class Product implements IProduct {
         this.createdAt = product.createdAt || new Date();
         this.updatedAt = new Date();
     }
+
+    static validationSchema = yup.object().shape({
+        name: yup.string().min(2).required('Product name is required'),
+        hsn: yup.string(),
+        quantity: yup.number().min(0).required('Quantity is required'),
+        price: yup.number().required('Unit price is required'),
+        gstRate: yup.number().required('GST rate is required'),
+        unit: yup.string(),
+    });
 
     private addtoVoucher() {
         const companyDB = db.getCompanyDB(this.companyID)

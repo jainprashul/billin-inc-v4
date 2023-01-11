@@ -108,9 +108,9 @@ const useInvoiceForm = (invoice: Invoices) => {
       err += 'Please enter customer name. \n';
     }
 
-    if (invoice.gstEnabled && customerGST === '') {
-      err += 'Please enter customer GST. \n';
-    }
+    // if (invoice.gstEnabled && customerGST === '') {
+    //   err += 'Please enter customer GST. \n';
+    // }
 
     if (products.length === 0) {
       err += 'Please add atleast one product. \n';
@@ -142,7 +142,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     const printInv = {
       ...invoice,
       products,
-      client : clientX,
+      client: clientX,
       // voucherNo: invoice.gstEnabled ? gstInvoiceNo : invoiceNo.toFixed(0),
       company: query?.company,
       amountPaid: amountPaid,
@@ -154,10 +154,13 @@ const useInvoiceForm = (invoice: Invoices) => {
   const getVoucherType = () => {
     let companyGST = query?.company.gst.substring(0, 2);
     let clientGST = client?.gst.substring(0, 2);
-    if (companyGST === clientGST) {
-      return "INTER_STATE";
+    if (!clientGST) {
+      clientGST = companyGST;
     }
-    return "INTRA_STATE";
+    if (companyGST === clientGST) {
+      return "INTRA_STATE";
+    }
+    return "INTER_STATE";
   }
 
   const updateLedger = async () => {
@@ -196,7 +199,7 @@ const useInvoiceForm = (invoice: Invoices) => {
         const stockLog = new StockLog({
           companyID: invoice.companyID,
           clientID: clientID as string,
-          clientName : client?.name as string,
+          clientName: client?.name as string,
 
           date: date as Date,
           logType: 'SALE',
@@ -231,7 +234,7 @@ const useInvoiceForm = (invoice: Invoices) => {
         const openingStockLog = new StockLog({
           companyID: invoice.companyID,
           clientID: clientID as string,
-          clientName : client?.name as string,
+          clientName: client?.name as string,
           date: date as Date,
           logType: 'OPENING_STOCK',
           quantity: -1 * product.quantity,
@@ -243,7 +246,7 @@ const useInvoiceForm = (invoice: Invoices) => {
 
         openingStockLog.save();
 
-        
+
 
         newStock.logIDs.add(openingStockLog.id);
         newStock.save();
@@ -257,7 +260,7 @@ const useInvoiceForm = (invoice: Invoices) => {
     invoiceNo,
     gstInvoiceNo,
     clientNames: query ? query.clientNames : [],
-    client : clientX,
+    client: clientX,
     customerContact, customerGST, customerName,
     setCustomerName, setCustomerGST, setCustomerContact,
     amountPaid, setAmountPaid,
