@@ -1,7 +1,6 @@
 import { Card, Typography } from '@mui/material'
-import { Bar, BarChart, Cell, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useAppSelector } from '../../app/hooks'
-import { getRandomColor } from '../../utils'
 import { selectTop5Selling } from '../../utils/utilsSlice'
 
 type Props = {
