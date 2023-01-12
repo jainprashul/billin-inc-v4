@@ -236,7 +236,7 @@ const useInvoiceForm = (invoice: Invoices) => {
           clientID: clientID as string,
           clientName: client?.name as string,
           date: date as Date,
-          logType: 'OPENING_STOCK',
+          logType: 'SALE',
           quantity: -1 * product.quantity,
           rate: product.price,
           amount: product.totalAmount,

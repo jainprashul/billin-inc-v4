@@ -7,7 +7,7 @@ import { useLoading } from '../../components/shared/LoadingX'
 import CompanyDB from '../../services/database/companydb'
 import { getDatesBetween } from '../../utils'
 import { useDataUtils } from '../../utils/useDataUtils'
-import { selectSalesData, setCount, setSalesData } from '../../utils/utilsSlice'
+import { selectSalesData, setCount, setSalesData, setTopSelling } from '../../utils/utilsSlice'
 import { NavigateOptions } from 'react-router-dom'
 import { Expense } from '../../services/database/model'
 // import jsonata from 'jsonata'
@@ -95,6 +95,43 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
             return stocks
         }
     }, [companyDB], []) ?? []
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const stkLogs = useLiveQuery(async () => {
+        if (companyDB) {
+            const stkLogs = await companyDB?.stocklogs.where('date').between(filter.date.from, filter.date.to).toArray()
+            return stkLogs
+        }
+    }, [companyDB, filter], []) ?? []
+
+    const sellStkLogs = React.useMemo(() => {
+        return stkLogs.filter((stkLog) => stkLog.logType ==='SALE')
+    }, [stkLogs])
+
+    // top selling stock items
+    React.useEffect(() => {
+        
+        const stkLogsByItem = sellStkLogs.reduce((acc : any, item) => {
+            const { stockID, quantity } = item
+            if (acc[stockID]) {
+                acc[stockID] = acc[stockID] + quantity
+            } else {
+                acc[stockID] = quantity
+            }
+            return acc
+        }, {})
+        const stkLogsByItemArr = Object.keys(stkLogsByItem).map((key) => {
+            return {
+                id: key,
+                name : stocks?.find((item: any) => item.id === key)!.name,
+                quantity: -1 * stkLogsByItem[key] as number
+            }
+        })
+        const stkLogsByItemArrSorted = stkLogsByItemArr.sort((a, b) => b.quantity - a.quantity)
+        dispatch(setTopSelling(stkLogsByItemArrSorted))
+    }, [dispatch, sellStkLogs, stocks])
+
+
 
     // count sales by date
     React.useEffect(() => {

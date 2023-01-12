@@ -16,6 +16,7 @@ import useDashboard from './useDashboard'
 import animationData from '../../assets/office.json'
 import Lottie from 'lottie-react';
 import { selectPromptEvent, selectShowInstallPrompt, setInstallPrompt } from '../../utils/service/swSlice'
+import TopSellingProducts from '../Stocks/TopSellingProducts'
 
 
 type Props = {}
@@ -174,9 +175,6 @@ const Dashboard = (props: Props) => {
             <br />
 
 
-
-
-
             <Grid container spacing={2}>
 
                 <Grid item xs={12} md={6}>
@@ -200,6 +198,9 @@ const Dashboard = (props: Props) => {
                 </Grid>
 
                 {/* TOP SELLING PRODUCTS */}
+                <Grid item xs={12} md={6}>
+                    <TopSellingProducts width={'100%'} height={350} />
+                </Grid>
 
                 {/* TOP CUSTOMERS */}
 

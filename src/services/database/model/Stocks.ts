@@ -124,7 +124,7 @@ export class Stock implements IStocks {
             action: 'UPDATE',
             changes: diff,
             link: `/stocks/${stock.id}`,
-            isVisible: true
+            isVisible: false
         });
         notify.save();
     }

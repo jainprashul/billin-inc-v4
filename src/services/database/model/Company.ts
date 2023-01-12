@@ -71,7 +71,8 @@ export class Company implements ICompany {
                 this.id = _id;
                 console.log('Company Saved', this.id);
                 // create a company database
-                return db.createCompanyDB(_id);
+                db.createCompanyDB(_id);
+                return this.id!;
             });
             return _save;
         });
