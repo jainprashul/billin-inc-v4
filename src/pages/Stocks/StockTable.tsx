@@ -4,6 +4,8 @@ import { useAppSelector } from '../../app/hooks';
 import { Stock } from '../../services/database/model/Stocks';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { selectIsAdmin } from '../../utils/utilsSlice';
+import { ExportCsv, ExportPdf } from "@material-table/exporters";
+import moment from 'moment';
 
 
 type Props = {
@@ -12,10 +14,10 @@ type Props = {
 
 
 const StockTable = ({ data }: Props) => {
-    const { navigate  } = useDataUtils()
+    const { navigate } = useDataUtils()
     const isAdmin = useAppSelector(selectIsAdmin)
 
-    
+
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
         setLoading(!(data ? data.length !== 0 : false))
@@ -24,7 +26,7 @@ const StockTable = ({ data }: Props) => {
         }, 2000);
     }, [data])
 
-    
+
 
     const columns: Array<Column<Stock>> = React.useMemo(() => [
         {
@@ -78,12 +80,13 @@ const StockTable = ({ data }: Props) => {
                 columns={columns}
                 title="Stocks"
                 data={data}
-                onRowClick={ (event , row) => {
+                onRowClick={(event, row) => {
                     if (!isAdmin) return;
                     navigate(`/stocks/${row?.id}`, {
                         state: row
                     })
                 }}
+
                 options={{
                     actionsColumnIndex: -1,
                     pageSize: 10,
@@ -91,8 +94,18 @@ const StockTable = ({ data }: Props) => {
                     draggable: true,
                     // filtering : filter,
                     headerStyle: {
-                        fontWeight: 'bold',    
+                        fontWeight: 'bold',
                     },
+                    exportMenu: [
+                        {
+                          label: "Export PDF",
+                          exportFunc: (cols, datas) => ExportPdf(cols, datas, `Stock ${moment().format('ll')}`),
+                        },
+                        {
+                          label: "Export CSV",
+                          exportFunc: (cols, datas) => ExportCsv(cols, datas, `Stock ${moment().format('ll')}`),
+                        },
+                      ],
                 }}
             />
         </>

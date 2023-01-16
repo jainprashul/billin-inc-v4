@@ -11,6 +11,8 @@ import purchasePattern from '../../components/PDF/PurchasePattern';
 import { Link } from 'react-router-dom';
 import { theme } from '../../styles/theme';
 import db from '../../services/database/db';
+import { ExportCsv, ExportPdf } from '@material-table/exporters';
+import moment from 'moment';
 
 type Props = {
     data: Array<Purchase>
@@ -244,6 +246,16 @@ const PurchaseTable = ({ data }: Props) => {
                     headerStyle: {
                         fontWeight: 'bold',
                     },
+                    exportMenu: [
+                        {
+                          label: "Export PDF",
+                          exportFunc: (cols, datas) => ExportPdf(cols, datas, `Purchase ${moment().format('ll')}`),
+                        },
+                        {
+                          label: "Export CSV",
+                          exportFunc: (cols, datas) => ExportCsv(cols, datas, `Purchase ${moment().format('ll')}`),
+                        },
+                      ],
                 }}
             />
 

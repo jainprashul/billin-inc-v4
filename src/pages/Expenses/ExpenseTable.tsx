@@ -6,6 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDataUtils } from '../../utils/useDataUtils'
 import { ExpenseEdit } from '.';
+import { ExportCsv, ExportPdf } from '@material-table/exporters';
+import moment from 'moment';
 
 type Props = {
     data: Array<Expense>
@@ -101,7 +103,18 @@ const ExpenseTable = ({ data }: Props) => {
                     draggable: true,
                     headerStyle: {
                         fontWeight: 'bold',
-                    },                }}
+                    },       
+                    exportMenu: [
+                        {
+                          label: "Export PDF",
+                          exportFunc: (cols, datas) => ExportPdf(cols, datas, `Expense ${moment().format('ll')}`),
+                        },
+                        {
+                          label: "Export CSV",
+                          exportFunc: (cols, datas) => ExportCsv(cols, datas, `Expense ${moment().format('ll')}`),
+                        },
+                      ],
+                         }}
                 title={`Expenses`}
             
             />

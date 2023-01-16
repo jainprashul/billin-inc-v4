@@ -1,4 +1,6 @@
 import MaterialTable, { Column } from '@material-table/core';
+import { ExportCsv, ExportPdf } from '@material-table/exporters';
+import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Ledger } from '../../services/database/model';
@@ -75,6 +77,16 @@ const LedgerTable = ({ data }: Props) => {
                         fontWeight: 'bold',
                     },
                     showTitle: false,
+                    exportMenu: [
+                        {
+                          label: "Export PDF",
+                          exportFunc: (cols, datas) => ExportPdf(cols, datas, `Ledger ${moment().format('ll')}`),
+                        },
+                        {
+                          label: "Export CSV",
+                          exportFunc: (cols, datas) => ExportCsv(cols, datas, `Ledger ${moment().format('ll')}`),
+                        },
+                      ],
 
                 }}
             />

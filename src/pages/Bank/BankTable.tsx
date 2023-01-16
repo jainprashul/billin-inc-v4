@@ -1,6 +1,8 @@
 import MaterialTable, { Action, Column } from '@material-table/core';
+import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import { Edit } from '@mui/icons-material';
 import Delete from '@mui/icons-material/Delete';
+import moment from 'moment';
 import React from 'react'
 import AlertDialog from '../../components/shared/AlertDialog';
 import { BankAccount } from '../../services/database/model/BankAccount';
@@ -116,6 +118,16 @@ const BankAccountTable = ({ data }: Props) => {
                     headerStyle: {
                         fontWeight: 'bold',
                     },
+                    exportMenu: [
+                        {
+                          label: "Export PDF",
+                          exportFunc: (cols, datas) => ExportPdf(cols, datas, `Accounts ${moment().format('ll')}`),
+                        },
+                        {
+                          label: "Export CSV",
+                          exportFunc: (cols, datas) => ExportCsv(cols, datas, `Accounts ${moment().format('ll')}`),
+                        },
+                      ],
                 }}
             />
 

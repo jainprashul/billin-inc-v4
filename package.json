@@ -6,6 +6,7 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@material-table/core": "^0.2.34",
+    "@material-table/exporters": "^1.0.12",
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.5",
     "@mui/x-date-pickers": "^5.0.0-alpha.4",

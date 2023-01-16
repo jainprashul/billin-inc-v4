@@ -9,6 +9,8 @@ import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { Link } from 'react-router-dom';
 import { theme } from '../../styles/theme';
+import moment from 'moment';
+import { ExportCsv, ExportPdf } from '@material-table/exporters';
 
 type Props = {
     data: Array<Invoice>
@@ -241,6 +243,16 @@ const InvoiceTable = ({ data }: Props) => {
                     headerStyle: {
                         fontWeight: 'bold',    
                     },
+                    exportMenu: [
+                        {
+                          label: "Export PDF",
+                          exportFunc: (cols, datas) => ExportPdf(cols, datas, `Invoice ${moment().format('ll')}`),
+                        },
+                        {
+                          label: "Export CSV",
+                          exportFunc: (cols, datas) => ExportCsv(cols, datas, `Invoice ${moment().format('ll')}`),
+                        },
+                      ],
                 }}
             />
 
