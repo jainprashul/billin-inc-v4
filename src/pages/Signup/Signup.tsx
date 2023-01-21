@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import authService from '../../services/authentication/auth.service';
 import { Alert } from '@mui/material';
 import { AccountCircleOutlined } from '@mui/icons-material';
+import { getConfig } from '../../services/database/db';
+import { Customer } from '../../services/database/model/Customer';
 
 function Copyright(props: any) {
     return (
@@ -27,56 +29,97 @@ function Copyright(props: any) {
 }
 
 type Props = {
-    setFirstTime : React.Dispatch<React.SetStateAction<boolean>>
+    setFirstTime: React.Dispatch<React.SetStateAction<boolean>>
 
 }
-export default function Signup(props : Props) {
+export default function Signup(props: Props) {
     const [error, setError] = React.useState<string | null>(null);
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        let creds = {
-            name : data.get('name') as string,
-            username : data.get('username') as string,
-            email: data.get('email') as string,
-            password: data.get('password') as string,
-            password_confirmation: data.get('repeat-password') as string,
-        }
-        // console.log(creds);
-        if (creds.password !== creds.password_confirmation) {
-            setError('Passwords do not match');
-            return;
-        }
-        
-        authService.register(creds).then((response) => {
-            console.log(response);
+        try {
+            const data = new FormData(event.currentTarget);
+            let creds = {
+                name: data.get('name') as string,
+                username: data.get('username') as string,
+                email: data.get('email') as string,
+                password: data.get('password') as string,
+                password_confirmation: data.get('repeat-password') as string,
+            }
+            // console.log(creds);
+            if (creds.password !== creds.password_confirmation) {
+                setError('Passwords do not match');
+                return;
+            }
+
+            const confg = await getConfig()
+
+            let customer: Customer = {
+                name: creds.name,
+                email: creds.email,
+                phone: data.get('phone') as string,
+                address: data.get('address') as string,
+                license: {
+                    serialKey: confg.serialKey,
+                    key: confg.lisenseKey!,
+                    lisenseType: confg.lisenseType!,
+                    validationDate: confg.lisenseValidationDate!,
+                    validTill: confg.lisenseValidTill!
+                }
+            }
+
+            const customerRes = await updateCustomer(customer)
+
+            const response = await authService.register(creds)
+
+            console.log(response, customerRes);
             props.setFirstTime(false);
             window.location.href = "/";
-        }).catch((error) => {
+
+        } catch (error: any) {
             setError(error.message);
-        });
+
+        }
+
 
     };
+
+    async function updateCustomer(data: Customer) {
+        const res = await fetch('https://console-billin-inc.vercel.app/api/customers', {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+
+        const response = await res.json()
+
+        if (response.result !== 'success') {
+            throw Error('Something went wrong.')
+        }
+
+        return true
+    }
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
             <CssBaseline />
             <Grid item xs={false} sm={4} md={7} sx={{
-                    backgroundImage: 'url(https://source.unsplash.com/random), url("../assets/bg.jpg")',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundColor: (t) =>
-                        t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}/>
+                backgroundImage: 'url(https://source.unsplash.com/random), url("../assets/bg.jpg")',
+                backgroundRepeat: 'no-repeat',
+                backgroundColor: (t) =>
+                    t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }} />
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                 <Box sx={{
-                        my: 4,
-                        mx: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
+                    my: 4,
+                    mx: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
                 >
                     <Typography component="h1" color={'primary'} variant="h4">
                         Billin' Inc
@@ -87,9 +130,9 @@ export default function Signup(props : Props) {
                     <Typography component="h2" variant="h5">
                         Create a new user
                     </Typography>
-                    <Box component="form"  onSubmit={handleSubmit} sx={{  }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{}}>
                         <TextField
-                            margin="normal"
+                            margin="dense"
                             required
                             fullWidth
                             id="name"
@@ -101,7 +144,7 @@ export default function Signup(props : Props) {
                             autoFocus
                         />
                         <TextField
-                            margin="normal"
+                            margin="dense"
                             required
                             fullWidth
                             id="username"
@@ -112,7 +155,7 @@ export default function Signup(props : Props) {
                             autoComplete="username"
                         />
                         <TextField
-                            margin="normal"
+                            margin="dense"
                             required
                             fullWidth
                             id="email"
@@ -123,7 +166,29 @@ export default function Signup(props : Props) {
                             autoComplete="email"
                         />
                         <TextField
-                            margin="normal"
+                            margin="dense"
+                            required
+                            fullWidth
+                            id="phone"
+                            label="Phone"
+                            placeholder='Phone no.'
+                            name="phone"
+                            type={'tel'}
+                            autoComplete="tel"
+                        />
+                        <TextField
+                            margin="dense"
+                            required
+                            fullWidth
+                            id="address"
+                            label="Address"
+                            placeholder='Address'
+                            name="address"
+                            type={'text'}
+                            autoComplete="address"
+                        />
+                        <TextField
+                            margin="dense"
                             required
                             fullWidth
                             name="password"
@@ -133,7 +198,7 @@ export default function Signup(props : Props) {
                             autoComplete="current-password"
                         />
                         <TextField
-                            margin="normal"
+                            margin="dense"
                             required
                             fullWidth
                             name="repeat-password"
