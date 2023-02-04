@@ -5,7 +5,6 @@ import Invoices from "./Invoices"
 import Details from "./Details"
 import InvoiceTable from "./InoviceTable"
 import ProductTable from "./Products/ProductTable"
-import ProductTableGST from "./Products/ProductTableGST"
 import ClientModel from './Client';
 import useInvoiceForm from "./useInvoiceForm"
 
@@ -17,7 +16,6 @@ export {
     Details as InvoiceDetail,
     InvoiceTable,
     ProductTable,
-    ProductTableGST,
     ClientModel,
     useInvoiceForm,
 

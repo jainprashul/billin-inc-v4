@@ -31,10 +31,6 @@ const ProductTable = ({
 
   const { isMobile } = useDataUtils()
 
-  // if (gstEnabled) {
-  //   return <ProductTableGST products={products} eventFunctions={eventFunctions} />
-  // }
-
   if (isMobile) {
     return (
       <Grid container spacing={2}>

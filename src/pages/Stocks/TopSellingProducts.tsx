@@ -33,12 +33,12 @@ const TopSellingProducts = ({ width = '100%', height = '100%' }: Props) => {
                     <Tooltip />
                     <Legend align='center' />
                     <Bar dataKey="quantity" name='Quantity' fill={'#53439a'} label={{
-                        position: 'inside',
-                        fill: 'white',
+                        position: 'bottom',
+                        // fill: '#fff',
+                        
                         // @ts-ignore
-                        valueAccessor: (props) => { return props.name }
-                    }}>
-                    </Bar>
+                        valueAccessor: (props) => { console.log(props); return props.name }
+                    }}/>
                 </BarChart>
             </ResponsiveContainer>
         </Card>

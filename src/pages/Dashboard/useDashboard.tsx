@@ -218,7 +218,6 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         const total = await companyDB?.invoices.count() ?? 0
         const currentCount = await companyDB?.invoices.where('billingDate').between(from, to).count() ?? 0
         const deltaPercent = ((-(currentCount - total) / total) * 100)
-        console.log('sakes', salesData)
         const currentAmount = (salesData.reduce((a, b) => a + b.sAmount, 0))
         const totalAmount = (await companyDB?.invoices.toArray() ?? []).reduce((a, b) => a + b.totalAmount, 0)
 
@@ -290,7 +289,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
             }
         }
         getCount().then((res) => {
-            console.log(res)
+            // console.log(res)
             dispatch(setCount(res))
             setLoading(false)
         })
