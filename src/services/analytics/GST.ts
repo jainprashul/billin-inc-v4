@@ -59,7 +59,7 @@ async function getGSTSales(companyDB: CompanyDB, from: Date, to: Date) {
 }
 
 
-const GST_RATES = [5, 12, 18, 28];
+const GST_RATES = [0, 3, 5, 12, 18, 28];
 
 async function generateGSTReportData(data: Purchase[] | Invoice[], excel = false) {
     const gstData: GSTINFO[] = [];

@@ -226,7 +226,7 @@ const AddProductRow = ({
                                     label="GST Rate"
                                 >
                                     {
-                                        [0, 5, 12, 18, 28].map((unit, index) => (
+                                        [0, 3, 5, 12, 18, 28].map((unit, index) => (
                                             <MenuItem key={index} value={unit}>{unit}</MenuItem>
                                         ))
                                     }
@@ -411,7 +411,7 @@ const AddProductRow = ({
                                 // label="GST Rate"
                                 >
                                     {
-                                        [0, 5, 12, 18, 28].map((unit, index) => (
+                                        [0, 3, 5, 12, 18, 28].map((unit, index) => (
                                             <MenuItem key={index} value={unit}>{unit}</MenuItem>
                                         ))
                                     }
