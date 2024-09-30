@@ -54,7 +54,7 @@ export const ExpenseTypes = [
         value: "OTHER",
         label: "Others"
     }
-];
+] as const;
 
 export const ExpenseModes = [
     {
@@ -81,4 +81,9 @@ export const ExpenseModes = [
         value: "OTHER",
         label: "Others"
     }
-];
+] as const;
+
+export const PRODUCT_UNITS = [ 
+    "KG", "GRAM", "LITRE", , "METER", "FEET", "INCH", "PIECE", "PACKET", "BOX", "BOTTLE", "BAG", "OTHER",
+] as const;
+

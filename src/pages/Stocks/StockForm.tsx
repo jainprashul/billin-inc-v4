@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Stock } from '../../services/database/model';
 import { useFormik } from 'formik';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { PRODUCT_UNITS } from '../../constants';
 
 type Prop = {
   open: boolean;
@@ -150,7 +151,7 @@ export default function StockForm({ open, setOpen, onClose, onSubmit, edit=false
               label="Unit"
             >
               {
-                ["KG", "L", "PCS", "BOX", "BAG", "BOTTLE", "CARTON"].map((unit, index) => (
+                PRODUCT_UNITS.map((unit, index) => (
                   <MenuItem key={index} value={unit}>{unit}</MenuItem>
                 ))
               }

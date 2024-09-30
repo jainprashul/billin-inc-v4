@@ -14,6 +14,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { useDataUtils } from '../../../utils/useDataUtils';
 import { selectGstRateType } from '../../../utils/utilsSlice';
 import { useAppSelector } from '../../../app/hooks';
+import { PRODUCT_UNITS } from '../../../constants';
 
 type Props = {
     sn?: number,
@@ -171,7 +172,7 @@ const AddProductRow = ({
                         // label="Unit"
                         >
                             {
-                                ["KG", "L", "PCS", "BOX", "BAG", "BOTTLE", "CARTON"].map((unit, index) => (
+                                PRODUCT_UNITS.map((unit, index) => (
                                     <MenuItem key={index} value={unit}>{unit}</MenuItem>
                                 ))
                             }
@@ -356,7 +357,7 @@ const AddProductRow = ({
                         // label="Unit"
                         >
                             {
-                                ["KG", "L", "PCS", "BOX", "BAG", "BOTTLE", "CARTON"].map((unit, index) => (
+                                PRODUCT_UNITS.map((unit, index) => (
                                     <MenuItem key={index} value={unit}>{unit}</MenuItem>
                                 ))
                             }

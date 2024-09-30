@@ -4,6 +4,7 @@ import authService from "../../authentication/auth.service";
 import db from "../db";
 import { NotificationLog, NotificationType } from "./NotificationLog";
 import * as yup from 'yup';
+import { PRODUCT_UNITS } from "../../../constants";
 
 export interface IProduct {
     id?: string;
@@ -21,7 +22,7 @@ export interface IProduct {
     createdAt?: Date;
 }
 
-type ProductUnit = "KG" | "L" | "PCS" | "BOX" | "BAG" | "BOTTLE" | "CARTON";
+type ProductUnit = typeof PRODUCT_UNITS[number]
 
 export type GstRate = 0 | 5 | 12 | 18 | 28;
 
