@@ -104,6 +104,24 @@ export const DRAWER_MENU: DrawerMenu[] = [
     }
 ]
 
+export const PRELOAD_ROUTES = [
+    {
+        name: 'Dashboard',
+        icon: DashboardIcon,
+        route: HOME
+    }, {
+        name: "Companies",
+        icon: BusinessIcon,
+        route: COMPANY,
+    },
+    {
+        name: "Settings",
+        icon: SettingsIcon,
+        route: SETTINGS,
+    }
+]
+
+
 export const RoutesHasSettings = [
     INVOICE_CREATE, PURCHASE_CREATE
 ]

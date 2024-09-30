@@ -71,11 +71,11 @@ const StockDetail = (props: Props) => {
                                     <Grid item xs={6}> Quantity :</Grid> <Grid item xs={6}>{stock?.quantity}</Grid>
                                     <Grid item xs={6}> GST Rate :</Grid> <Grid item xs={6}>{stock?.gstRate} %</Grid>
                                     <Grid item xs={6}> HSN :</Grid> <Grid item xs={6}>{stock?.hsn}</Grid>
-                                    <Grid item xs={6}> Purchase Price :</Grid> <Grid item xs={6}>₹ {stock?.purchasePrice?.toFixed(2)}</Grid>
-                                    <Grid item xs={6}> Sales Price :</Grid> <Grid item xs={6}>₹ {stock?.salesPrice?.toFixed(2)}</Grid>
+                                    <Grid item xs={6}> Purchase Price :</Grid> <Grid item xs={6}>₹ {stock?.purchasePrice?.toFixed?.(2)}</Grid>
+                                    <Grid item xs={6}> Sales Price :</Grid> <Grid item xs={6}>₹ {stock?.salesPrice?.toFixed?.(2)}</Grid>
                                     <Grid item xs={6}> MRP :</Grid> <Grid item xs={6}>₹ {stock?.mrp?.toFixed(2)}</Grid>
                                     <Grid item xs={6}> Unit :</Grid> <Grid item xs={6}>{stock?.unit}</Grid>
-                                    <Grid item xs={6}> Stock Value :</Grid> <Grid item xs={6}>₹ {stock?.stockValue?.toFixed(2)}</Grid>
+                                    <Grid item xs={6}> Stock Value :</Grid> <Grid item xs={6}>₹ {stock?.stockValue?.toFixed?.(2)}</Grid>
                                 </Grid>
                             </Typography>
 

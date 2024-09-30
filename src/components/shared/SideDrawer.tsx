@@ -14,6 +14,9 @@ import { Tooltip } from '@mui/material';
 import { useAppSelector } from '../../app/hooks';
 import { selectIsAdmin } from '../../utils/utilsSlice';
 import React, {useMemo} from 'react'
+import useDashboard from '../../pages/Dashboard/useDashboard';
+import { useDataUtils } from '../../utils/useDataUtils';
+import { PRELOAD_ROUTES } from '../../constants/navbar';
 
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -74,8 +77,14 @@ type Props = {
 const SideDrawer = ({open , handleDrawerClose, theme}: Props) => {
   const navigate = useNavigate()
   const isAdmin = useAppSelector(selectIsAdmin);
-  const menuItems = useMemo(() => DRAWER_MENU.filter((item) => !item.admin || isAdmin), [isAdmin]);
   
+  const {companyDB } = useDataUtils()
+
+  const menuItems = useMemo(() => {
+    if(!companyDB) return PRELOAD_ROUTES;
+    return DRAWER_MENU.filter((item) => !item.admin || isAdmin )}, [isAdmin, companyDB]);
+  
+
   return (
     <Drawer variant="permanent" open={open}>
         <DrawerHeader>

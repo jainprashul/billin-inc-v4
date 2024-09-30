@@ -51,7 +51,7 @@ const UPI = (props: Props) => {
                     variant='outlined'
                     margin='normal'
                     disabled={!edit}
-                    defaultValue={company.upi}
+                    defaultValue={company?.upi}
                     inputRef={UPIRef}
                     required
                 />

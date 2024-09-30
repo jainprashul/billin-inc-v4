@@ -37,7 +37,7 @@ const Stocks = (props: Props) => {
       }} aria-label="add">
         <AddIcon />
       </Fab>
-      <Create open={open} setOpen={setOpen} />
+      {open && <Create open={open} setOpen={setOpen} />}
     </div>
   )
 }

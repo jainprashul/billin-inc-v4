@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { useLocalStorage } from '.';
 import CompanyDB from '../services/database/companydb';
 import db from '../services/database/db';
@@ -14,7 +14,7 @@ const CompanyDBContext = React.createContext<{
 }>({
     companyDB: null,
     companyID: 1,
-    setCompanyID: (id: number) => {},
+    setCompanyID: (id: number) => { },
     company: defaultCompany
 });
 
@@ -22,24 +22,34 @@ export const useCompanyDB = () => React.useContext(CompanyDBContext);
 
 
 export const CompanyDBProvider = ({ children }: { children: React.ReactNode }) => {
-    const [ companyID , setCompanyID ] = useLocalStorage("companyID", 1);
+    const [companyID, setCompanyID] = useLocalStorage("companyID", 1);
     const [companyDB, setCompanyDB] = React.useState<CompanyDB | null>(null);
 
-    const company = useLiveQuery( async ()=> {
-        return db.companies.get(companyID);
+    const company = useLiveQuery(async () => {
+        // get the company keys from the database 
+        const keys = await db.companies.toCollection().keys();
+        // check the company keys if it includes the companyID
+        let id = keys.includes(companyID) ? companyID : Number(keys[0]);
+        if (!id) return;
+        return db.companies.get(id);
     }, [companyID])!
 
     useEffect(() => {
         db.on('ready', () => {
-          setTimeout(() => {
-            setCompanyDB(db.getCompanyDB(companyID));
-          }, 900);
+            setTimeout(async () => {
+                // get the company keys from the database 
+                const keys = await db.companies.toCollection().keys();
+                // check the company keys if it includes the companyID
+                let id = keys.includes(companyID) ? companyID : Number(keys[0]);
+                if (!id) return;
+                setCompanyDB(db.getCompanyDB(id));
+            }, 900);
         });
-      }, [companyID]);
+    }, [companyID]);
 
     const Context = {
         companyDB,
-        companyID , setCompanyID,
+        companyID, setCompanyID,
         company
     }
 

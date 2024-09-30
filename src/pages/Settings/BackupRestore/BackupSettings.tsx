@@ -39,6 +39,11 @@ const BackupSettings = (props: Props) => {
     if (file) {
       importData(file).then(() => {
         toast.enqueueSnackbar("Data imported successfully", { variant: "success" });
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+
         // prompt user to reload the app
         setDialog({
           open: true,
