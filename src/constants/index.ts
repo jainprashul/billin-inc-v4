@@ -83,7 +83,7 @@ export const ExpenseModes = [
     }
 ] as const;
 
-export const PRODUCT_UNITS = [ 
-    "KG", "GRAM", "LITRE", , "METER", "FEET", "INCH", "PIECE", "PACKET", "BOX", "BOTTLE", "BAG", "OTHER",
+export const PRODUCT_UNITS = [
+    "KG", "GRAM", "LITRE","METER", "FEET", "INCH", "PIECE", "PACKET", "BOX", "BOTTLE", "BAG", "OTHER"
 ] as const;
 

@@ -22,7 +22,7 @@ export interface IProduct {
     createdAt?: Date;
 }
 
-type ProductUnit = typeof PRODUCT_UNITS[number]
+export type ProductUnit = typeof PRODUCT_UNITS[number]
 
 export type GstRate = 0 | 5 | 12 | 18 | 28;
 

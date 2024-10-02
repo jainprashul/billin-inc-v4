@@ -5,6 +5,7 @@ import authService from "../../authentication/auth.service";
 import db from "../db";
 import { NotificationLog, NotificationType } from "./NotificationLog";
 import { StockLog } from "./StockLogs";
+import { ProductUnit } from "./Product";
 
 export interface IStocks {
     id?: string;
@@ -19,7 +20,7 @@ export interface IStocks {
     logIDs: Set<string>;
     companyID: number;
     hsn : string;
-    unit : string;
+    unit : ProductUnit
     stockLogs? : StockLog[];
     createdAt?: Date;
 }
@@ -42,7 +43,7 @@ export class Stock implements IStocks {
     companyID: number;
     stockLogs: StockLog[];
     hsn : string;
-    unit : string;
+    unit : ProductUnit;
 
     createdAt: Date;
     updatedAt: Date;
