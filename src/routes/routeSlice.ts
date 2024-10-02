@@ -10,7 +10,7 @@ export interface RouteState {
 }
 
 const initialState: RouteState = {
-    // eslint-disable-next-line no-restricted-globals
+     
     path: location.pathname,
     params: [],
 };

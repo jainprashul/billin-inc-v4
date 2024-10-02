@@ -1,11 +1,12 @@
 import { Button, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react'
-import { LISENSE } from '../../../constants/routes';
-import authService from '../../../services/authentication/auth.service';
-import { getConfig } from '../../../services/database/db'
-import { Config } from '../../../services/database/model';
+import { LISENSE } from '@/constants/routes';
+import authService from '@/services/authentication/auth.service';
+import { getConfig } from '@/services/database/db'
+import { Config } from '@/services/database/model';
 import Lottie from 'lottie-react';
+import animationFile from "@/assets/about.json";
 
 type Props = {}
 
@@ -30,7 +31,7 @@ const Lisenses = (props: Props) => {
         float: 'right',
       }}>
         <Lottie
-          animationData={require('../../../assets/about.json')}
+          animationData={animationFile}
           loop={true}
           autoPlay={true}
           style={{ width: '100%', height: '100%' }}

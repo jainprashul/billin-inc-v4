@@ -29,7 +29,7 @@ export const CompanyDBProvider = ({ children }: { children: React.ReactNode }) =
         // get the company keys from the database 
         const keys = await db.companies.toCollection().keys();
         // check the company keys if it includes the companyID
-        let id = keys.includes(companyID) ? companyID : Number(keys[0]);
+        const id = keys.includes(companyID) ? companyID : Number(keys[0]);
         if (!id) return;
         return db.companies.get(id);
     }, [companyID])!
@@ -40,7 +40,7 @@ export const CompanyDBProvider = ({ children }: { children: React.ReactNode }) =
                 // get the company keys from the database 
                 const keys = await db.companies.toCollection().keys();
                 // check the company keys if it includes the companyID
-                let id = keys.includes(companyID) ? companyID : Number(keys[0]);
+                const id = keys.includes(companyID) ? companyID : Number(keys[0]);
                 if (!id) return;
                 setCompanyDB(db.getCompanyDB(id));
             }, 900);

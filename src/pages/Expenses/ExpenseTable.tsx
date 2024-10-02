@@ -64,7 +64,7 @@ const ExpenseTable = ({ data }: Props) => {
             icon: () => <EditIcon />,
             tooltip: 'Edit Expense',
             onClick: (event, rowData) => {
-                let expense = rowData as Expense
+                const expense = rowData as Expense
                 setEdit({
                     open: true,
                     expense
@@ -76,7 +76,7 @@ const ExpenseTable = ({ data }: Props) => {
             icon: () => <DeleteIcon />,
             tooltip: 'Delete Expense',
             onClick: (event, rowData) => {
-                let expense = rowData as Expense
+                const expense = rowData as Expense
                 setDialog({
                     open: true,
                     title: "Delete Expense",

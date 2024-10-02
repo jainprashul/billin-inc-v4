@@ -23,7 +23,7 @@ const LogTable = ({ data }: Props) => {
             title: 'Voucher',
             field: 'voucherNo',
             render: (data) => {
-                let link = data.logType === 'PURCHASE' ? `/purchase/${data.voucherNo}` : `/invoice/${data.voucherNo}`;
+                const link = data.logType === 'PURCHASE' ? `/purchase/${data.voucherNo}` : `/invoice/${data.voucherNo}`;
 
                 return <Link style={{
                     textDecoration: 'none',

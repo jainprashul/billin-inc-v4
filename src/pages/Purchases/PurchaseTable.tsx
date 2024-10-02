@@ -104,7 +104,7 @@ const PurchaseTable = ({ data }: Props) => {
             title: 'Vendor',
             field: 'client.name',
             render: (data) => {
-                let link = `/ledger/${data.client?.id}`;
+                const link = `/ledger/${data.client?.id}`;
                 return <Link style={{
                     textDecoration: 'none',
                     color: theme.palette.primary.main,
@@ -225,7 +225,7 @@ const PurchaseTable = ({ data }: Props) => {
             },
 
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     ], [ filter]);
 
     return (

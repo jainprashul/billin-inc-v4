@@ -20,7 +20,7 @@ export const generateBackupFile = async () => {
     const DBBLob = await exportDatabase(db);
     const companyDbs = Object.values(db.companyDB);
 
-    let blobs : Blob[] = [];
+    const blobs : Blob[] = [];
     for (let i = 0; i < companyDbs.length; i++) {
         const companyDB = companyDbs[i];
         const companyDBBlob = await exportDatabase(companyDB);
@@ -42,7 +42,7 @@ export const exportData = async () => {
     try {
         const zipBlob = await generateBackupFile();
 
-        let time = new Date().toISOString().split('T')[0];
+        const time = new Date().toISOString().split('T')[0];
         saveAs(zipBlob, `db-backup-${time}.dbx`)
         console.log('Backup taken successfully');
     } catch (error) {
@@ -112,7 +112,7 @@ export async function clearALLCache() {
         if (navigator.onLine) {
             if ('serviceWorker' in navigator) {
                 await navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                    for (let registration of registrations) {
+                    for (const registration of registrations) {
                         registration.unregister();
                     }
                 });

@@ -20,7 +20,7 @@ export class Backup implements IBackup {
     }
 
     async save() {
-        let backup = new Backup({ ...this })
+        const backup = new Backup({ ...this })
         return db.transaction('rw', db.backups, async () => {
             const _save = db.backups.put(backup).then(_id => {
                 backup.id = _id;

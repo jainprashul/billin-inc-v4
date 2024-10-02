@@ -8,7 +8,7 @@ import { ThemeProvider } from '@mui/material';
 import { theme } from './styles/theme';
 import LoadingX, { LoadingProvider } from './components/shared/LoadingX';
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
+const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID
 
 
 function App() {

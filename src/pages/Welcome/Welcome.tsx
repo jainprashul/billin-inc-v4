@@ -64,7 +64,7 @@ const Welcome = (props: Props) => {
                     position: 'relative',
                 }}>
                     <Typography variant="h6">Welcome to</Typography>
-                    <Typography variant="h4" color='primary'>Billin' Inc</Typography>
+                    <Typography variant="h4" color='primary'>Billin&apos; Inc</Typography>
                     <Typography variant="h6">A simple and easy to use billing software</Typography>
                     {
                         showInstall && <Button variant="text" color="primary" onClick={() => {
@@ -103,7 +103,7 @@ const Welcome = (props: Props) => {
                         handleStart();
                     }}>Get Started
                     </Button>
-                    <Button disableRipple color='inherit'>Thank you for choosing the Billin'Inc for your business! Our app is designed to help you create and manage invoices, track inventory, and run reports, all in one place.</Button>
+                    <Button disableRipple color='inherit'>Thank you for choosing the Billin&apos;Inc for your business! Our app is designed to help you create and manage invoices, track inventory, and run reports, all in one place.</Button>
                 </Typography>
 
 

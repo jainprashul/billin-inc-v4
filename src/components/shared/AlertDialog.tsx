@@ -21,7 +21,7 @@ type Props = {
 }
 
 export default function AlertDialog(props: Props) {
-    let { open, setOpen, title, message, onCancel, showCancel = true, onConfirm, confirmText = "OK", cancelText = "Cancel", confirmColor = 'primary', backdropClose=true } = props;
+    const { open, setOpen, title, message, onCancel, showCancel = true, onConfirm, confirmText = "OK", cancelText = "Cancel", confirmColor = 'primary', backdropClose=true } = props;
 
     /* const handleClickOpen = () => {
         setOpen(true);

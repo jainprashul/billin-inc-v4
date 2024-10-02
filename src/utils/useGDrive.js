@@ -49,7 +49,7 @@ export const useGDrive = () => {
 
     const restoreBackUpFile = async (fileId) => {
         if(!fileId){
-            let backupFileId = localStorage.getItem("backupFileId");
+            const backupFileId = localStorage.getItem("backupFileId");
             if(backupFileId){
                 fileId = backupFileId;
             }else{
@@ -71,7 +71,7 @@ export const useGDrive = () => {
         );
 
         const blob = await response.blob();
-        let file = new File([blob], "backup.dbx", { type: blob.type });
+        const file = new File([blob], "backup.dbx", { type: blob.type });
 
         await importData(file);
         console.log("Restored");

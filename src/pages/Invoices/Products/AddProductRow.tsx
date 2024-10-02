@@ -42,7 +42,7 @@ const AddProductRow = ({
     const formik = useFormik({
         initialValues: product,
         onSubmit: (values) => {
-            let product = new Product({ ...values, id: `prod_${nanoid(8)}` });
+            const product = new Product({ ...values, id: `prod_${nanoid(8)}` });
             onSubmit(product);
             formik.resetForm();
             // console.log(nameRef.current);

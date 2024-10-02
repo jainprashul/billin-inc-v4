@@ -44,7 +44,7 @@ const BackupList = ({data, open , setOpen, handleRestore}: Props) => {
             tooltip: 'Restore',
             onClick: (event, rowData ) => {
                 console.log(rowData)
-                let data = rowData as Backup
+                const data = rowData as Backup
                 handleRestore(data.id as string)
             },
         }

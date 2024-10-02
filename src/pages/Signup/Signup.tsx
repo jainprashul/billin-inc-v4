@@ -20,7 +20,7 @@ function Copyright(props: any) {
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" target={'_blank'} href="https://billinginc.now.sh/">
-                Billin' Inc
+                Billin&apos; Inc
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -38,7 +38,7 @@ export default function Signup(props: Props) {
         event.preventDefault();
         try {
             const data = new FormData(event.currentTarget);
-            let creds = {
+            const creds = {
                 name: data.get('name') as string,
                 username: data.get('username') as string,
                 email: data.get('email') as string,
@@ -53,7 +53,7 @@ export default function Signup(props: Props) {
 
             const confg = await getConfig()
 
-            let customer: Customer = {
+            const customer: Customer = {
                 name: creds.name,
                 email: creds.email,
                 phone: data.get('phone') as string,
@@ -122,7 +122,7 @@ export default function Signup(props: Props) {
                 }}
                 >
                     <Typography component="h1" color={'primary'} variant="h4">
-                        Billin' Inc
+                        Billin&apos; Inc
                     </Typography>
                     <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
                         <AccountCircleOutlined />

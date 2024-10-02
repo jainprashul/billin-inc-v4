@@ -15,7 +15,7 @@ type Props = {
 
 
 const LedgerTable = ({ data }: Props) => {
-    let loading = !(data ? data.length > 0 : false);
+    const loading = !(data ? data.length > 0 : false);
 
     const columns: Array<Column<Ledger>> = [
         {
@@ -27,7 +27,7 @@ const LedgerTable = ({ data }: Props) => {
             title: 'Voucher',
             field: 'voucherNo',
             render: (data) => {
-                let link = data.voucherType === 'PURCHASE' ? `/purchase/${data.voucherNo}` : `/invoice/${data.voucherNo}`;
+                const link = data.voucherType === 'PURCHASE' ? `/purchase/${data.voucherNo}` : `/invoice/${data.voucherNo}`;
 
                 return <Link style={{
                     textDecoration: 'none',

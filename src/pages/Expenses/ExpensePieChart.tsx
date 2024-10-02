@@ -110,12 +110,13 @@ function convertDataByExpenseMode(data: Expense[]) {
         color: string
     }[] = []
     data.forEach((expense) => {
-        let modeExists = res.some((item) => item.expenseMode === expense.expenseMode)
+        const modeExists = res.some((item) => item.expenseMode === expense.expenseMode)
         if (modeExists) {
-            let index = res.findIndex((item) => item.expenseMode === expense.expenseMode)
+            const index = res.findIndex((item) => item.expenseMode === expense.expenseMode)
             res[index].amount += expense.amount
         } else {
             res.push({
+                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                 expenseMode: ExpenseModes.find((item) => item.value === expense.expenseMode)?.value!,
                 amount: expense.amount,
                 color: getRandomColor()

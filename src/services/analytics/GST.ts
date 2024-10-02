@@ -147,7 +147,7 @@ async function generateGSTReportData(data: Purchase[] | Invoice[], excel = false
     // For EXCEL TOTALS
 
     async function getTotals() {
-        let total: GSTINFO = {
+        const total: GSTINFO = {
             id: '',
             PartyGST: '',
             PartyName: '',

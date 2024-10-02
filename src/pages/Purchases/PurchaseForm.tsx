@@ -57,7 +57,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
     return () => {
 
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [gstEnable])
 
   const formik = useFormik({
@@ -99,7 +99,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
   function onSubmit(values: Purchase) {
 
     // check if invoice is valid
-    let err = validateInvoice();
+    const err = validateInvoice();
     if (err) {
       // alert(err)
       toast.enqueueSnackbar(err, {
@@ -114,7 +114,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
       return;
     }
 
-    let companyDB = db.getCompanyDB(values.companyID);
+    const companyDB = db.getCompanyDB(values.companyID);
     companyDB.transaction('rw', [...companyDB.tables], async () => {
       // save products to db
       products.forEach(product => {

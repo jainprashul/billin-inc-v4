@@ -9,6 +9,8 @@ import { configBackEnd } from './services/authentication/auth.backend';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { initServiceWorker, updateServiceWorker } from './utils/service/swSlice';
 import { persistStorage } from './utils/service/storage';
+import db from './services/database/db';
+
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

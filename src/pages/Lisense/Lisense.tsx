@@ -89,7 +89,7 @@ const Lisense = (props: Props) => {
 
                 <Typography variant='subtitle1'>
                     Serial : <span onClick={() => {
-                        let val = serial?.replace(/-/g, '') ?? '';
+                        const val = serial?.replace(/-/g, '') ?? '';
                         navigator.clipboard.writeText(val)
                     }}>{serial}</span>
                 </Typography>

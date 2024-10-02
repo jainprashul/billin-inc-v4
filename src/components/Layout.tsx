@@ -17,7 +17,7 @@ export default function Layout({ children }: Props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  let location = useLocation();
+  const location = useLocation();
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {

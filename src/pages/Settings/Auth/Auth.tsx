@@ -3,6 +3,7 @@ import { Avatar, Button } from '@mui/material'
 import React from 'react'
 import { useGoogle } from '../../../utils/useGoogle'
 import Lottie from 'lottie-react'
+import animationFile from "@/assets/auth.json";
 type Props = {}
 
 const Auth = (props: Props) => {
@@ -15,7 +16,7 @@ const Auth = (props: Props) => {
         float: 'right',
       }}>
         <Lottie
-          animationData={require('../../../assets/auth.json')}
+          animationData={animationFile}
           loop={true}
           autoPlay={true}
           style={{ width: '100%', height: '100%' }}

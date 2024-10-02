@@ -31,7 +31,7 @@ const DailyLedgerTable = ({ data }: Props) => {
             title: 'Name',
             field: 'clientID',
             render: (data) => {
-                let link = `/ledger/${data.clientID}`;
+                const link = `/ledger/${data.clientID}`;
                 const clientName = Clients?.find(client => client.id === data.clientID)?.name ?? '';
 
                 return <Link style={{
@@ -47,7 +47,7 @@ const DailyLedgerTable = ({ data }: Props) => {
             title: 'Voucher',
             field: 'voucherNo',
             render: (data) => {
-                let link = `/invoice/${data.voucherNo}`;
+                const link = `/invoice/${data.voucherNo}`;
 
                 return <Link style={{
                     textDecoration: 'none',

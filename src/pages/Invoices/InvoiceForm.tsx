@@ -58,7 +58,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     return () => {
 
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [gstEnable])
 
   const formik = useFormik({
@@ -101,7 +101,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
   function onSubmit(values: Invoices) {
 
     // check if invoice is valid
-    let err = validateInvoice();
+    const err = validateInvoice();
     if (err) {
       // alert(err)
       enqueueSnackbar(err, {
@@ -116,7 +116,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
       return;
     }
 
-    let companyDB = db.getCompanyDB(values.companyID);
+    const companyDB = db.getCompanyDB(values.companyID);
     companyDB.transaction('rw', [...companyDB.tables], async () => {
       // save products to db
       products.forEach(product => {

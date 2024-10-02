@@ -23,7 +23,7 @@ export default [
     rules : {
       'react/react-in-jsx-scope': 'off',
       'react/display-name': 'off',
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "prefer-const": "warn",
       '@typescript-eslint/no-empty-object-type': 'off',

@@ -35,7 +35,7 @@ const Sales = (props: Props) => {
     async function getSalesReport() {
       setLoading(true)
       if (companyDB) {
-        let dbReport = await companyDB.reports.get({
+        const dbReport = await companyDB.reports.get({
           from : props.filter.date.from,
           to : props.filter.date.to,
           type : 'GST_SALES'

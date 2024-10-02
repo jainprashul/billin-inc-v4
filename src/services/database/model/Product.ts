@@ -46,7 +46,7 @@ export class Product implements IProduct {
     updatedAt: Date;
 
     constructor(product: IProduct) {
-        let isInclusive = Boolean(JSON.parse(localStorage.getItem("gstRateInclusive") || "false"));
+        const isInclusive = Boolean(JSON.parse(localStorage.getItem("gstRateInclusive") || "false"));
         this.id = product.id || `prod_${nanoid(8)}`;
         this.voucherID = product.voucherID;
         this.name = product.name;

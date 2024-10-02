@@ -285,7 +285,7 @@ thead.itembox{
           </thead>
           <tbody>
           ${ledger.map((item, i) => {
-        let runningBalance = prevRunningBalance + item.debit - item.credit;
+        const runningBalance = prevRunningBalance + item.debit - item.credit;
         prevRunningBalance = runningBalance;
         return `
                 <tr class="item-row" key= ${item.id}>

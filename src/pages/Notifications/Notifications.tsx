@@ -11,7 +11,7 @@ import db from '../../services/database/db';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOff from '@mui/icons-material/FilterListOff';
 
-let timeOut = 150;
+const timeOut = 150;
 const _filter = {
     date: {
         from: moment().startOf('week').toDate(),

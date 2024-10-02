@@ -64,7 +64,7 @@ export class Company implements ICompany {
     }
 
     async save() {
-        let company = new Company({ ...this })
+        const company = new Company({ ...this })
         return db.transaction('rw', db.companies, db.users, db.roles, async () => {
             company.updatedAt = new Date();
             const _save = db.companies.put(company).then(_id => {

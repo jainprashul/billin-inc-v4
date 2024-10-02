@@ -7,7 +7,7 @@ import { Client, Company, Ledger, Product, Purchase, Stock, StockLog } from '../
 import { useDataUtils } from '../../utils/useDataUtils';
 
 // Create client ID if it doesn't exist yet
-let cid = `c_${nanoid(12)}`
+const cid = `c_${nanoid(12)}`
 
 const usePurchaseForm = (purchase: Purchase) => {
   const { companyID } = useDataUtils();
@@ -149,8 +149,8 @@ const usePurchaseForm = (purchase: Purchase) => {
   }
 
   const getVoucherType = () => {
-    let companyGST = query?.company.gst.substring(0, 2);
-    let clientGST = client?.gst.substring(0, 2);
+    const companyGST = query?.company.gst.substring(0, 2);
+    const clientGST = client?.gst.substring(0, 2);
     if (companyGST === clientGST) {
       return "INTER_STATE";
     }

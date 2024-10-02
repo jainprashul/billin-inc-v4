@@ -54,9 +54,8 @@ const BankAccountEdit = React.lazy(() => import('../pages/Bank/Edit'));
 const BankAccountDetail = React.lazy(() => import('../pages/Bank/BankDetails'));
 
 
-type Props = {}
 
-const AppRoutes = (props: Props) => {
+const AppRoutes = () => {
 
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(selectIsLoggedIn)
@@ -89,8 +88,8 @@ const AppRoutes = (props: Props) => {
 
     checktheNetworkStatus()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])
+   
+}, [dispatch])
 
   // if (isFirstTime) {
   //   return <Welcome/>

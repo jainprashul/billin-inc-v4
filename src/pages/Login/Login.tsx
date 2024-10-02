@@ -19,7 +19,7 @@ function Copyright(props: any) {
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" target={'_blank'} href="https://billinginc.now.sh/">
-                Billin' Inc
+                Billin&apos; Inc
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -33,7 +33,7 @@ export default function Login() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        let creds = {
+        const creds = {
             email: data.get('email') as string,
             password: data.get('password') as string,
             remember : !!data.get('remember')
@@ -67,7 +67,7 @@ export default function Login() {
                     }}
                 >
                     <Typography component="h1" color={'primary'} variant="h4">
-                        Billin' Inc
+                        Billin&apos; Inc
                     </Typography>
                     <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
                         <LockOutlinedIcon />

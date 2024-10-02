@@ -51,7 +51,7 @@ const UserTable = ({ data }: Props) => {
       icon: () => <EditIcon />,
       tooltip: 'Edit User',
       onClick: (event, rowData) => {
-        let user = rowData as User
+        const user = rowData as User
         setEdit({
           open: true,
           user
@@ -62,7 +62,7 @@ const UserTable = ({ data }: Props) => {
       icon: () => <PersonRemoveIcon />,
       tooltip: 'Delete User',
       onClick: (event, rowData) => {
-        let user = rowData as User
+        const user = rowData as User
 
         setDialog({
           open: true,

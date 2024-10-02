@@ -76,6 +76,8 @@ export class User implements IUser {
     });
 
     async loadRole() {
+        // check if db is initialized before calling this function
+         
         const role = await db.roles.get(this.roleID);
         this.role = role;
         return role;
@@ -156,7 +158,7 @@ export class User implements IUser {
     }
 
     async save() {
-        let user = new User({
+        const user = new User({
             id: this.id,
             name: this.name,
             username: this.username,
@@ -171,7 +173,7 @@ export class User implements IUser {
             // delete user.role;
 
             return db.users.orderBy('username').keys(async (usernames) => {
-                let usernameExists = usernames.includes(user.username);
+                const usernameExists = usernames.includes(user.username);
                 console.log(usernames, user.username);
                 console.log(usernameExists);
 

@@ -1,19 +1,20 @@
 import { Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React from 'react'
-import { clearALLCache, deleteData, exportData, importData } from '../../../utils/dbUtils'
+import { clearALLCache, deleteData, exportData, importData } from '@/utils/dbUtils'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
-import AlertDialog from '../../../components/shared/AlertDialog';
-import { useGDrive } from '../../../utils/useGDrive';
+import AlertDialog from '@/components/shared/AlertDialog';
+import { useGDrive } from '@/utils/useGDrive';
 import { Folder } from '@mui/icons-material';
 import BackupList from './BackupList';
-import { useLoading } from '../../../components/shared/LoadingX';
+import { useLoading } from '@/components/shared/LoadingX';
 import Lottie from 'lottie-react';
+import animationFile from "@/assets/restore.json";
 
 type Props = {}
 
@@ -154,7 +155,7 @@ const BackupSettings = (props: Props) => {
         float: 'right',
       }}>
         <Lottie
-          animationData={require('../../../assets/restore.json')}
+          animationData={animationFile}
           loop={true}
           autoPlay={true}
           style={{ width: '100%', height: '100%' }}

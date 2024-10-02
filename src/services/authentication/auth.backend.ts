@@ -2,25 +2,25 @@ import db from "../database/db";
 import { User } from "../database/model";
 import * as jose from "jose";
 
-const secret = new TextEncoder().encode(process.env.REACT_APP_JWT_SECRET as string);
+const secret = new TextEncoder().encode(import.meta.env.REACT_APP_JWT_SECRET as string);
 
 // Act as a proxy to the authentication service
 export const configBackEnd = () => {
-    let realFetch = window.fetch;
+    const realFetch = window.fetch;
     console.log('configBackEnd');
 
     window.fetch = function (url, opts) {
-        let URL = url as string
+        const URL = url as string
         return new Promise((resolve, reject) => {
             // wrap in timeout to simulate server api call
             setTimeout(async () => {
                 // authenticate
                 if (URL.endsWith('/api/login') && opts?.method === 'POST') {
                     // get parameters from post request
-                    let params = JSON.parse(opts.body as string);
+                    const params = JSON.parse(opts.body as string);
 
                     // find if any user matches login credentials
-                    let filteredUsers = await db.users.filter(user => {
+                    const filteredUsers = await db.users.filter(user => {
                         return user.username === params.username
                     }).first();
 
@@ -31,11 +31,11 @@ export const configBackEnd = () => {
                         }
 
                         // if login details are valid return user details and fake jwt token
-                        let responseJson: Partial<User> = {
+                        const responseJson: Partial<User> = {
                             ...filteredUsers,
                         }
                         delete responseJson.password;
-                        let token = await generateToken(responseJson);
+                        const token = await generateToken(responseJson);
                         return ok({
                             ...responseJson,
                             token
@@ -50,7 +50,7 @@ export const configBackEnd = () => {
                 if (URL.endsWith('/api/register') && opts?.method === 'POST') {
                    try {
                      // get new user object from post body
-                     let newUser = JSON.parse(opts.body as string);
+                     const newUser = JSON.parse(opts.body as string);
                      const user = new User({
                          ...newUser,
                      })
@@ -60,11 +60,11 @@ export const configBackEnd = () => {
                      console.log('user', user);
  
                      // return user with token
-                     let responseJson: Partial<User> = {
+                     const responseJson: Partial<User> = {
                          ...user,
                      }
                      delete responseJson.password;
-                     let token = await generateToken(responseJson);
+                     const token = await generateToken(responseJson);
                      return ok({
                          ...responseJson,
                          token
@@ -82,7 +82,7 @@ export const configBackEnd = () => {
                     // check for fake auth token in header and return users if valid
                     console.log('opts', opts);
                     try {
-                        let user = await verifyToken(opts.headers);
+                        const user = await verifyToken(opts.headers);
                         if (user) {
                             const users = await db.users.toArray();
                             return ok(users);

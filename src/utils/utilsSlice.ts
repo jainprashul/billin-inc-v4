@@ -123,7 +123,7 @@ export const utilsSlice = createSlice({
     reducers: {
         setGstEnabled: (state, action: { payload: boolean }) => {
 
-            let gst = {
+            const gst = {
                 enabled: action.payload,
                 inclusive: !action.payload ? false : state.settings.gst.inclusive
             }

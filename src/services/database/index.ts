@@ -37,23 +37,23 @@ class AppDB extends Dexie {
     }
 
     getCompanyDB(companyID: number): CompanyDB {
-        let dbname = `Company_${companyID}`
+        const dbname = `Company_${companyID}`
         return this.companyDB[dbname];
     }
 
     async loadCompanyDBs() {
         const companies = await this.companies.toArray();
         companies.forEach((company) => {
-            let dbname = `Company_${company.id}`
-            let cDB = new CompanyDB(dbname);
+            const dbname = `Company_${company.id}`
+            const cDB = new CompanyDB(dbname);
             this.companyDB[dbname] = cDB;
         });
     }
 
     createCompanyDB(companyID: number): CompanyDB {
         // console.log('createCompanyDB', companyID);
-        let dbname = `Company_${companyID}`
-        let newDB = new CompanyDB(dbname);
+        const dbname = `Company_${companyID}`
+        const newDB = new CompanyDB(dbname);
         newDB.on('populate', () => {
             console.log('populate', dbname);
         });

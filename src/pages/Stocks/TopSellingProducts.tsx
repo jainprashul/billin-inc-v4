@@ -35,8 +35,8 @@ const TopSellingProducts = ({ width = '100%', height = '100%' }: Props) => {
                     <Bar dataKey="quantity" name='Quantity' fill={'#53439a'} label={{
                         position: 'bottom',
                         // fill: '#fff',
-                        
-                        // @ts-ignore
+                        // @ts-expect-error - recharts types are wrong
+                        // eslint-disable-next-line react/prop-types
                         valueAccessor: (props) => { console.log(props); return props.name }
                     }}/>
                 </BarChart>

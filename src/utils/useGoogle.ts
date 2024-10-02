@@ -41,7 +41,7 @@ export const useGoogle = () => {
             auth.isSignedIn.listen(updateSigninStatus);
             updateSigninStatus(auth.isSignedIn.get());
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     }, [auth]);
 
 

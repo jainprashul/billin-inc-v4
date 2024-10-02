@@ -45,7 +45,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         },
     })
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     const filterList: Filter[] = [
         {
             name: 'date',
@@ -54,7 +54,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         }
     ]
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     const handleFilterChange = (data: any) => {
         setFilter({
             ...filter,
@@ -62,7 +62,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         })
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     const expenses = useLiveQuery(async () => {
         if (companyDB) {
             const expense = await companyDB?.expenses.where('date').between(filter.date.from, filter.date.to).toArray()
@@ -70,7 +70,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         }
     }, [companyDB, filter], []) ?? []
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     const invoices = useLiveQuery(async () => {
         if (companyDB) {
             const invoice = await companyDB?.invoices.where('billingDate').between(filter.date.from, filter.date.to).toArray()
@@ -80,7 +80,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         }
     }, [companyDB, filter], []) ?? []
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     const purchase = useLiveQuery(async () => {
         if (companyDB) {
             const purchase = await companyDB?.purchases.where('billingDate').between(filter.date.from, filter.date.to).toArray()
@@ -88,7 +88,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         }
     }, [companyDB, filter], []) ?? []
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     const stocks = useLiveQuery(async () => {
         if (companyDB) {
             const stocks = await companyDB?.stocks.toArray()
@@ -96,7 +96,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         }
     }, [companyDB], []) ?? []
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     const stkLogs = useLiveQuery(async () => {
         if (companyDB) {
             const stkLogs = await companyDB?.stocklogs.where('date').between(filter.date.from, filter.date.to).toArray()
@@ -137,7 +137,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
     React.useEffect(() => {
         setLoading(true)
         const dates = getDatesBetween(filter.date.from, filter.date?.to)
-        let res = []
+        const res = []
         // jsonatá, a query language for JSON
         // query for getting the invoice count and amount by date
 
@@ -211,7 +211,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         setLoading(false)
 
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [dispatch, filter.date, invoices.length, purchase.length])
 
     const SalesCount = async (from: Date, to: Date) => {
@@ -293,7 +293,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
             dispatch(setCount(res))
             setLoading(false)
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [filter.date, companyDB, salesData])
 
     const Context = React.useMemo(() => ({

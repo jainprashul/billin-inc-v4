@@ -109,12 +109,12 @@ const Filters = ({ filters, getFilters }: Props) => {
 
 
         setFilterState(state)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [])
 
     React.useEffect(() => {
         getFilters(filterState)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [filterState])
 
     return (
@@ -162,7 +162,7 @@ const SelectFilter = ({ filters, setFilters, filterName, options = [] }: SelectF
             >
                 {options.map((x: any) => {
                     return (
-                        <MenuItem value={x}>{x}</MenuItem>
+                        <MenuItem key={x} value={x}>{x}</MenuItem>
                     )
                 })}
             </Select>
@@ -191,7 +191,7 @@ const CheckboxFilter = ({ filters, setFilters, filterName, options = [] }: Selec
             >
                 {options.map((x: any) => {
                     return (
-                        <MenuItem value={x}>
+                        <MenuItem key={x} value={x}>
                             <Checkbox checked={filters[filterName].indexOf(x) > -1} />
                             <ListItemText primary={x} />
                         </MenuItem>
@@ -215,7 +215,7 @@ const DateFilter = ({ filters, setFilters, filterName , defaultVal='thisWeek'  }
             ...filters,
             [filterName]: customDate
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [customDate])
 
     const handleTimeChange = (val: string) => {
@@ -234,7 +234,7 @@ const DateFilter = ({ filters, setFilters, filterName , defaultVal='thisWeek'  }
                 input={<OutlinedInput label={filterName} />}
                 defaultValue={defaultVal}
                 onChange={(e) => {
-                    let val = handleTimeChange(e.target.value)
+                    const val = handleTimeChange(e.target.value)
                     if (e.target.value === 'custom') {
                         setCustom(true)
                         return
@@ -265,7 +265,7 @@ const DateFilter = ({ filters, setFilters, filterName , defaultVal='thisWeek'  }
                 
             <DateProvider>
                 <DatePicker
-                    label="From"
+                    
                     value={customDate.from}
                     onChange={(newValue) => {
                         setCustomDate({

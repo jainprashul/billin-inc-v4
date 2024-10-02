@@ -8,7 +8,7 @@ import { Invoice } from '../../services/database/model/Invoices';
 import { useDataUtils } from '../../utils/useDataUtils';
 
 // Create client ID if it doesn't exist yet
-let cid = `c_${nanoid(12)}`
+const cid = `c_${nanoid(12)}`
 
 const useInvoiceForm = (invoice: Invoices) => {
   const { companyID, getAccountDetails } = useDataUtils();
@@ -152,7 +152,7 @@ const useInvoiceForm = (invoice: Invoices) => {
   }
 
   const getVoucherType = () => {
-    let companyGST = query?.company.gst.substring(0, 2);
+    const companyGST = query?.company.gst.substring(0, 2);
     let clientGST = client?.gst.substring(0, 2);
     if (!clientGST) {
       clientGST = companyGST;

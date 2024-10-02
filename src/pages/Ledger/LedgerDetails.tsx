@@ -110,7 +110,7 @@ const LedgerDetails = (props: Props) => {
 
     const updateAdjustment = () => {
 
-        let data = new Ledger({
+        const data = new Ledger({
             companyID: client?.companyID as number,
             date: new Date(),
             voucherNo: '',
@@ -125,7 +125,7 @@ const LedgerDetails = (props: Props) => {
             receivableType: 'CASH',
             cash: 0,
         })
-        let bal = data.debit - data.credit;
+        const bal = data.debit - data.credit;
         data.receivable = type === 'received' ? bal : type === 'paid' ? -bal : 0;
         data.payable = type === 'deposited' ? -bal : type === 'dues' ? bal : 0;
 

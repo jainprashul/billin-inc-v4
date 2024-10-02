@@ -22,7 +22,7 @@ const NotificationBar = (props: Props) => {
     };
 
     const getNotificationCount = (logs : NotificationLog[]) => {
-        let count = logs.filter(log => log.status === 'NEW').length;
+        const count = logs.filter(log => log.status === 'NEW').length;
         setNotificationCount(count);
         return count;
     }
