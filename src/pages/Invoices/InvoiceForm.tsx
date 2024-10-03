@@ -58,7 +58,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     return () => {
 
     }
-     
+
   }, [gstEnable])
 
   const formik = useFormik({
@@ -166,7 +166,7 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
     });
   }
 
-  Object.entries(formik.errors).length > 0 && console.log(formik.errors)
+  if (Object.entries(formik.errors).length > 0) console.log(formik.errors)
 
   const { gstEnabled, voucherNo: billNo } = formik.values
   return (
@@ -284,18 +284,17 @@ const InvoiceForm = ({ onSubmit: handleSubmit, submitText = 'Generate Invoice', 
                 setDate(new Date(event.target.value))
               }}
             /> */}
-
-
             <DateProvider>
-              <DatePicker
-                label="Billing Date"
-                value={date}
-                onChange={(newValue) => {
-                  setDate(moment(newValue).toDate())
-                  formik.setFieldValue('billingDate', moment(newValue).toDate())
-                }}
-                renderInput={(params) => <TextField variant='standard' {...params} />}
-              />
+            <DatePicker
+              label="Billing Date"
+              value={moment(date)}
+              onChange={(newValue) => {
+                setDate(moment(newValue).toDate())
+                formik.setFieldValue('billingDate', moment(newValue).toDate())
+              }}           
+            >
+              
+            </DatePicker>
             </DateProvider>
 
           </div>

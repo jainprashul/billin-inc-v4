@@ -46,7 +46,7 @@ const Search = ({ query, onClear, onSearch }: Props) => {
                                 cursor: 'pointer'
                             }} onClick={() => {
                                 setSearchQuery('');
-                                onClear && onClear();
+                                onClear?.();
                             }} />
                         </InputAdornment>
                     ) : null,

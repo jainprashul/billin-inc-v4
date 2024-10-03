@@ -4715,7 +4715,7 @@ update-browserslist-db@^1.1.0:
     escalade "^3.2.0"
     picocolors "^1.1.0"
 
-upiqr@^1.0.29:
+upiqr@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/upiqr/-/upiqr-1.2.2.tgz#cb166cd200a3837f93189852d076a73c6ae053a1"
   integrity sha512-WneoPX5JuACRz3I3LbUs0wAqg2Y1FfTrSDnzOdmkqzwJ0BHlwpJz+SbWZ6tTTL2Bo4M3+ha3Sd+T/U8P2xxOow==

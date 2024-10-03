@@ -45,8 +45,14 @@ const useInvoiceForm = (invoice: Invoices) => {
     if (clientID) {
       const res = await db.getCompanyDB(invoice?.companyID)?.clients.get(clientID);
       // res && setCustomerName(res.name) ;
-      res ? setCustomerContact(res.contacts[0].phone as string) : setCustomerContact('');
-      res ? setCustomerGST(res.gst as string) : setCustomerGST('');
+      if (res) {
+        // setCustomerName(res.name);
+        setCustomerContact(res.contacts[0].phone as string);
+        setCustomerGST(res.gst as string);
+      } else {
+        setCustomerContact('');
+        setCustomerGST('');
+      }
       return res;
     }
   }, [clientID, customerName]);

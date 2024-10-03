@@ -57,7 +57,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
     return () => {
 
     }
-     
+
   }, [gstEnable])
 
   const formik = useFormik({
@@ -164,7 +164,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
     });
   }
 
-  Object.entries(formik.errors).length > 0 && console.log(formik.errors)
+  if (Object.entries(formik.errors).length > 0) console.log(formik.errors)
 
   const { gstEnabled, voucherNo: billNo } = formik.values
   return (
@@ -177,7 +177,7 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
             value={customerName}
             options={clientNames}
             onChange={(event, value, reason, detail) => {
-              console.log('auto',value, reason, detail);
+              console.log('auto', value, reason, detail);
               if (reason === 'selectOption') {
                 setCustomerName(value as string)
                 db.getCompanyDB(purchase.companyID).clients.get({ name: value }).then(client => {
@@ -283,19 +283,17 @@ const PurchaseForm = ({ onSubmit: handleSubmit, submitText = 'Create Purchase En
               }}
             /> */}
 
-
             <DateProvider>
               <DatePicker
                 label="Billing Date"
-                value={date}
+                value={moment(date)}
                 onChange={(newValue) => {
                   setDate(moment(newValue).toDate())
                   formik.setFieldValue('billingDate', moment(newValue).toDate())
                 }}
-                renderInput={(params) => <TextField variant='standard' {...params} />}
-              />
+              >
+              </DatePicker>
             </DateProvider>
-
           </div>
 
         </Grid>

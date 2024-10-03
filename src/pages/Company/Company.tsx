@@ -28,7 +28,7 @@ const Company = (props: Props) => {
     return db.companies.toArray();
   }) ?? [];
 
-  const filteredCompany = company?.filter(company => user?.companyIDs?.includes(company.id!) || user?.roleID === 1)!;
+  const filteredCompany = company?.filter(company => user?.companyIDs?.includes(company.id!) || user?.roleID === 1);
 
   const handleDelete = (company: ICompany) => {
     setOpen(true);

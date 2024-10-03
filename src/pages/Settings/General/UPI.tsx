@@ -1,7 +1,7 @@
 import { Button, TextField } from '@mui/material'
 import React from 'react'
 import { useDataUtils } from '../../../utils/useDataUtils'
-import { upiqr } from 'upiqr';
+import upiqr from 'upiqr';
 
 type Props = {}
 

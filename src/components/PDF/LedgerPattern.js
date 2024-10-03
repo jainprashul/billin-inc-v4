@@ -310,12 +310,12 @@ thead.itembox{
     <tr className=''>
         <td colSpan="4" class="blank "></td>
         <td colSpan="1" class="total-line">Credit : </td>
-        <td colSpan="1" class="total-value"><span id="total">Rs. ${(total?.credit).toFixed(2)}</span></td>
+        <td colSpan="1" class="total-value"><span id="total">Rs. ${(total?.credit ?? 0).toFixed(2)}</span></td>
     </tr>
     <tr className=''>
         <td colSpan="4" class="blank "></td>
         <td colSpan="1" class="total-line">Debit : </td>
-        <td colSpan="1" class="total-value"><span id="total">Rs. ${(total?.debit).toFixed(2)}</span></td>
+        <td colSpan="1" class="total-value"><span id="total">Rs. ${(total?.debit ?? 0).toFixed(2)}</span></td>
     </tr>
 
     <tr className=''>

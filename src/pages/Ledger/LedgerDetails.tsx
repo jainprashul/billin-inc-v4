@@ -1,4 +1,4 @@
-import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, NorthEast, People, Print, SouthWest, Storefront } from '@mui/icons-material';
+import { AccountBalance, ArrowBack, Delete, Edit as EditIcon, Info, NorthEast, People, Print, SouthWest, Storefront } from '@mui/icons-material';
 import { useDataUtils } from '../../utils/useDataUtils';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Avatar, Box, Button, Divider, FormControl, Grid, IconButton, MenuItem, Select, TextField, Tooltip } from '@mui/material';
@@ -110,6 +110,11 @@ const LedgerDetails = (props: Props) => {
 
     const updateAdjustment = () => {
 
+        if (amount === 0) {
+            toast.enqueueSnackbar(`Please enter an amount`, { variant: 'error' });
+            return;
+        }
+
         const data = new Ledger({
             companyID: client?.companyID as number,
             date: new Date(),
@@ -126,13 +131,9 @@ const LedgerDetails = (props: Props) => {
             cash: 0,
         })
         const bal = data.debit - data.credit;
+        
         data.receivable = type === 'received' ? bal : type === 'paid' ? -bal : 0;
         data.payable = type === 'deposited' ? -bal : type === 'dues' ? bal : 0;
-
-        if (amount === 0) {
-            toast.enqueueSnackbar(`Please enter an amount`, { variant: 'error' });
-            return;
-        }
 
         data.save().then(() => {
             setAmount(0);
@@ -147,6 +148,8 @@ const LedgerDetails = (props: Props) => {
 
         })
     }
+
+    const clientType = client?.isCustomer ? 'CUSTOMER' : 'VENDOR';
 
     return (
         <>
@@ -247,8 +250,8 @@ const LedgerDetails = (props: Props) => {
                                         >
                                             <MenuItem value='received'>Received</MenuItem>
                                             <MenuItem value='paid'>Paid</MenuItem>
-                                            <MenuItem value='deposited'>Deposited</MenuItem>
-                                            <MenuItem value='dues'>Dues</MenuItem>
+                                            {/* <MenuItem value='deposited'>Deposited</MenuItem>
+                                            <MenuItem value='dues'>Dues</MenuItem> */}
 
                                         </Select>
                                     </FormControl>
@@ -291,7 +294,21 @@ const LedgerDetails = (props: Props) => {
                                         bgcolor: amber[500],
                                     }}> <AccountBalance /> </Avatar>
                                     <div>
-                                        <Typography variant="h6"> Balance</Typography>
+                                        <Typography variant="h6"> Balance 
+                                            <Tooltip title={
+                                                <Typography variant="body1">
+                                                    <b>Balance</b> is the difference between the <b>Debit</b> and <b>Credit</b> amount.
+                                                    <li>
+                                                        If the <b>Balance</b> is <b>Positive</b>, it means the {clientType} owes you.
+                                                    </li>
+                                                    <li>
+                                                        If the <b>Balance</b> is <b>Negative</b>, it means you need to pay the {clientType}.
+                                                    </li>
+                                                </Typography>
+                                            }> 
+                                                <span> <Info fontSize={'small'} /> </span>
+                                                </Tooltip>
+                                        </Typography>
                                         <Typography variant="h5"> ₹ {total.balance} </Typography>
                                     </div>
                                 </Box>

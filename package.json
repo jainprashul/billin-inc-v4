@@ -35,7 +35,7 @@
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.3.0",
     "recharts": "^2.2.0",
-    "upiqr": "^1.0.29",
+    "upiqr": "^1.2.2",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },

@@ -194,14 +194,16 @@ const Ledgers = () => {
 
       <Box display="flex" justifyContent='space-between' py={1}>
         <Typography variant="h6"> Ledger - &nbsp;
-          <DateProvider>
-            <DatePicker
-              value={date}
+        <DateProvider>
+            <DatePicker sx={{
+              ['& .MuiInputBase-root']: { height: 36, width: 200, },
+            }}
+              value={moment(date)}
               onChange={(newValue) => {
-                setDate(newValue || new Date());
-              }}
-              renderInput={(params) => <TextField disabled variant='standard' {...params} />}
-            />
+                setDate(moment(newValue).toDate())
+              }}           
+            >
+            </DatePicker>
             </DateProvider>
         </Typography>
 
