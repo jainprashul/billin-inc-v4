@@ -16,7 +16,9 @@ const Lisense = (props: Props) => {
         // getSerial 
         async function getSerial() {
             const confg = await getConfig();
-            confg && setSerial(confg.serialKey)
+            if (confg) {
+                setSerial(confg.serialKey);
+            }
         }
         getSerial()
     }, [])
@@ -75,7 +77,7 @@ const Lisense = (props: Props) => {
                 overflow: 'hidden',
                 minHeight: '85vh',
             }}>
-                <Typography variant="h5" color='primary'>Billin' Inc</Typography>
+                <Typography variant="h5" color='primary'>Billin&apos; Inc</Typography>
                 <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
                     <LockOutlined />
                 </Avatar>

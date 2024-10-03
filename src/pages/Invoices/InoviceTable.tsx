@@ -59,7 +59,7 @@ const InvoiceTable = ({ data }: Props) => {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     const editInvoice = async (invoice: Invoice) => {
         navigate(`/invoice/${invoice.id}/edit`, {
             state: invoice

@@ -64,7 +64,7 @@ const PurchaseTable = ({ data }: Props) => {
         }
     }, [companyID]);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     const editPurchase = async (purchase: Purchase) => {
         navigate(`/purchase/${purchase.id}/edit`, {
             state: purchase

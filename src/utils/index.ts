@@ -99,7 +99,7 @@ export const objDiff = (updatedObj: any, baseObj: any): any => {
     if (typeof updatedObj[key] === 'object' && typeof baseObj[key] === 'object') {
       return [
         ...acc,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         ...objDiff(updatedObj[key], baseObj[key]).map((item : any, i: any) => `pkey : ${key}, ${item}`)
       ]
     }
